@@ -1,8 +1,9 @@
 # Interviewauswertung:
 ## Teilnehmende:
-2 separate online Interviews, 2 Studierende der Universität Basel und ZHAW
-Semesterbelegung: 2. bis 4. Semester
-Modulanzahl pro Semester: 6 bis 12
+- 2 separate online Interviews, 
+2 Studierende der Universität Basel und ZHAW
+- Semesterbelegung: 2. bis 4. Semester
+- Modulanzahl pro Semester: 6 bis 12
 
 ## Wichtigsten Erkenntnisse 
 ### Planung
