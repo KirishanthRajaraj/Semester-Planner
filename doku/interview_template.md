@@ -2,11 +2,15 @@
 
 
 ## Einleitung & Themeneinstieg
-Das Ziel dieses interviews ist es anhand deiner Antworten, die Anforderungen & das Konzept meiner App einzugrenzen, sodass ich etwas nach Benutzernachfrage erstellen kann.
+Die Teilnahme an diesem Interview ist freiwillig. Du kannst jederzeit abbrechen oder einzelne Fragen nicht beantworten, ohne dass dir daraus Nachteile entstehen.
 
-Rechtliche klärung, Antworten werden aufgeschrieben und in einem öffentlichem Repository angezeigt, mit anonymisiertem Namen. Damit wird es weiter verarbeitet und zur Verbesserung der App verwendet.
+Das Interview wird nicht aufgenommen, sondern nur transkribiert. Deine Antworten werden anonymisiert in einem öffentlichen Repository dokumentiert und im Rahmen meines individuellen Software Projektes an der FHNW zur Verbesserung der App verwendet. 
 
-## Fragen
+Die Daten aus allen Interviews, die ich durchführe, werden in wichtigste Erkenntnisse zusammengefasst (d.h. nicht personenspezifisch) und bleiben anonymisiert bis auf unbestimmte Zeit im öffentlichen Repository. Deine persönlichen Antworten werden nicht direkt öffentlich aufgezeigt. Falls du später möchtest, dass deine Angaben gelöscht werden, kannst du dich jederzeit bei mir melden. 
+
+Für die Auswertung nutze ich teilweise KI-Tools wie Claude von Anthropic. Dabei werden Daten unter Umständen auf Servern im Ausland (z.B. USA) verarbeitet.
+
+## Fragenkatalog
 nicht nach Reihenfolge, Fragen je nach Antwort des Benutzers stellen.
 
 - [ ] Welchen Studiengang, Schule? Wieviel Semester schon dabei, Voll- oder Teilzeit, wieviele Module gerade.
