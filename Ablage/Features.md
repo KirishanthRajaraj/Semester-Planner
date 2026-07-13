@@ -71,3 +71,10 @@ backlog:
 - C | ai aufgaben import, per screenshot, html, csv, link, text etc.
 - C | social features
 - ...
+
+
+
+---
+falls keine zeit, eher kein custom backend -> import / backup
+
+die extra features, kann ich immernoch nach dem projekt implementieren
