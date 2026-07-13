@@ -5,8 +5,8 @@
 | Milestone | Zeitraum | ~Stunden | Status |
 |---|---|---|---|
 | M0 Vision & Vorbereitung | bis 13. Juni | 5h | ✅ abgeschlossen |
-| M1 Interviews, Anforderungen & Scope | bis 30. Juni | ~15h | ⬜ |
-| M2 Technologieentscheid & Learning neuer Technolgien | laufend | ~10h | ⬜ |
+| M1 Interviews, Anforderungen & Scope | bis 30. Juni | ~15h | ✅ abgeschlossen |
+| M2 Technologieentscheid & Learning neuer Technolgien | laufend | ~10h | ⬜ in progress |
 | M3 Prototyp Skateboard (MVP-Kern) & Designprozess, entscheid | bis 14. Juli | ~35h | ⬜ |
 | M4 User Evaulierungen, User Tests vom MVP | bis 21. Juli | ~10h | ⬜ |
 | M5 Prototyp Roller (2. Iteration ) | bis 9. August | ~30h | ⬜ |
