@@ -145,7 +145,7 @@ Next.js. Mit jedem Frontend, kann man mehr oder weniger dasselbe machen. Hier mu
 
 #### Libraries
 
-##### UI Library
+##### UI library
 shadcn
 - sehr gute kompatibilität mit next.js
 - minimalistisch
@@ -153,7 +153,19 @@ shadcn
 - kenne ich bereits
 MaterialUI wäre zu heavy für meinen use case.
 
-##### State Library
+##### Natural language date & duration parser library
+Hier war ich erstaunt, es gibt eine ziemlich klare Wahl für nlp Datum/Terminerkennung, 'chrono-node'.
+Damit kann man dinge wie "next friday", "meeting tomorrow at 14:00" erkennen. Leider limitierter
+deutsche Sprache Support.
+
+Wiederkehrende Daten wie "every friday" kann chrono-node nicht erkennen. 
+Allerdings könnte man theoretisch andere libraries, die das handeln kombinieren mit chrono-node.
+'rrule' kann wiederkehrende Daten handhaben.
+
+Für Aussagen wie "2h", oder "1h 10min", gibt es mehrere libraries jurations.js, parse-duration, js-duration-parser, hier versuche ich am besten mehrere aus.
+
+
+##### State library
 | Kriterium | Zustand | Redux (Toolkit) | Gewichtung |
 |---|---|---|---|
 | Boilerplate | Minimal, 1 File | höher, Mehr Struktur nötig (actions, reducers, slicers) | Mittel |
