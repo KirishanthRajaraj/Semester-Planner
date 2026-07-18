@@ -1,28 +1,37 @@
 'use client'
 import CodeMirror from "@uiw/react-codemirror";
 import { indentWithTab } from "@codemirror/commands";
-import { Decoration, EditorView, MatchDecorator, ViewPlugin, keymap, type DecorationSet, type ViewUpdate } from "@codemirror/view";
+import { Decoration, EditorView, ViewPlugin, keymap, type DecorationSet, type ViewUpdate } from "@codemirror/view";
+import { RangeSetBuilder } from "@codemirror/state";
 import * as chrono from "chrono-node";
 
-const highlightWords = ["tomorrow", "today"];
+// RangeSetBuilder [14, 20], [21, 34] indexe vom ganzen text des editors, um die dekorationen für diese von bis strings zu geben
+function buildDecorations(text: string): DecorationSet {
+  const builder = new RangeSetBuilder<Decoration>();
+  chrono.parse(text).forEach((result) => {
+    builder.add(
+      result.index,
+      result.index + result.text.length,
+      Decoration.mark({ class: "bg-primary/30 dark:bg-primary/50 rounded-sm" })
+    );
+  });
+  return builder.finish();
+}
 
-
-const wordMatcher = new MatchDecorator({
-  regexp: new RegExp(`\\b(${highlightWords.join("|")})\\b`, "gi"),
-  decoration: () => Decoration.mark({ class: "bg-primary/30 dark:bg-primary/50 rounded-sm" }),
-});
-
-// zum verstehen
+// zum genauer verstehen
 const highlightExtension = ViewPlugin.fromClass(
   class {
     decorations: DecorationSet;
     constructor(view: EditorView) {
-      this.decorations = wordMatcher.createDeco(view);
+      this.decorations = buildDecorations(view.state.doc.toString());
     }
     update(update: ViewUpdate) {
-      this.decorations = wordMatcher.updateDeco(update, this.decorations);
+      if (update.docChanged) {
+        this.decorations = buildDecorations(update.state.doc.toString());
+      }
     }
   },
+  { decorations: (v) => v.decorations }
 );
 
 const editorTheme = EditorView.theme({
