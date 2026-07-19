@@ -51,7 +51,6 @@ function buildDecorations(text: string): DecorationSet {
             result.index + result.text.length,
             Decoration.mark({ class: "bg-primary/30 dark:bg-primary/50 rounded-sm" })
         );
-        console.log(result.text, result.start.date(), result.end?.date());
     });
     return builder.finish();
 }
@@ -86,7 +85,6 @@ const linesToTaskItem = (text: string): TaskItem[] => {
             date: parsedDate?.start.date(),
             parentId: parentAtDepth[depth - 1],
         });
-        console.log(parentAtDepth);
 
         items.push(item);
         // aktuellen Parent zwischenspeichern, sodass man die ParentId für das nächste Item setzen kann
@@ -94,7 +92,6 @@ const linesToTaskItem = (text: string): TaskItem[] => {
         // hinzufügen / löschen von plätzen im Array, sodass die Länge des Arrays immer der Tiefe entspricht + 1, sodass man immer den Parent des nächsten setzen kann
         parentAtDepth.length = depth + 1;
     });
-    console.log(items);
     return items;
 }
 
