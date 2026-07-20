@@ -3,4 +3,5 @@ export interface TaskItem {
   title: string;
   date?: Date;
   parentId?: string;
+  depth?: number;
 }

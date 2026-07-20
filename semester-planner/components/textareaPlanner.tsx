@@ -1,15 +1,16 @@
 'use client'
 import CodeMirror from "@uiw/react-codemirror";
 import { indentWithTab } from "@codemirror/commands";
-import { Decoration, EditorView, ViewPlugin, keymap, type DecorationSet, type ViewUpdate } from "@codemirror/view";
+import { Decoration, EditorView, MatchDecorator, ViewPlugin, keymap, type DecorationSet, type ViewUpdate } from "@codemirror/view";
 import { RangeSetBuilder } from "@codemirror/state";
 import { indentUnit } from "@codemirror/language";
 import * as chrono from "chrono-node";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { TaskItem } from "@/interfaces/taskItem";
 import { useTaskStore } from "@/store/taskStore";
+import parse from 'parse-duration'
 
 // text editor styles
 const editorTheme = EditorView.theme({
@@ -58,6 +59,8 @@ export default function textareaPlanner({ className }: { className?: string }) {
                 Decoration.mark({ class: "bg-primary/30 dark:bg-primary/50 rounded-sm" })
             );
         });
+
+        parse(text);
         return builder.finish();
     }
 
@@ -98,18 +101,22 @@ export default function textareaPlanner({ className }: { className?: string }) {
             // hinzufügen / löschen von plätzen im Array, sodass die Länge des Arrays immer der Tiefe entspricht + 1, sodass man immer den Parent des nächsten setzen kann
             parentAtDepth.length = depth + 1;
         });
+        console.log(items);
         useTaskStore.getState().setTasks(items);
+
     }
 
-    const handleSubmit = () => {
-        linesToTaskItem(textAreaText);
-        router.push("/dnd");
+    const handleSubmit = (value: string) => {
+        setTextAreaText(value);
+        linesToTaskItem(value);
+
+        //router.push("/dnd");
     };
 
     return (
         <div>
             <CodeMirror
-                className={`${className}`}
+                className={`${className} min-h-96 p-4`}
                 placeholder="e.g. math homework due tomorrow at 18:00"
                 basicSetup={{
                     lineNumbers: false,
@@ -122,11 +129,9 @@ export default function textareaPlanner({ className }: { className?: string }) {
                 }}
                 theme={editorTheme}
                 extensions={[keymap.of([indentWithTab]), indentUnit.of("\t"), highlightExtension]}
-                onChange={(value) => setTextAreaText(value)}
+                onChange={(value) => handleSubmit(value)}
             />
-            <Button className="mt-4" onClick={handleSubmit}>
-                Submit
-            </Button>
+
         </div>
     );
 }
