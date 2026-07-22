@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table"
 import { useTaskStore } from "@/store/taskStore";
 import { TaskItem } from "@/interfaces/taskItem";
+import { isTaskOverdue } from "@/lib/taskOperations";
 import { DataTable } from "./ui/datatable";
 
 interface DataTableProps<TData, TValue> {
@@ -42,7 +43,11 @@ export function TasksTable() {
 
   return (
     <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={tasks} />
+      <DataTable
+        columns={columns}
+        data={tasks}
+        getRowClassName={(task) => (isTaskOverdue(task) ? "bg-red-500" : "")}
+      />
     </div>
   );
 }
