@@ -12,7 +12,7 @@ export default function droppable({ id, title, children }: { id: string; title: 
         // column (no items to collide with) still correctly falls back to the column itself.
         collisionPriority: CollisionPriority.Low,
     });
-    const style = isDropTarget ? '!bg-black' : undefined;
+    const style = isDropTarget ? 'border-foreground rounded-lg' : undefined;
 
 
     return (
@@ -21,7 +21,7 @@ export default function droppable({ id, title, children }: { id: string; title: 
                 (
                     <div className="flex flex-col gap-1 p-4 rounded-md border-bottom gap-4">
                         <h2 className="text-lg font-bold border-b-4">{title}</h2>
-                        <div ref={ref} className={`flex flex-col gap-1 min-h-12 bg-white ${style}`}>
+                        <div ref={ref} className={`flex flex-col gap-1 min-h-12 ${style}`}>
                             {children}
                         </div>
                     </div >

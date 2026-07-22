@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import { TaskItem } from "@/interfaces/taskItem";
+import { persist, createJSONStorage } from "zustand/middleware";
 import { Semester } from "@/interfaces/Semester";
+import { reviveDates } from "@/lib/persistStorage";
 
 interface SemesterStore {
     semester: Semester;
@@ -9,9 +10,17 @@ interface SemesterStore {
     setWeeks: (weeks: { startDate: Date; endDate: Date }[]) => void;
 }
 
-export const useSemesterStore = create<SemesterStore>((set) => ({
-    semester: { startDate: new Date(), endDate: new Date() },
-    setSemester: (semester) => set({ semester }),
-    weeks: [],
-    setWeeks: (weeks) => set({ weeks }),
-}));
+export const useSemesterStore = create<SemesterStore>()(
+    persist(
+        (set) => ({
+            semester: { startDate: new Date(), endDate: new Date() },
+            setSemester: (semester) => set({ semester }),
+            weeks: [],
+            setWeeks: (weeks) => set({ weeks }),
+        }),
+        {
+            name: "semester-storage",
+            storage: createJSONStorage(() => localStorage, { reviver: reviveDates }),
+        }
+    )
+);
