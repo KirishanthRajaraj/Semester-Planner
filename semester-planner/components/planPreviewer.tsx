@@ -1,5 +1,5 @@
 'use client'
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useSemesterStore } from "@/store/semesterStore";
 import { useTaskStore } from "@/store/taskStore";
 import { TaskItem } from "@/interfaces/taskItem";
@@ -7,12 +7,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 function getWeeks(start: Date, end: Date) {
-    const weeks: { start: Date; end: Date }[] = [];
+    const weeks: { startDate: Date; endDate: Date }[] = [];
     let currentWeek = new Date(start);
     while (currentWeek < end) {
         const weekEnd = new Date(currentWeek);
         weekEnd.setDate(weekEnd.getDate() + 7);
-        weeks.push({ start: currentWeek, end: weekEnd < end ? weekEnd : end });
+        weeks.push({ startDate: currentWeek, endDate: weekEnd < end ? weekEnd : end });
         currentWeek = weekEnd;
     }
     return weeks;
@@ -54,9 +54,14 @@ function TaskColumn({ title, tasks }: { title: string; tasks: TaskItem[] }) {
 
 export default function PlanPreviewer({ className }: { className?: string }) {
     const semester = useSemesterStore((state) => state.semester);
+    const setWeeks = useSemesterStore((state) => state.setWeeks);
     const tasks = useTaskStore((state) => state.tasks);
-    console.log(tasks);
+
     const weeks = getWeeks(semester.startDate, semester.endDate);
+
+    useEffect(() => {
+        setWeeks(weeks);
+    }, [weeks, setWeeks]);
 
     const inbox = tasks.filter((task) => !task.date);
     const outsideOfSemester = tasks.filter(
@@ -73,7 +78,7 @@ export default function PlanPreviewer({ className }: { className?: string }) {
                         key={i}
                         title={`Week ${i + 1}`}
                         tasks={tasks.filter(
-                            (task) => task.date && task.date >= week.start && task.date < week.end
+                            (task) => task.date && task.date >= week.startDate && task.date < week.endDate
                         )}
                     />
                 ))}

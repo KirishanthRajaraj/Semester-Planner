@@ -106,11 +106,14 @@ export default function textareaPlanner({ className }: { className?: string }) {
 
     }
 
-    const handleSubmit = (value: string) => {
+
+    const updatePreview = (value: string) => {
         setTextAreaText(value);
         linesToTaskItem(value);
+    };
 
-        //router.push("/dnd");
+    const handleSubmit = () => {
+        router.push("/dnd");
     };
 
     return (
@@ -129,9 +132,11 @@ export default function textareaPlanner({ className }: { className?: string }) {
                 }}
                 theme={editorTheme}
                 extensions={[keymap.of([indentWithTab]), indentUnit.of("\t"), highlightExtension]}
-                onChange={(value) => handleSubmit(value)}
+                onChange={(value) => updatePreview(value)}
             />
-
+            <Button className="mt-4" onClick={() => handleSubmit()}>
+                Submit
+            </Button>
         </div>
     );
 }

@@ -8,5 +8,5 @@ interface TaskStore {
 
 export const useTaskStore = create<TaskStore>((set) => ({
   tasks: [],
-  setTasks: (tasks) => set({ tasks }),
+  setTasks: (tasks: TaskItem[]) => set({ tasks }),
 }));
