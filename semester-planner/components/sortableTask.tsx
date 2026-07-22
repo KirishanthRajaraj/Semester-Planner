@@ -3,7 +3,7 @@ import { useSortable } from "@dnd-kit/react/sortable";
 import { SortableKeyboardPlugin } from "@dnd-kit/dom/sortable";
 import { pointerIntersection } from "@dnd-kit/collision";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import DragDropIcon from "@/app/icons/dndIcon";
+import DragDropIcon from "@/icons/dndIcon";
 import { useTaskStore } from "@/store/taskStore";
 
 export default function SortableTask({ task, index, group }: { task: TaskItem; index: number; group: string }) {
