@@ -44,9 +44,13 @@ const editorTheme = EditorView.theme({
     },
 });
 
-export default function textareaPlanner({ className }: { className?: string }) {
+export default function TextareaPlanner({ className }: { className?: string }) {
     const [textAreaText, setTextAreaText] = useState<string>("");
     const router = useRouter();
+
+    useEffect(() => {
+        taskItemsToText();
+    }, []);
 
 
     // RangeSetBuilder [14, 20], [21, 34] indexe vom ganzen text des editors, um die dekorationen für diese von bis strings zu geben
@@ -80,7 +84,7 @@ export default function textareaPlanner({ className }: { className?: string }) {
         { decorations: (v) => v.decorations }
     );
 
-    const linesToTaskItem = (text: string) => {
+    const textToTaskItem = (text: string) => {
         const lines = text.split("\n");
         const items: TaskItem[] = [];
         // string benutzen für die id
@@ -90,9 +94,10 @@ export default function textareaPlanner({ className }: { className?: string }) {
             const parsedDate = chrono.parse(line)[0];
             const item: TaskItem = ({
                 id: crypto.randomUUID(),
-                title: line,
+                title: line.trim(),
                 date: parsedDate?.start.date(),
                 parentId: parentAtDepth[depth - 1],
+                depth: depth
             });
 
             items.push(item);
@@ -103,13 +108,22 @@ export default function textareaPlanner({ className }: { className?: string }) {
         });
         console.log(items);
         useTaskStore.getState().setTasks(items);
-
     }
 
+    // this function should always align with what textToTaskItem() does, but backwards
+    const taskItemsToText = () => {
+        const tasks: TaskItem[] = useTaskStore.getState().tasks;
+        let text: string = "";
+        tasks.forEach((task, index) => {
+            text += "\t".repeat(task.depth ?? 0) + task.title + " " + (task.date?.toLocaleDateString("en-GB") ?? '');
+            text += "\n"
+        });
+        setTextAreaText(text);
+    }
 
     const updatePreview = (value: string) => {
         setTextAreaText(value);
-        linesToTaskItem(value);
+        textToTaskItem(value);
     };
 
     const handleSubmit = () => {
@@ -133,6 +147,7 @@ export default function textareaPlanner({ className }: { className?: string }) {
                 theme={editorTheme}
                 extensions={[keymap.of([indentWithTab]), indentUnit.of("\t"), highlightExtension]}
                 onChange={(value) => updatePreview(value)}
+                value={textAreaText}
             />
             <Button className="mt-4" onClick={() => handleSubmit()}>
                 Submit
