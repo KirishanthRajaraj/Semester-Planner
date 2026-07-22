@@ -3,6 +3,7 @@ import { useSortable } from "@dnd-kit/react/sortable";
 import { SortableKeyboardPlugin } from "@dnd-kit/dom/sortable";
 import { pointerIntersection } from "@dnd-kit/collision";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import DragDropIcon from "@/app/icons/dndIcon";
 
 export default function SortableTask({ task, index, group }: { task: TaskItem; index: number; group: string }) {
     const { ref, isDragging } = useSortable({
@@ -21,9 +22,12 @@ export default function SortableTask({ task, index, group }: { task: TaskItem; i
     return (
         <Card
             ref={ref}
-            className={`text-sm font-semibold p-3 rounded-md bg-primary text-background cursor-grab active:cursor-grabbing ${isDragging ? "opacity-50" : ""}`}
+            className={`flex flex-row items-center justify-between text-sm font-semibold p-3 rounded-md bg-primary text-background cursor-grab active:cursor-grabbing ${isDragging ? "opacity-50" : ""}`}
         >
-            {task.title}
+            <p>{task.title}</p>
+            <div className="w-6">
+                <DragDropIcon/>
+            </div>
         </Card>
     )
 }
