@@ -20,36 +20,47 @@ export default function dndArea() {
                     if (event.canceled) return;
 
                     const { target, source } = event.operation;
-                    console.log("test");
-                    if (target?.id.toString().includes("week")) {
-                    console.log("test1");
+                    if (!target) return;
 
-                        const weekIndex = parseInt(target.id.toString().split("-")[1]) - 1;
-                        const startDate = weeks[weekIndex].startDate;
-                        const endDate = weeks[weekIndex].endDate;
-                        const draggedTaskId = source?.id;
-                        console.log(draggedTaskId);
-                        //Das Datum neu setzen für den Task der in eine neue Wochegedragged wurde
-                        console.log(target.id)
-                        setTasks(tasks.map((task) =>
-                            task.id === draggedTaskId ? { ...task, date: new Date(startDate.getDate() + (weekIndex * 7)) } : task
-                        ));
+                    // target is either a sibling task (sortable → read its group) or a bare
+                    // container (read its id). both resolve to the destination group id.
+                    const destGroup = isSortable(target) ? String(target.group) : String(target.id);
+                    const draggedTaskId = source?.id;
+
+                    // group is derived from date at render, so we only need to set the date:
+                    // inbox → no date; a week → a date nudged one day inside the week so it
+                    // doesn't land on the shared week boundary and match two weeks at once.
+                    let newDate: Date | undefined = undefined;
+                    if (destGroup.startsWith("week-")) {
+                        const weekIndex = parseInt(destGroup.split("-")[1]) - 1;
+                        const d = new Date(weeks[weekIndex].startDate);
+                        d.setDate(d.getDate() + 1);
+                        newDate = d;
                     }
+
+                    const newTasks = tasks.map((task) =>
+                        task.id === draggedTaskId ? { ...task, date: newDate } : task
+                    );
+                    console.log(newTasks);
+                    
+                    // defer so dnd-kit finishes its own drag-end teardown before React re-renders
+                    // do not remove
+                    queueMicrotask(() => setTasks(newTasks));
                 }}
             >
                 <div className="w-80 flex flex-col gap-2 p-4">
                     <Droppable id={`inbox`} title={`Inbox`}>
-                        {tasks.map((task, index) => (
-                            <SortableTask key={task.id} task={task} index={index} />
+                        {tasks.filter((task) => !task.date).map((task, index) => (
+                            <SortableTask key={task.id} task={task} index={index} group="inbox" />
                         ))}
                     </Droppable>
                 </div>
 
 
-                {weeks.map((week, index) => (
-                    <Droppable id={`week-${index + 1}`} title={`Week ${index + 1}`} key={`week-${index + 1}`}>
+                {weeks.map((week, weekIndex) => (
+                    <Droppable id={`week-${weekIndex + 1}`} title={`Week ${weekIndex + 1}`} key={weekIndex + 1}>
                         {tasks.filter(task => task.date && task.date >= week.startDate && task.date <= week.endDate).map((task, index) => (
-                            <SortableTask key={task.id} task={task} index={index} />
+                            <SortableTask key={task.id} task={task} index={index} group={`week-${weekIndex + 1}`}  />
                         ))}
                     </Droppable>
                 ))}
