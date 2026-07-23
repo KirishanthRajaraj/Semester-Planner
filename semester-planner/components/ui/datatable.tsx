@@ -23,6 +23,7 @@ interface DataTableProps<TData, TValue> {
   getRowClassName?: (row: TData) => string
 }
 
+//zum verstehen 
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -46,9 +47,9 @@ export function DataTable<TData, TValue>({
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 )
               })}
