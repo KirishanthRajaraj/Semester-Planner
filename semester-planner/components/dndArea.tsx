@@ -42,7 +42,6 @@ export default function dndArea() {
                 const newTasks = tasks.map((task) =>
                     task.id === draggedTaskId ? { ...task, date: newDate } : task
                 );
-                console.log(newTasks);
 
                 // defer so dnd-kit finishes its own drag-end teardown before React re-renders
                 // do not remove

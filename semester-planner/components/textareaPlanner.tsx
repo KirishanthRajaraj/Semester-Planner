@@ -2,13 +2,13 @@
 import CodeMirror from "@uiw/react-codemirror";
 import { indentWithTab } from "@codemirror/commands";
 import { Decoration, EditorView, MatchDecorator, ViewPlugin, keymap, type DecorationSet, type ViewUpdate } from "@codemirror/view";
-import { RangeSetBuilder } from "@codemirror/state";
+import { type Range } from "@codemirror/state";
 import { indentUnit } from "@codemirror/language";
 import * as chrono from "chrono-node";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
-import { TaskItem } from "@/interfaces/taskItem";
+import { TaskItem, TaskStatus } from "@/interfaces/taskItem";
 import { useTaskStore } from "@/store/taskStore";
 import parse from 'parse-duration'
 
@@ -53,22 +53,45 @@ export default function TextareaPlanner({ className }: { className?: string }) {
     }, []);
 
 
-    // RangeSetBuilder [14, 20], [21, 34] indexe vom ganzen text des editors, um die dekorationen für diese von bis strings zu geben
+    // collect every markation to submit to DecorationSet all at once
     function buildDecorations(text: string): DecorationSet {
-        const builder = new RangeSetBuilder<Decoration>();
+        const ranges: Range<Decoration>[] = [];
+
+        // date spans over the whole doc (chrono gives absolute offsets)
         chrono.parse(text).forEach((result) => {
-            builder.add(
-                result.index,
-                result.index + result.text.length,
+            ranges.push(
                 Decoration.mark({ class: "bg-primary/30 dark:bg-primary/50 rounded-sm" })
+                    .range(result.index, result.index + result.text.length)
             );
         });
 
-        parse(text);
-        return builder.finish();
+        // every line: colour the :done:/:doing: token, and strike through done lines
+        let offset = 0;
+        for (const line of text.split("\n")) {
+            const statusMatch = line.match(/:(done|doing):\s*$/i);
+            if (statusMatch && statusMatch.index !== undefined) {
+                const isDone = statusMatch[1].toLowerCase() === "done";
+                const tokenFrom = offset + statusMatch.index;
+                ranges.push(
+                    Decoration.mark({ class: isDone ? "text-green-500 font-bold" : "text-amber-500 font-bold" })
+                        .range(tokenFrom, tokenFrom + statusMatch[0].length)
+                );
+                if (isDone) {
+                    const indent = line.match(/^\t*/)?.[0].length ?? 0;
+                    if (indent < line.length) {
+                        ranges.push(
+                            Decoration.mark({ class: "line-through opacity-60" })
+                                .range(offset + indent, offset + line.length)
+                        );
+                    }
+                }
+            }
+            offset += line.length + 1; // + the newline, save the offset
+        }
+
+        return Decoration.set(ranges, true); // true = sort by position
     }
 
-    // zum genauer verstehen
     const highlightExtension = ViewPlugin.fromClass(
         class {
             decorations: DecorationSet;
@@ -84,18 +107,41 @@ export default function TextareaPlanner({ className }: { className?: string }) {
         { decorations: (v) => v.decorations }
     );
 
-    const textToTaskItem = (text: string) => {
+    const textToTaskItem = (text: string, submit: boolean) => {
         const lines = text.split("\n");
         const items: TaskItem[] = [];
         // string benutzen für die id
         const parentAtDepth: (string | undefined)[] = [];
         lines.forEach((line) => {
             const depth = line.match(/^\t*/)?.[0].length ?? 0;
-            const parsedDate = chrono.parse(line)[0];
+
+            // remove :done:/:doing: from the text before saving
+            let status: TaskStatus = "todo";
+            let rest = line;
+            const statusMatch = rest.match(/:(done|doing):\s*$/i);
+            if (statusMatch && statusMatch.index !== undefined) {
+                status = statusMatch[1].toLowerCase() === "done" ? "done" : "inprogress";
+                rest = rest.slice(0, statusMatch.index);
+            }
+
+            const parsedDates = chrono.parse(rest);
+
+            // only the first detected date becomes the task's date
+            const date = parsedDates[0]?.start.date();
+
+            // remove all dates from text
+            let title = rest;
+            for (let i = 0; i < parsedDates.length; i++) {
+                const lineText = parsedDates[i];
+                title = title.slice(0, lineText.index) + title.slice(lineText.index + lineText.text.length);
+            }
+            title = title.replace(/\s+/g, " ").trim();
+
             const item: TaskItem = ({
                 id: crypto.randomUUID(),
-                title: line.trim(),
-                date: parsedDate?.start.date(),
+                title: title,
+                date: date,
+                status: status,
                 parentId: parentAtDepth[depth - 1],
                 depth: depth
             });
@@ -106,8 +152,11 @@ export default function TextareaPlanner({ className }: { className?: string }) {
             // hinzufügen / löschen von plätzen im Array, sodass die Länge des Arrays immer der Tiefe entspricht + 1, sodass man immer den Parent des nächsten setzen kann
             parentAtDepth.length = depth + 1;
         });
-        console.log(items);
-        useTaskStore.getState().setTasks(items);
+        if (submit) {
+            useTaskStore.getState().setTasks(items);
+            console.log(items);
+        }
+
     }
 
     // this function should always align with what textToTaskItem() does, but backwards
@@ -115,7 +164,14 @@ export default function TextareaPlanner({ className }: { className?: string }) {
         const tasks: TaskItem[] = useTaskStore.getState().tasks;
         let text: string = "";
         tasks.forEach((task, index) => {
-            text += "\t".repeat(task.depth ?? 0) + task.title + " " + (task.date?.toLocaleDateString("en-GB") ?? '');
+            // absolute named-month form ("24 Jul 2026") re-parses to the same Date via chrono,
+            // so save→load→save doesn't drift (unlike a relative phrase or DD/MM/YYYY).
+            const dateStr = task.date
+                ? " " + task.date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
+                : "";
+            // render the status back as a token so it round-trips (done → :done:, inprogress → :doing:)
+            const statusStr = task.status === "done" ? " :done:" : task.status === "inprogress" ? " :doing:" : "";
+            text += "\t".repeat(task.depth ?? 0) + task.title + dateStr + statusStr;
             text += "\n"
         });
         setTextAreaText(text);
@@ -123,10 +179,12 @@ export default function TextareaPlanner({ className }: { className?: string }) {
 
     const updatePreview = (value: string) => {
         setTextAreaText(value);
-        textToTaskItem(value);
+        textToTaskItem(value, true);
     };
 
     const handleSubmit = () => {
+        textToTaskItem(textAreaText, true);
+
         router.push("/dnd");
     };
 

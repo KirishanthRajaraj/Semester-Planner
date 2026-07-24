@@ -33,13 +33,10 @@ const STATUS_CONFIG: Record<TaskStatus, { label: string; icon: typeof Circle; cl
 function TaskStatusCell({ task }: { task: TaskItem }) {
   const tasks = useTaskStore((state) => state.tasks);
   const setTasks = useTaskStore((state) => state.setTasks);
+  const setStatus = useTaskStore((state) => state.setTaskStatusById);
   const status = task.status ?? "todo";
   const current = STATUS_CONFIG[status];
   const CurrentIcon = current.icon;
-
-  const setStatus = (newStatus: TaskStatus) => {
-    setTasks(tasks.map((t) => (t.id === task.id ? { ...t, status: newStatus } : t)));
-  };
 
   return (
     // fixed size so the badge<->toggle-group crossfade doesn't reflow the row;
@@ -51,7 +48,7 @@ function TaskStatusCell({ task }: { task: TaskItem }) {
       </div>
       <ToggleGroup
         value={[status]}
-        onValueChange={(values) => values[0] && setStatus(values[0] as TaskStatus)}
+        onValueChange={(values) => values[0] && setStatus(task.id, values[0] as TaskStatus)}
         className="absolute pointer-events-none opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100"
       >
         {(Object.keys(STATUS_CONFIG) as TaskStatus[]).map((key) => {
