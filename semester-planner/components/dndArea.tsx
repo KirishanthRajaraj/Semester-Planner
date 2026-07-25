@@ -15,6 +15,15 @@ export default function dndArea() {
     const weeks = useSemesterStore((state) => state.weeks);
     const semester = useSemesterStore((state) => state.semester);
 
+    // implementation day droppables
+    //check which days each week has in the background
+    //if it needs to be corrected, correct it, should start on mondays.
+    //have each weekday of that week in an array or use weeks startdate and loop through until enddate, which should be sunday
+
+    //change ondragend to support day
+    //render
+    //handle the edge cases
+
     return (
         <DragDropProvider
             onDragEnd={(event) => {
@@ -23,14 +32,9 @@ export default function dndArea() {
                 const { target, source } = event.operation;
                 if (!target) return;
 
-                // target is either a sibling task (sortable → read its group) or a bare
-                // container (read its id). both resolve to the destination group id.
                 const destGroup = isSortable(target) ? String(target.group) : String(target.id);
                 const draggedTaskId = source?.id;
 
-                // group is derived from date at render, so we only need to set the date:
-                // inbox → no date; a week → a date nudged one day inside the week so it
-                // doesn't land on the shared week boundary and match two weeks at once.
                 let newDate: Date | undefined = undefined;
                 if (destGroup.startsWith("week-")) {
                     const weekIndex = parseInt(destGroup.split("-")[1]) - 1;

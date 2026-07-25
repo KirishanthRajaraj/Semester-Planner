@@ -13,14 +13,6 @@ export default function Home() {
   const [semesterEnd, setSemesterEnd] = useState<Date | null>(null);*/
   const setSemester = useSemesterStore((state) => state.setSemester);
 
-
-  useEffect(() => {
-    /*
-    const storedStart = localStorage.getItem("semesterStart");
-    const storedEnd = localStorage.getItem("semesterEnd");*/
-    setSemester({ startDate: new Date("2026-09-15"), endDate: new Date("2027-1-30") });
-  }, []);
-
   return (
     <div>
       <h1 className="text-3xl font-bold mb-12">Semester Planner</h1>

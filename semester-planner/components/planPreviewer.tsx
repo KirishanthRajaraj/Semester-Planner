@@ -1,10 +1,13 @@
 'use client'
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSemesterStore } from "@/store/semesterStore";
 import { useTaskStore } from "@/store/taskStore";
 import { TaskItem } from "@/interfaces/taskItem";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { SemesterDates } from "./SemesterDates";
 
 function getWeeks(start: Date, end: Date) {
     const weeks: { startDate: Date; endDate: Date }[] = [];
@@ -70,7 +73,7 @@ export default function PlanPreviewer({ className }: { className?: string }) {
 
     return (
         <ScrollArea className={`${className} max-h-96 overflow-y-auto `}>
-            <p className="text-sm text-muted-foreground">Aktuelles Semester: {semester.startDate.toLocaleDateString()} - {semester.endDate.toLocaleDateString()}</p>
+            <SemesterDates />
             <div className="w-96 flex flex-col gap-4 p-4">
                 <TaskColumn title="Inbox" tasks={inbox} />
                 {weeks.map((week, i) => (

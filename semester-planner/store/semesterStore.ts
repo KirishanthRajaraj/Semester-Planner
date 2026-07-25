@@ -13,7 +13,7 @@ interface SemesterStore {
 export const useSemesterStore = create<SemesterStore>()(
     persist(
         (set) => ({
-            semester: { startDate: new Date(), endDate: new Date() },
+            semester: { startDate: new Date('2026-09-15'), endDate: new Date('2027-02-19') },
             setSemester: (semester) => set({ semester }),
             weeks: [],
             setWeeks: (weeks) => set({ weeks }),
