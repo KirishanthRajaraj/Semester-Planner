@@ -156,7 +156,6 @@ export default function TextareaPlanner({ className }: { className?: string }) {
             useTaskStore.getState().setTasks(items);
             console.log(items);
         }
-
     }
 
     // this function should always align with what textToTaskItem() does, but backwards

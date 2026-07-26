@@ -20,3 +20,6 @@ export const getDescendants = (tasks: TaskItem[], parentId: string): TaskItem[] 
         ...getDescendants(tasks, child.id),
     ]);
 }
+
+export const parentTasksSet = (tasks: TaskItem[]): Set<string> => 
+    new Set(tasks.map((t) => t.parentId).filter((pId): pId is string => pId !== undefined && pId !== null && pId.length > 0))
