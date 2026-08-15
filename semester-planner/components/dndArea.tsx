@@ -4,9 +4,8 @@ import { useState } from "react";
 import SortableTask from "./sortableTask";
 import { DragDropProvider } from "@dnd-kit/react";
 import { isSortable } from "@dnd-kit/react/sortable";
-import DroppableDate from "./droppable";
-import { useSemesterStore } from "@/store/semesterStore";
 import Droppable from "./droppable";
+import { useSemesterStore } from "@/store/semesterStore";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
 export default function dndArea() {
@@ -100,7 +99,7 @@ export default function dndArea() {
                     <div className="w-full flex flex-col gap-2 p-4">
                         {weeks.map((week, weekIndex) => (
                             <>
-                                <Droppable id={`week-${weekIndex + 1}`} title={`Week ${weekIndex + 1}`} key={weekIndex + 1}>
+                                <Droppable id={`week-${weekIndex + 1}`} title={`Week ${weekIndex + 1}`} key={weekIndex + 1} className={`w-full`}>
                                     {tasks.filter(task => task.date && task.date >= week.startDate && task.date <= week.endDate && task.noDay).map((task, index) => (
                                         <SortableTask key={task.id} task={task} index={index} group={`week-${weekIndex + 1}`} />
                                     ))}
@@ -108,11 +107,11 @@ export default function dndArea() {
 
                                 <div className="w-full grid grid-cols-7 gap-1">
                                     {getDays(week).map((day, dayIndex) => (
-                                        <DroppableDate id={`week-${weekIndex + 1}-day-${dayIndex + 1}`} title={day.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase()} isDay={true} key={`week-${weekIndex + 1}-day-${dayIndex + 1}`} className={`${day.getDay() != 1 && dayIndex == 0 ? COL_START_BY_DAY[day.getDay()] : ''}`}>
+                                        <Droppable id={`week-${weekIndex + 1}-day-${dayIndex + 1}`} title={day.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase()} isDay={true} key={`week-${weekIndex + 1}-day-${dayIndex + 1}`} className={`gap-3 bg-transparent ring-0 align-bottom h-min ${day.getDay() != 1 && dayIndex == 0 ? COL_START_BY_DAY[day.getDay()] : ''}`}>
                                             {tasks.filter(task => task.date && task.date.toDateString() === day.toDateString() && !task.noDay).map((task, index) => (
                                                 <SortableTask key={task.id} task={task} index={index} group={`week-${weekIndex + 1}-day-${dayIndex + 1}`} />
                                             ))}
-                                        </DroppableDate>
+                                        </Droppable>
                                     ))}
                                 </div>
                             </>
