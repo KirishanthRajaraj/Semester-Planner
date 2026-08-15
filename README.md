@@ -1,5 +1,7 @@
 # Semester Planer - ipro
 
+# Planung
+
 ## meilensteinplan
 
 ### Übersicht
@@ -9,7 +11,7 @@
 | M0 Vision & Vorbereitung | bis 13. Juni | 5h | ✅ abgeschlossen |
 | M1 Interviews, Anforderungen & Scope | bis 30. Juni | ~15h | ✅ abgeschlossen |
 | M2 Technologieentscheid & Learning neuer Technolgien | laufend | ~10h | ⬜ in progress |
-| M3 Prototyp Skateboard (MVP-Kern) & Designprozess, entscheid | bis 14. Juli | ~35h | ⬜ |
+| M3 Prototyp Skateboard (MVP-Kern) & Designprozess, entscheid | bis 14. Juli | ~35h | ✅  |
 | M4 User Evaulierungen, User Tests vom MVP | bis 21. Juli | ~10h | ⬜ |
 | M5 Prototyp Roller (2. Iteration ) | bis 9. August | ~30h | ⬜ |
 | M6 Feedback-Märkte, weiteres externes User Feedback | 10.–24. August | ~20h | ⬜ |
@@ -27,7 +29,7 @@
 - Übersicht verschaffen, groben meilensteinplan definieren, was zu tun ist
 - Repo & Doku aufsetzen
 
-#### M1 - Interviews, Anforderungen & Scope
+#### M1 - Interviews, Anforderungen & Scope | Verbindung zu ucdre Modul
 - 2-4 Interviews durchführen mit anderen studierenden, zur Problemvalidierung
 - Anforderungen priorisieren (MVP vs. Later)
 - Rationale dokumentieren (kritische Entscheidungen treffen & fragen klären)
@@ -125,15 +127,18 @@ nicht nach Reihenfolge, Fragen je nach Antwort des Benutzers stellen.
 
 - [ ] (*Gifs zeigen*, klingt das nach etwas, dass du dir vorstellen könntest zu nutzen? Was würde dich bremsen?)
 
-### Interviewresultate
+### Interviewresultate | Verbindung zu ucdre Modul
 
 Siehe separates Dokument "interview_resultate.md".
 
-## Wireframes
+## Wireframes | Verbindung zu ucdre Modul
 
 ###
 Wireframe v1, MVP:
 ![alt text](Ablage/img/Wireframe_v1.png)
+
+Wireframe dnd Erstversionen:
+![alt text](Ablage/img/dnd_versionen.png)
 
 ## Technologieentscheid
 
@@ -175,7 +180,6 @@ Allerdings könnte man theoretisch andere libraries, die das handeln kombinieren
 
 Für Aussagen wie "2h", oder "1h 10min", gibt es mehrere libraries jurations.js, parse-duration, js-duration-parser, hier versuche ich am besten mehrere aus.
 
-
 ##### State library
 | Kriterium | Zustand | Redux (Toolkit) | Gewichtung |
 |---|---|---|---|
@@ -213,10 +217,10 @@ Ich tendiere eher dagegen.
 ### MVP
 | ID | Beschreibung | Prio | Aufwand |
 |---|---|---|---|
-| F01 | **Verwaltung** verschiedener **Module** | Hoch | Tief |
+| F01 | **Verwaltung** verschiedener **Module** (Level 1 Tasks) | Hoch | Tief |
 | F02 | **Bulk add Aufgaben/Unteraufgaben** pro Modul (vereinfachte Version), per grossem Rich text Feld und Language detection | Hoch | Hoch |
 | F03 | **Bulk edit** Aufgaben/Unteraufgaben | Hoch | Hoch |
-| F04 | **dnd Editor** der Aufgaben/Unteraufgaben, mindestens wochenbasiert von Start- bis Enddatum des Moduls | Hoch | Mittel | 
+| F04 | **dnd Editor** **Preview** der Aufgaben/Unteraufgaben, mindestens wochenbasiert von Start- bis Enddatum des Moduls | Hoch | Mittel | 
 | F05 | **Overview page** <ul><li>Aufgaben Table view, mit Status</li><li>Fortschrittsanzeige aller Module</li></ul> | Hoch | Tief |
 | F07 | **Aufgaben inbox View**, auf Overview Page & dnd Editor Preview | Hoch | Tief |
 | F08 | **browser localStorage** Speicherung| Hoch | Tief |
@@ -245,7 +249,7 @@ backlog:
 - **Social Features** Freunde hinzufügen. Eigene Planung & Profil teilen können
 - ...
 
-### Brainstorming (Entwurf)
+### Brainstorming weitere Features nach den Interviews
 - A | bulk add aufgaben mit einem textfeld, statt mit mehreren input feldern, Natural language detection (zuerst minimal), drag n drop aufgaben über mehrere wochen des zeitplanes/kalenders
     - für schnelle eintragung und planung
 - A | Bulk bearbeitung erlauben, auch über das eine textfeld, drag n drop
@@ -262,7 +266,7 @@ backlog:
 - A | automatische popups um schnell verpasste aufgaben zu verschieben
     - Interviews: bei Gewissen schwanken Energielevels tagesabhängig, starre Pläne wie "jeden Abend eine Übungsaufgabe lösen" werden dann oft nicht eingehalten
     - Interviews: verpasste Zwischentermine werden generell nicht aktiv nachverfolgt, bleiben stehen oder werden vergessen, allenfalls manuell neu eingeplant
-- A | usability tests durchführen, design iterationen durchführen (kein Feature)
+- A | usability tests durchführen, design iterationen durchführen, die App nicht überladen! (kein Feature)
     - Interviews: mangelnde Intuitivität schreckt ab, hohe lernkurve schreckt ab!
 - B | ein fokus modus, bei denen alle Aufgaben ausser einer ausgeblendet werden
     - Interviews: bei Gewissen stressen weit entfernte Termine (z.B. in einem halben Jahr), bzw. weit entfernte Termine beinflussen schon ihre Leistung jetzt
@@ -282,9 +286,21 @@ backlog:
 - C | social features
 - ...
 
+## Designentscheide
+
+### Fragen
+**Wie instruiere / zeige ich Erstusern für was die App ist und wie man sie verwendet?**
+In meinem v1 Wireframe habe ich auf der ersten Seite nur ein Textfeld, da werden die wenigsten direkt verstehen dass es sich um eine Planungsapp handelt,
+bei der man bulk Aufgaben hinzufügen kann, jede Zeile eine Aufgabe ist und man per Tab Unteraufgaben erstellen kann.
+
+Option 1: Placeholder ghost Text in der text area
+Option 2: Tooltip neben dem text area Label
+Option 3: Ein Previewvideo, bei dem alles grafisch erklärt wird
+Option 4: Tutorial, bei dem der User Schritt für Schritt mit hervorgehebenen Elementen erklärt bekommt wie alles funktioniert.
+Option 5: Ein Fragezeichen in der Navigation, bei der die App erklärt wird
 
 ## Rationale / Fragenklärung / sonstige Entscheidungshilfe
-Ich habe bemerkt, dass mir einige Fragen/Unklarheiten aufgetaucht sind während dem Vorbereiten dieses Projektes, die mit der Zeit viel Aufwand aufweisen und sich auch als wichtig erscheinen für die Laufbahn des Projektes. Deshalb dokumentiere ich sie hier. Dieser Abschnitt unterstützt auch als generelle Entscheidungshilfe.
+Ich habe bemerkt, dass mir einige Fragen/Unklarheiten aufgetaucht sind während dem Vorbereiten dieses Projektes, die mit der Zfeit viel Aufwand aufweisen und sich auch als wichtig erscheinen für die Laufbahn des Projektes. Deshalb dokumentiere ich sie hier. Dieser Abschnitt unterstützt auch als generelle Entscheidungshilfe.
 
 ### Fragen
 **Da dieses Projekt hauptsächlich ein natural language bulk Aufgabenplaner ist, warum nicht einfach ein llm mit anbindung zum persönlichen Kalender benutzen?**
@@ -296,3 +312,146 @@ Ich habe nach dem einreichen der Projektidee gemerkt, dass es den grössten Teil
 - Personalisierung & Persistence. Man kann mit den von letzten Monat eingetragener Planung, welches gestern ein wenig angepasst wurde, ziemlich einfach weitere Dinge machen, wie z.b. Auswertungen, Visualisierungen, etc.
 - Es ist gute Übung für allgemein schnelle, iterative Softwareentwicklung
 Aus diesen Gründen finde ich es trotzdem eine gute Idee
+
+**Wann mache ich user Tests. nach Erstellung des MVP/Prototypen oder nach vollständigem 1.0?**
+Nach dem Prototypen kann ich nur die Features testen lassen, usability z.b. nicht da dann das Design etc. nicht in der finalen Version sein wird.
+Allerdings möchte ich auch Usability möglichst früh testen und Fehler erkennen, ohne das ich 180h in die falsche Richtung gehe
+
+**teste ich die erste iteration mit der finalen iteration der app mit denselben personen oder mit neuen?**
+Ich will Erstkontakte von Usern mit meiner App testen. Wenn Personen die App bereits kennen, teste ich nicht das was ich herausfinden möchte.
+
+**Sollte ich eine genauere Planung erlauben, also z.b. eine Tagesplanung hinzufügen?** 
+
+**Sollte der Text Editor nur rein als task capture funktionieren oder sollte der Bulk Edit auch damit gesteuert sein?**
+Nachteile:
+- Viel Synchronisierungsaufwand & mögliche Bugs
+    - wiederkehrende Tasks z.B. "notizen durchlesen every friday". was wenn der user im dnd editor oder in der tabelle einen friday vom every friday task herausnimmt und der user zurück zum texteditor view geht? im text editor kann dann nicht mehr "notizen durchlesen every friday"
+    -  
+
+
+# Realisieren / Umsetzung
+
+## Inputfeld zum planen
+
+## Objekt / Datenstruktur
+
+Um mit den eingegebenen Daten zu arbeiten, brauche ich ein Objekt / Datenstruktur. 
+Als erstes habe ich an folgendes gedacht um mit den verschachtelten Aufgaben zu arbeiten.
+
+export interface TaskItem {
+  id: string;
+  title: string;
+  children?: TaskItem;
+  ...
+}
+
+Allerdings würde es hier mühsam werden rekursiv die children durchzugehen könnte mühsam werden.
+Es kommen noch folgende in Frage.
+
+export interface TaskItem {
+  id: string;
+  title: string;
+  childIds?: string;
+  ...
+}
+
+export interface TaskItem {
+  id: string;
+  title: string;
+  childIds?: string;
+  parentId?: string;
+  ...
+}
+
+export interface TaskItem {
+  id: string;
+  title: string;
+  parentId?: string;
+  ...
+}
+
+Nach ein wenig recherche, scheint die Version mit nur der parentId am besten für mich zu sein. Da ich später aus diesen Objekten eine Drag and Drop Komponente bauen möchte.
+So müsste ich bei änderung des Parents von einem Objekt, bei Drag and Drop nur beim geschobenen Objekt die ParentId ändern und nicht ein Property bei zwei Objekten aktualisieren.
+Parent und ChildIds im selben Objekt anzugeben ist auch redundant.
+
+### Tasks Drag and Drop Weekview
+Zuerst wollte ich meine originelle Idee mit dem Drag n Drop aus dem MVP nehmen, da die Lösung mit dem Tree Drag and Drop eher ambitiös war mit zu vielen Edge Cases.
+Allerdings ist das Drag and Drop ein wichtiges Tool zur Planung, deshalb habe ich mit das dnd nochmals vereinfacht überlegt:
+
+Spezifikationen erste dnd Version:
+- dnd-kit/react benutzen, nicht dnd-kit-sortable-tree, da ich weg vom tree drag n drop gehe
+- vertikal oder horizontal wöchentliche droppable Zonen
+- Alle Tasks sind separat, keine tree Darstellung, auch child tasks
+- Child tasks haben ein kleines Label auf ihrem Item z.b. prog1 > rekursion, welche die Parent Struktur anzeigt
+- Noch keine 'bewege Parent, bewege auch deren children' Logik oder Darstellung
+- Es wird auf einer separaten Seite sein, nicht neben dem Planungs Text Editor, so kann Synchronisierungsaufwand vermieden werden
+
+#### Übersicht dnd-kit/react library
+Benötigte Komponenten der dnd-kit/react library:
+- DragDropProvider
+- useDraggable oder useSortable
+- useDroppable
+
+**DragDropProvider**, alle dnd Komponenten müssen hier beinhaltet sein, der DragDropProvider koordiniert ebenfalls die Drag events.
+**useDraggable**, macht aus einem Element ein draggable element. In meinem Fall müssen alle Tasks des Semesters draggable sein. 
+**useSortable**, dasselbe wie useDraggable, allerdings mit sortier Funktionalität innerhalb von Wochen.
+**useDroppable**, macht aus einem Element ein droppable Element, bei dem man draggable elemente einfügen kann. In meinem Fall sind es alle Wochen des Semesters, die dynamisch generiert werden, je nach Semesterlänge.
+
+### allgemein edge cases
+- wie werden Tasks mit mehreren datumsangaben gehandled?
+- wie werden child Tasks die über dem datum des parents liegen gehandled?
+- wiederkehrende Tasks (sofern es diese geben wird), wie "every friday notizen durchlesen"
+    - sollten ausserhalb des Text Editors nicht bearbeitbar sein, wenn dann nur remove all
+    - sollten innerhalb des Text Editors nicht überschrieben werden können mit anderen daten
+
+## F03 Bulk Edit
+
+Ursprünglich geplant: Bulk Edit über Text Editor. Nach MVP-Grossteil: mögliche Schwierigkeiten aufgefallen → genauer angeschaut.
+
+### Bulk Edit per Text Editor: Nachteile
+* dnd braucht eine stabile ID pro Task. Aktuell vergibt der Text Editor bei jedem onChange neue UUID -> dnd sieht es als "neuen" Task, Reihenfolge geht verloren, falls sortierung innerhalb droppable containern implementiert wurde. So ist concurrent Editing von Tasks, zwischen Tabelle, dnd und Text Editor nicht möglich.
+* Datum-Problem: Datum muss im Text stehen, darf aber nicht gleichzeitig im Titel UND als store-property existieren -> sonst doppelt nach re-render. Bsp: "hausaufgaben tomorrow" -> "tomorrow" muss beim Speichern raus, sonst nach Reload "hausaufgaben 11. Mai tomorrow"
+* unintuitiv am Anfang, kein bekanntes UI-Konzept -> Anleitung oder sonstiges nötig
+
+### Bulk Edit per Text Editor: Vorteile
+* USP, meine App ist so nicht "noch eine weitere Todo App"
+* schnelles bulk editing: ctrl+x ganze Zeile, Tab mitten im Wort -> ganze Zeile einrücken, search&replace möglich. Shortcuts sehr gut erweiterbar, da der Text Editor, Code Mirror 6 ursprünglich ein Editor für Code ist
+* unintuitiv, aber schnell gelernt (Text-Editor-Bedienung kennt jeder)
+* übersichtlich: alle Tasks des Semesters auf einen Blick, UND direkt editierbar
+* wenig Navigation zwischen Komponenten, wenig Klicks. Planungs-Flow bleibt so erhalten.
+
+### Alternativen
+**Table Bulk Edit** (evtl. collapsible parent rows): ungünstig
+* kein schnelles re-parenting, re-ordering möglich, wie im Text Editor
+* multi-task edits möglich, aber sehr klick-lastig -> genau das, was ich vermeiden möchte mit meiner app
+
+**Text Editor Bulk Edit ohne Date/Status, nur Hierarchie/Reorder/Titel**:
+* Schade um chrono-node, ungenutzt
+* User müsste zwischen Fenstern wechseln (Datum, Subtasks) → Kontext-Switching, genau das, was vermieden werden soll
+
+### Nebenentscheid: Tagesplanung
+Zusätzlich zu Wochenplanung (dnd) auch Tagesplanung.
+Aufwand: 2-6h. Task-Objekt arbeitet schon mit Datum-Property → nur neue droppable areas pro Wochentag nötig. Komplexer falls Sortierung innerhalb droppable areas persistiert werden muss (Store/Getter/Objekthandling an vielen Stellen betroffen). Vor Implementierung genauer planen.
+
+### Entscheid Bulk Edit: komplett über Text Editor
+Nach den genannten Vorteilen ist die Entscheidung klar für mich. Text Editor übernimmt neben Quick Capture auch komplette Task-Verwaltung. 
+* eine View: Text Editor fetcht & stellt Tasks korrekt dar
+* Status sichtbar & aktualisierbar
+* Date & Status müssen aus Titel gecleaned werden — sonst z.B. "kapitel 2 lesen 28/09/26 :doing:" als Titel gespeichert → sichtbar in anderen App-Teilen als Tasktitel
+
+## F05 ... Fortschrittsanzeige aller Module | Verbindung zu prog1 Modul
+Dieses Feature ist spannend, da es direkt eine Verknüpfung zu prog1 darsellt. Ein kleines eingehäustes Feature, bei dem es darum geht einen rekursiven Algorithmus zu entwicklen, der den Fortschritt aller Module bzw. aller level 1 Task Items aufzeigt:
+![alt text](/Ablage/img/TaskProgress.png)
+Ein Task gilt als 100% erledigt, wenn alle sub Tasks auch erledigt sind. Allerdings, wenn z. B. Task C1 erledigt ist zählt es nicht gleich viel zum Fortschritt wie wenn Task B3 oder Task B1 erledigt ist. Task A1 ist der Root Level 1 Task für den der Fortschritt gemessen wird (z. B. ein Modul). 
+**Fall Task B1 ist erledigt:**
+1 / (Anzahl Tasks auf diesem Level) -> 1 / 3. Der Progress Bar sollte um ein 1/3 hoch.
+**Fall Task C1 ist erledigt:**
+(1 / (Anzahl Tasks auf diesem Level)) * (die Brüche der vorherigen Levels) -> (1 / 2) * (1 / 3) = 1 / 6. Der Progress Bar sollte um ein 1 / 6 hoch.
+
+Das Ganze wird hier wegen der unendlichen Child Struktur am besten rekursiv gemacht. Aktuell stimmt der Algorithmus den ich geschrieben habe noch nicht ganz, deswegen muss hier noch dahinter.
+
+##  M3 Prototyp Skateboard verstpätete Erledigung
+Diesen Meilenstein konnte ich erfolgreich nach Plan erledigen. Allerdings hatte ich ungefähr 15 Tage Verspätung. Ich habe die Zeit deutlich unterschätzt. Einbindung von Libraries & Komponenten die ich nicht kenne (dnd-kit, Code mirror, tanstack datatable) habe ich unterschätzt, regelmässig Gedanken für Umentscheidungen haben vorallem zur Verspätung geführt. Diese Erkenntnisse nehme ich für die nächsten Projekte mit, mehr Zeit für unbekanntes einplanen & den Scope kleiner einplanen, und vor allem dabei bleiben.
+
+## M4 User Evaulierungen, User Tests vom MVP
+Dies habe ich gestrichen, da ich eine Pause eingelegt habe von Anfang Juli bis mitte August. Ich habe in meinem Meilensteinplan, keine Pausen / Ferien eingeplant. Ich habe für den ganzen Sommer Arbeit eingeplant, das war nicht sehr geschickt. Das nehme ich auch für das nächste mal mit. Da der Feedbackmarkt auch bald ist, hat es für meine eigenen ersten User Validierungen keine grossen nutzen.

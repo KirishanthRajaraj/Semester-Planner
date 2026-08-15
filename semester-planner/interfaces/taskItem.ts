@@ -7,4 +7,5 @@ export interface TaskItem {
   parentId?: string;
   depth?: number;
   status?: TaskStatus;
+  noDay?: boolean;
 }

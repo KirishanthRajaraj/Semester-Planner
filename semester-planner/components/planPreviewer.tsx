@@ -9,15 +9,22 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { SemesterDates } from "./SemesterDates";
 
+
 function getWeeks(start: Date, end: Date) {
     const weeks: { startDate: Date; endDate: Date }[] = [];
-    let currentWeek = new Date(start);
-    while (currentWeek < end) {
-        const weekEnd = new Date(currentWeek);
-        weekEnd.setDate(weekEnd.getDate() + 7);
-        weeks.push({ startDate: currentWeek, endDate: weekEnd < end ? weekEnd : end });
-        currentWeek = weekEnd;
+    let weekStart = new Date(start);
+    while (weekStart < end) {
+        // Sunday
+        const weekEnd = new Date(weekStart);
+        let startDay = weekStart.getDay(); // 0=Sun - 6=Sat
+        const weekdayIndex = (startDay + 6) % 7; // konvertieren zu, Mon=0 - Sun=6, damit es einfacher ist zum rechnen
+        const daysToSunday = 6 - weekdayIndex;
+        weekEnd.setDate(weekStart.getDate() + daysToSunday);
+        weeks.push({ startDate: weekStart, endDate: weekEnd < end ? weekEnd : end });
+        weekStart = new Date(weekEnd);
+        weekStart.setDate(weekStart.getDate() + 1);
     }
+    console.log(weeks);
     return weeks;
 }
 

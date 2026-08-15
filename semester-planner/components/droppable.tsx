@@ -2,7 +2,7 @@ import { useDroppable } from "@dnd-kit/react";
 import { CollisionPriority } from "@dnd-kit/abstract";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
-export default function droppable({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
+export default function droppable({ id, title, isDay, className, children }: { id: string; title: string; isDay?: boolean; className?: string; children: React.ReactNode }) {
     const { isDropTarget, ref } = useDroppable({
         id,
         type: 'column',
@@ -16,8 +16,8 @@ export default function droppable({ id, title, children }: { id: string; title: 
         <>
             {(title.includes("Week")) ?
                 (
-                    <div className="flex flex-col gap-1 p-4 rounded-md border-bottom gap-4">
-                        <h2 className="text-lg font-bold border-b-4">{title}</h2>
+                    <div className={`flex flex-col gap-1 p-4 rounded-md border-bottom gap-4 ${className}`}>
+                        <h2 className={`text-lg font-bold border-b-4 ${isDay ? 'opacity-50 text-sm' : ''}`}>{title}</h2>
                         <div ref={ref} className={`flex flex-col gap-1 min-h-16 ${style}`}>
                             {children}
                         </div>
@@ -25,11 +25,11 @@ export default function droppable({ id, title, children }: { id: string; title: 
                 )
                 :
                 (
-                    <Card>
+                    <Card className={`${className}`}>
                         <CardHeader>
-                            <CardTitle>{title}</CardTitle>
+                            <CardTitle className={isDay ? 'opacity-50 text-sm' : ''}>{title}</CardTitle>
                         </CardHeader>
-                        <CardContent ref={ref} className={`flex flex-col gap-1 min-h-12 ${style}`}>
+                        <CardContent ref={ref} className={`flex flex-col gap-1 min-h-12 bg-none ${style}`}>
                             {children}
                         </CardContent>
                     </Card >
