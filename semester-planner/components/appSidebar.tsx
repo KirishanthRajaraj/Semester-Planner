@@ -26,10 +26,10 @@ export default function AppSidebar() {
     return (
 
         <Sidebar collapsible="icon" variant="floating">
-            <SidebarHeader className="flex items-end justify-center">
+            <SidebarHeader className="bg-muted/20 flex items-end justify-center">
                 <SidebarTrigger />
             </SidebarHeader>
-            <SidebarContent>
+            <SidebarContent className="bg-muted/20">
                 <SidebarGroup>
                     <SidebarMenu>
                         {navItems.map((item) => (

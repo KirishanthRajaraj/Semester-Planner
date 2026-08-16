@@ -25,7 +25,8 @@ export default function SortableTask({ task, index, group }: { task: TaskItem; i
             className={`w-full flex flex-row items-center justify-between gap-4 text-sm font-semibold p-3 rounded-md bg-primary text-background cursor-grab active:cursor-grabbing ${isDragging ? "opacity-50" : ""}`}
         >
                 <p className=" font-bold">{task.title}</p>
-                <p className="text-xs font-extrabold">{constructParentString(task)}</p>
+                <p className="text-xs font-extrabold bg-primary/30 dark:bg-primary/50 rounded-sm p-0.5 shadow-background/10 shadow-sm">{constructParentString(task)}</p>
+                <p className="text-xs font-extrabold bg-cyan-400/30 dark:bg-cyan-400/50 rounded-sm p-0.5">{task.duration !== undefined ? `${task.duration / 60}h` : ""}</p>
             <div className="w-6">
                 <DragDropIcon />
             </div>

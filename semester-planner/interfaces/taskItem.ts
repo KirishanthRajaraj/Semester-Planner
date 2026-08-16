@@ -4,6 +4,7 @@ export interface TaskItem {
   id: string;
   title: string;
   date?: Date;
+  duration?: number;
   parentId?: string;
   depth?: number;
   status?: TaskStatus;

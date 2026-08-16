@@ -48,6 +48,7 @@ const editorTheme = EditorView.theme({
 export default function TextareaPlanner({ className }: { className?: string }) {
     const [textAreaText, setTextAreaText] = useState<string>("");
     const router = useRouter();
+    const DURATION_REGEX = /\b(\d+(?:\.\d+)?)\s?(hours?|hrs?|h)\b/i;
 
     useEffect(() => {
         taskItemsToText();
@@ -61,7 +62,7 @@ export default function TextareaPlanner({ className }: { className?: string }) {
         // date spans over the whole doc (chrono gives absolute offsets)
         chrono.parse(text).forEach((result) => {
             ranges.push(
-                Decoration.mark({ class: "bg-primary/30 dark:bg-primary/50 rounded-sm" })
+                Decoration.mark({ class: "bg-primary/30 dark:bg-primary/50 rounded-sm p-0.5" })
                     .range(result.index, result.index + result.text.length)
             );
         });
@@ -69,13 +70,14 @@ export default function TextareaPlanner({ className }: { className?: string }) {
         // every line: colour the :done:/:doing: token, and strike through done lines
         let offset = 0;
         for (const line of text.split("\n")) {
-            const statusMatch = line.match(/:(done|doing):\s*$/i);
+            const statusMatch = line.match(/:(done|doing):/i);
+            console.log("line:", line, "statusMatch:", statusMatch);
             if (statusMatch && statusMatch.index !== undefined) {
                 const isDone = statusMatch[1].toLowerCase() === "done";
-                const tokenFrom = offset + statusMatch.index;
+                const tokenStart = offset + statusMatch.index;
                 ranges.push(
                     Decoration.mark({ class: isDone ? "text-green-500 font-bold" : "text-amber-500 font-bold" })
-                        .range(tokenFrom, tokenFrom + statusMatch[0].length)
+                        .range(tokenStart, tokenStart + statusMatch[0].length)
                 );
                 if (isDone) {
                     const indent = line.match(/^\t*/)?.[0].length ?? 0;
@@ -90,7 +92,22 @@ export default function TextareaPlanner({ className }: { className?: string }) {
             offset += line.length + 1; // + the newline, save the offset
         }
 
-        return Decoration.set(ranges, true); // true = sort by position
+        // colour the durations
+        let offsetDuration = 0;
+        for (const line of text.split("\n")) {
+            const durationMatch = line.match(DURATION_REGEX);
+            console.log("line:", line, "durationMatch:", durationMatch);
+            if (durationMatch && durationMatch.index !== undefined) {
+                const durationStart = offsetDuration + durationMatch.index;
+                ranges.push(
+                    Decoration.mark({ class: "bg-cyan-400/30 dark:bg-cyan-400/50 rounded-sm p-0.5" })
+                        .range(durationStart, durationStart + durationMatch[0].length)
+                );
+            }
+            offsetDuration += line.length + 1;
+        }
+
+        return Decoration.set(ranges, true);
     }
 
     const highlightExtension = ViewPlugin.fromClass(
@@ -121,10 +138,21 @@ export default function TextareaPlanner({ className }: { className?: string }) {
             // remove :done:/:doing: from the text before saving
             let status: TaskStatus = "todo";
             let rest = line;
-            const statusMatch = rest.match(/:(done|doing):\s*$/i);
+            const statusMatch = rest.match(/:(done|doing):/i);
             if (statusMatch && statusMatch.index !== undefined) {
                 status = statusMatch[1].toLowerCase() === "done" ? "done" : "inprogress";
-                rest = rest.slice(0, statusMatch.index);
+                const statusToken = rest.slice(statusMatch.index, statusMatch.index + statusMatch[0].length);
+                rest = rest.replace(statusToken, "").trim();
+            }
+
+            // remove durations from the text before saving
+            let duration = undefined;
+            const durationMatch = rest.match(DURATION_REGEX);
+            if (durationMatch && durationMatch.index !== undefined) {
+                const durationToken = rest.slice(durationMatch.index, durationMatch.index + durationMatch[0].length);
+                rest = rest.replace(durationToken, "").trim();
+                const num = Number(durationMatch[0].match(/\d+(?:\.\d+)?/)?.[0]); // "1.5 hours" -> 1.5
+                duration = num * 60;
             }
 
             const parsedDates = chrono.parse(rest);
@@ -147,6 +175,7 @@ export default function TextareaPlanner({ className }: { className?: string }) {
                 id: crypto.randomUUID(),
                 title: title,
                 date: date,
+                duration: duration,
                 status: status,
                 parentId: parentAtDepth[depth - 1],
                 depth: depth
@@ -172,15 +201,20 @@ export default function TextareaPlanner({ className }: { className?: string }) {
         const tasks: TaskItem[] = useTaskStore.getState().tasks;
         let text: string = "";
         tasks.forEach((task, index) => {
-            // absolute named-month form ("24 Jul 2026") re-parses to the same Date via chrono,
-            // so save→load→save doesn't drift (unlike a relative phrase or DD/MM/YYYY).
+            // render date
             const dateStr = task.date
                 ? " " + task.date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
                 : "";
-            // render the status back as a token so it round-trips (done → :done:, inprogress → :doing:)
+            // render status
             const statusStr = task.status === "done" ? " :done:" : task.status === "inprogress" ? " :doing:" : "";
             text += "\t".repeat(task.depth ?? 0) + task.title + dateStr + statusStr;
+            // render duration
+            if (task.duration) {
+                const hours = task.duration / 60;
+                text += " " + hours + "h";
+            }
             text += "\n"
+
         });
         setTextAreaText(text);
     }
@@ -204,7 +238,11 @@ export default function TextareaPlanner({ className }: { className?: string }) {
                 </span>
                 |
                 <span>
-                    e. g. <span className="bg-primary p-0.5 text-background font-bold rounded-md">next week</span> = due date
+                    e. g. <span className="bg-primary/70 p-0.5 text-background font-bold rounded-md">next week</span> = due date
+                </span>
+                |
+                <span>
+                    e. g. <span className="bg-cyan-400/70 p-0.5 text-background font-bold rounded-md">0.5h</span> = duration
                 </span>
                 |
                 <span>
