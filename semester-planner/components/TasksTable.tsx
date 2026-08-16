@@ -1,22 +1,12 @@
 import {
   ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
 } from "@tanstack/react-table"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Circle, CircleDot, CircleCheck } from "lucide-react";
 import { useTaskStore } from "@/store/taskStore";
 import { TaskItem, TaskStatus } from "@/interfaces/taskItem";
-import { isTaskOverdue } from "@/lib/taskOperations";
+import { constructParentString, isTaskOverdue } from "@/lib/taskOperations";
 import { DataTable } from "./ui/datatable";
 
 interface DataTableProps<TData, TValue> {
@@ -75,6 +65,12 @@ export function TasksTable() {
       accessorKey: "date",
       header: "Date",
       cell: ({ row }) => row.original.date?.toLocaleDateString("de-CH") ?? "—",
+    },
+    {
+      id: "ancestors",
+      header: "Ancestors",
+      cell: ({ row }) => constructParentString(row.original),
+
     },
     {
       accessorKey: "status",

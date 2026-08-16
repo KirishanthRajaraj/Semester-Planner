@@ -1,7 +1,7 @@
 'use client'
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { KanbanSquare, LayoutDashboard, NotepadText } from "lucide-react";
+import { KanbanSquare, LayoutDashboard, NotepadText, Settings } from "lucide-react";
 import {
     Sidebar,
     SidebarContent,
@@ -14,9 +14,10 @@ import {
 } from "./ui/sidebar";
 
 const navItems = [
-    { title: "Editor", url: "/", icon: NotepadText },
-    { title: "Übersicht", url: "/overview", icon: LayoutDashboard },
-    { title: "Planung", url: "/plan", icon: KanbanSquare },
+    { title: "Text Plan", url: "/", icon: NotepadText },
+    { title: "Plan", url: "/plan", icon: KanbanSquare },
+    { title: "Overview", url: "/overview", icon: LayoutDashboard },
+    { title: "Settings", url: "/settings", icon: Settings },
 ];
 
 export default function AppSidebar() {

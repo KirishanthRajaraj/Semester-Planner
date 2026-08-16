@@ -78,9 +78,8 @@ export default function PlanPreviewer({ className }: { className?: string }) {
     );
 
     return (
-        <ScrollArea className={`${className} max-h-96 overflow-y-auto `}>
-            <SemesterDates />
-            <div className="w-96 flex flex-col gap-4 p-4">
+        <ScrollArea className={`${className} max-h-96 overflow-y-auto w-full`}>
+            <div className="w-full flex flex-col gap-4 p-4">
                 <TaskColumn title="Inbox" tasks={inbox} />
                 {weeks.map((week, i) => (
                     <TaskColumn

@@ -11,7 +11,7 @@ const formatDate = (d: Date) =>
 const inlineInputClass =
     "inline-block field-sizing-content h-auto w-auto border-0 bg-transparent text-sm text-muted-foreground shadow-none underline-offset-4 hover:underline focus-visible:text-foreground focus-visible:underline focus-visible:ring-0";
 
-export function SemesterDates() {
+export function SemesterDates({ className }: { className?: string }) {
     const semester = useSemesterStore((s) => s.semester);
     const setSemester = useSemesterStore((s) => s.setSemester);
 
@@ -44,7 +44,7 @@ export function SemesterDates() {
     };
 
     return (
-        <div className="flex flex-col gap-1">
+        <div className={`flex flex-col gap-1 ${className}`}>
             <p className="text-sm text-muted-foreground mb-1">Aktuelles Semester:</p>
 
             <p className="flex flex-wrap items-center gap-x-1 text-sm text-muted-foreground">

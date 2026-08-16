@@ -14,15 +14,6 @@ export default function dndArea() {
     const weeks = useSemesterStore((state) => state.weeks);
     const semester = useSemesterStore((state) => state.semester);
 
-    // implementation day droppables
-    //check which days each week has in the background
-    //if it needs to be corrected, correct it, should start on mondays.
-    //have each weekday of that week in an array or use weeks startdate and loop through until enddate, which should be sunday
-
-    //change ondragend to support day
-    //render
-    //handle the edge cases
-
     const COL_START_BY_DAY: Record<number, string> = {
         0: "col-start-7", // Sun
         1: "col-start-1", // Mon
@@ -99,15 +90,19 @@ export default function dndArea() {
                     <div className="w-full flex flex-col gap-2 p-4">
                         {weeks.map((week, weekIndex) => (
                             <>
-                                <Droppable id={`week-${weekIndex + 1}`} title={`Week ${weekIndex + 1}`} key={weekIndex + 1} className={`w-full`}>
+                                <Droppable id={`week-${weekIndex + 1}`} title={`Week ${weekIndex + 1}`} key={weekIndex + 1} week={week} className={`w-full`}>
                                     {tasks.filter(task => task.date && task.date >= week.startDate && task.date <= week.endDate && task.noDay).map((task, index) => (
                                         <SortableTask key={task.id} task={task} index={index} group={`week-${weekIndex + 1}`} />
                                     ))}
                                 </Droppable>
 
-                                <div className="w-full grid grid-cols-7 gap-1">
+                                <div className="w-full grid grid-cols-7 gap-2 mb-4">
                                     {getDays(week).map((day, dayIndex) => (
-                                        <Droppable id={`week-${weekIndex + 1}-day-${dayIndex + 1}`} title={day.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase()} isDay={true} key={`week-${weekIndex + 1}-day-${dayIndex + 1}`} className={`gap-3 bg-transparent ring-0 align-bottom h-min ${day.getDay() != 1 && dayIndex == 0 ? COL_START_BY_DAY[day.getDay()] : ''}`}>
+                                        <Droppable id={`week-${weekIndex + 1}-day-${dayIndex + 1}`} 
+                                        title={day.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase()} 
+                                        isDay={true} key={`week-${weekIndex + 1}-day-${dayIndex + 1}`} 
+                                        className={`gap-3 bg-transparent ring-0 align-bottom h-min ${day.getDay() != 1 && dayIndex == 0 ? COL_START_BY_DAY[day.getDay()] : ''}`} 
+                                        isToday={day.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)}>
                                             {tasks.filter(task => task.date && task.date.toDateString() === day.toDateString() && !task.noDay).map((task, index) => (
                                                 <SortableTask key={`day-${dayIndex + 1}-${task.id}`} task={task} index={index} group={`week-${weekIndex + 1}-day-${dayIndex + 1}`} />
                                             ))}

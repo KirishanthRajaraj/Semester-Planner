@@ -60,7 +60,7 @@ export default function Overview() {
 
     return (
         <>
-            <div className="container font-sans flex flex-col flex-1 justify-center">
+            <div className="font-sans flex flex-col flex-1 justify-center">
 
                 <h1 className="text-3xl font-bold mb-12 mt-16">Übersicht</h1>
                 <TasksTable />

@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { TaskItem, TaskStatus } from "@/interfaces/taskItem";
 import { useTaskStore } from "@/store/taskStore";
+import { ArrowRightToLine } from "lucide-react"
 import parse from 'parse-duration'
 
 // text editor styles
@@ -17,7 +18,7 @@ const editorTheme = EditorView.theme({
     "&": {
         backgroundColor: "transparent",
         color: "var(--foreground)",
-        border: "1px solid var(--border)",
+        border: "2px solid var(--border)",
         borderRadius: "var(--radius)",
     },
     "&.cm-focused": {
@@ -192,13 +193,25 @@ export default function TextareaPlanner({ className }: { className?: string }) {
     const handleSubmit = () => {
         textToTaskItem(textAreaText, true);
 
-        router.push("/dnd");
+        router.push("/plan");
     };
 
     return (
-        <div>
+        <div className={`w-full ${className} min-h-96`}>
+            <div className="flex items-center gap-4 py-2 text-muted-foreground text-sm">
+                <span className="flex items-center gap-1">
+                    <ArrowRightToLine className="w-10 h-6 border-2 py-0.5 pl-1 rounded-sm" color="white" /> <span> = child task </span>
+                </span>
+                |
+                <span>
+                    e. g. <span className="bg-primary p-0.5 text-background font-bold rounded-md">next week</span> = due date
+                </span>
+                |
+                <span>
+                    task b <span className="text-green-600">:done:</span> = status
+                </span>
+            </div>
             <CodeMirror
-                className={`${className} min-h-96 p-4`}
                 placeholder="e.g. math homework due tomorrow at 18:00"
                 basicSetup={{
                     lineNumbers: false,
@@ -213,9 +226,10 @@ export default function TextareaPlanner({ className }: { className?: string }) {
                 extensions={[keymap.of([indentWithTab]), indentUnit.of("\t"), highlightExtension]}
                 onChange={(value) => updatePreview(value)}
                 value={textAreaText}
+                minHeight="25rem"
             />
             <Button className="mt-4" onClick={() => handleSubmit()}>
-                Submit
+                Plan
             </Button>
         </div>
     );
