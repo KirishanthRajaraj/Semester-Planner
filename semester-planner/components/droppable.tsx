@@ -21,7 +21,7 @@ export default function droppable({ id, title, isDay, className, children }: { i
                         <h2 className={`text-lg font-bold border-b-4 ${isDay ? 'opacity-50 text-sm' : ''}`}>{title}</h2>
                         <div className={`flex flex-col w-full gap-1 min-h-10 overflow-hidden items-center justify-center`}>
                             <div ref={ref} className={`flex flex-col w-full gap-1 min-h-16 border-2 border-dashed border-foreground/50 items-center justify-center text-foreground/50 ${style}`}>
-                                {!(React.Children.count(children) > 0) && <span className={isDay ? 'opacity-50 text-sm' : ''}>{title}</span>}
+                                {!(React.Children.count(children) > 0) && <span className={isDay ? 'opacity-50 text-sm' : ''}>until end of week</span>}
                                 {children}
                             </div>
                         </div>

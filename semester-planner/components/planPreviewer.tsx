@@ -24,7 +24,6 @@ function getWeeks(start: Date, end: Date) {
         weekStart = new Date(weekEnd);
         weekStart.setDate(weekStart.getDate() + 1);
     }
-    console.log(weeks);
     return weeks;
 }
 

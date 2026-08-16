@@ -110,11 +110,13 @@ export default function TextareaPlanner({ className }: { className?: string }) {
     const textToTaskItem = (text: string, submit: boolean) => {
         const lines = text.split("\n");
         const items: TaskItem[] = [];
+
         // string benutzen für die id
         const parentAtDepth: (string | undefined)[] = [];
         lines.forEach((line) => {
-            const depth = line.match(/^\t*/)?.[0].length ?? 0;
+            if (line.trim() === "") return; // ignore empty lines
 
+            const depth = line.match(/^\t*/)?.[0].length ?? 0;
             // remove :done:/:doing: from the text before saving
             let status: TaskStatus = "todo";
             let rest = line;
@@ -137,6 +139,9 @@ export default function TextareaPlanner({ className }: { className?: string }) {
             }
             title = title.replace(/\s+/g, " ").trim();
 
+            if (title.trim() === "") return; // ignore empty lines, that have dates
+
+
             const item: TaskItem = ({
                 id: crypto.randomUUID(),
                 title: title,
@@ -152,9 +157,12 @@ export default function TextareaPlanner({ className }: { className?: string }) {
             // hinzufügen / löschen von plätzen im Array, sodass die Länge des Arrays immer der Tiefe entspricht + 1, sodass man immer den Parent des nächsten setzen kann
             parentAtDepth.length = depth + 1;
         });
+
+        console.log(items);
+
+
         if (submit) {
             useTaskStore.getState().setTasks(items);
-            console.log(items);
         }
     }
 

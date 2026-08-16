@@ -52,25 +52,25 @@ export default function dndArea() {
                 const { target, source } = event.operation;
                 if (!target) return;
 
-                const destGroup = isSortable(target) ? String(target.group) : String(target.id);
+
+                const destDroppable = String(target.id);
                 const draggedTaskId = source?.id;
 
                 let isGeneralWeek = false;
                 let newDate: Date | undefined = undefined;
-                if (destGroup.startsWith("week-")) {
+                if (destDroppable.startsWith("week-")) {
                     isGeneralWeek = true;
-                    const weekIndex = parseInt(destGroup.split("-")[1]) - 1;
+                    const weekIndex = parseInt(destDroppable.split("-")[1]) - 1;
                     let d = new Date(weeks[weekIndex].endDate);
                     
-                    if(destGroup.includes("-day-")) {
+                    if(destDroppable.includes("-day-")) {
                         isGeneralWeek = false;
-                        const dayIndex = parseInt(destGroup.split("-")[3]) - 1;
+                        const dayIndex = parseInt(destDroppable.split("-")[3]) - 1;
                         const days = getDays(weeks[weekIndex]);
                         d = days[dayIndex];
                     }
                     newDate = d;
                 }
-                console.log(newDate);
                 const newTasks = tasks.map((task) =>
                     task.id === draggedTaskId ? { ...task, date: newDate, noDay: isGeneralWeek } : task
                 );
@@ -109,7 +109,7 @@ export default function dndArea() {
                                     {getDays(week).map((day, dayIndex) => (
                                         <Droppable id={`week-${weekIndex + 1}-day-${dayIndex + 1}`} title={day.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase()} isDay={true} key={`week-${weekIndex + 1}-day-${dayIndex + 1}`} className={`gap-3 bg-transparent ring-0 align-bottom h-min ${day.getDay() != 1 && dayIndex == 0 ? COL_START_BY_DAY[day.getDay()] : ''}`}>
                                             {tasks.filter(task => task.date && task.date.toDateString() === day.toDateString() && !task.noDay).map((task, index) => (
-                                                <SortableTask key={task.id} task={task} index={index} group={`week-${weekIndex + 1}-day-${dayIndex + 1}`} />
+                                                <SortableTask key={`day-${dayIndex + 1}-${task.id}`} task={task} index={index} group={`week-${weekIndex + 1}-day-${dayIndex + 1}`} />
                                             ))}
                                         </Droppable>
                                     ))}
