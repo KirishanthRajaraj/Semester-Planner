@@ -89,7 +89,7 @@ export default function dndArea() {
 
                     <div className="w-full flex flex-col gap-2 p-4">
                         {weeks.map((week, weekIndex) => (
-                            <>
+                            <div key={`weekwrapper-${weekIndex + 1}`}>
                                 <Droppable id={`week-${weekIndex + 1}`} title={`Week ${weekIndex + 1}`} key={weekIndex + 1} week={week} className={`w-full`}>
                                     {tasks.filter(task => task.date && task.date >= week.startDate && task.date <= week.endDate && task.noDay).map((task, index) => (
                                         <SortableTask key={task.id} task={task} index={index} group={`week-${weekIndex + 1}`} />
@@ -109,7 +109,7 @@ export default function dndArea() {
                                         </Droppable>
                                     ))}
                                 </div>
-                            </>
+                            </div>
                         ))}
                     </div>
                 </ScrollArea>

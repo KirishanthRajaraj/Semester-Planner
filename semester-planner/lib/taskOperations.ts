@@ -23,7 +23,7 @@ export const getDescendants = (tasks: TaskItem[], parentId: string): TaskItem[] 
 }
 
 export const constructParentString = (task: TaskItem): string => {
-    const getTaskById = useTaskStore((state) => state.getTaskById);
+    const { getTaskById } = useTaskStore.getState();
 
     let parentString: string = "";
     let parent: TaskItem | undefined = task;

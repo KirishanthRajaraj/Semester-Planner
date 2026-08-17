@@ -67,8 +67,8 @@ export function TasksTable() {
       cell: ({ row }) => row.original.date?.toLocaleDateString("de-CH") ?? "—",
     },
     {
-      id: "ancestors",
-      header: "Ancestors",
+      id: "parents",
+      header: "Parents",
       cell: ({ row }) => constructParentString(row.original),
 
     },

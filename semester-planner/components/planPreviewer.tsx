@@ -4,10 +4,8 @@ import { useSemesterStore } from "@/store/semesterStore";
 import { useTaskStore } from "@/store/taskStore";
 import { TaskItem } from "@/interfaces/taskItem";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { SemesterDates } from "./SemesterDates";
+import { constructParentString } from "@/lib/taskOperations";
 
 
 function getWeeks(start: Date, end: Date) {
@@ -36,7 +34,7 @@ function TaskColumn({ title, tasks }: { title: string; tasks: TaskItem[] }) {
                     <div className="flex flex-col gap-2">
                         {tasks.map((task) => (
                             <Card key={task.id} className="text-xs font-semibold p-2 rounded-md bg-primary text-background">
-                                <p>{task.title}</p>
+                                <p>{constructParentString(task)}{task.parentId !== undefined ? " > " : ""}{task.title}</p>
                             </Card>
                         ))}
                     </div>
@@ -50,7 +48,7 @@ function TaskColumn({ title, tasks }: { title: string; tasks: TaskItem[] }) {
                     <CardContent className="flex flex-col gap-1">
                         {tasks.map((task) => (
                             <Card key={task.id} className="text-xs font-semibold p-1 rounded-md bg-primary text-background">
-                                <p>{task.title}</p>
+                                <p>{constructParentString(task)}{task.parentId !== undefined ? " < " : ""}{task.title}</p>
                             </Card>
                         ))}
                     </CardContent>

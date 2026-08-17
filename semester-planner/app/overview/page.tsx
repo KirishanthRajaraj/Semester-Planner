@@ -65,17 +65,19 @@ export default function Overview() {
                 <h1 className="text-3xl font-bold mb-12 mt-16">Übersicht</h1>
                 <TasksTable />
 
-                <div className="flex flex-col gap-4 w-full">
-                    <h2 className="text-xl font-bold mb-4 mt-16">Progress</h2>
-                    {tasksProgress.map((task) => {
-                        return (
-                            <div key={task.task.id}>
-                                <p className="font-bold mb-2">{task.task.title}</p>
-                                <Progress value={(task.progress) * 100} className="w-[40%]" />
-                            </div>
-                        );
-                    })}
-                </div>
+                {(tasksProgress.length > 0) &&
+                    <div className="flex flex-col gap-4 w-full">
+                        <h2 className="text-xl font-bold mb-4 mt-16">Progress</h2>
+                        {tasksProgress.map((task) => {
+                            return (
+                                <div key={task.task.id}>
+                                    <p className="font-bold mb-2">{task.task.title}</p>
+                                    <Progress value={(task.progress) * 100} className="w-[40%]" />
+                                </div>
+                            );
+                        })}
+                    </div>
+                }
             </div>
         </>
     );
