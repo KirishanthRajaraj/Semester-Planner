@@ -16,11 +16,14 @@ function getWeeks(start: Date, end: Date) {
         const weekEnd = new Date(weekStart);
         let startDay = weekStart.getDay(); // 0=Sun - 6=Sat
         const weekdayIndex = (startDay + 6) % 7; // konvertieren zu, Mon=0 - Sun=6, damit es einfacher ist zum rechnen
+        weekEnd.setHours(23, 59, 59, 999);
+
         const daysToSunday = 6 - weekdayIndex;
         weekEnd.setDate(weekStart.getDate() + daysToSunday);
         weeks.push({ startDate: weekStart, endDate: weekEnd < end ? weekEnd : end });
         weekStart = new Date(weekEnd);
         weekStart.setDate(weekStart.getDate() + 1);
+        weekStart.setHours(0, 0, 0, 0);
     }
     return weeks;
 }
@@ -64,6 +67,7 @@ export default function PlanPreviewer({ className }: { className?: string }) {
     const setWeeks = useSemesterStore((state) => state.setWeeks);
     const tasks = useTaskStore((state) => state.tasks);
 
+
     const weeks = getWeeks(semester.startDate, semester.endDate);
 
     useEffect(() => {
@@ -76,15 +80,16 @@ export default function PlanPreviewer({ className }: { className?: string }) {
     );
 
     return (
-        <ScrollArea className={`${className} max-h-96 overflow-y-auto w-full`}>
+        <ScrollArea className={`${className} max-h-96 overflow-y-auto w-full border-2 border-muted-foreground/20 rounded-xl`}>
             <div className="w-full flex flex-col gap-4 p-4">
+                <p className="text-sm font-bold text-foreground/40">Preview</p>
                 <TaskColumn title="Inbox" tasks={inbox} />
                 {weeks.map((week, i) => (
                     <TaskColumn
                         key={i}
                         title={`Week ${i + 1}`}
                         tasks={tasks.filter(
-                            (task) => task.date && task.date >= week.startDate && task.date < week.endDate
+                            (task) => task.date && task.date >= week.startDate && task.date <= week.endDate
                         )}
                     />
                 ))}

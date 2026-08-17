@@ -71,7 +71,6 @@ export default function TextareaPlanner({ className }: { className?: string }) {
         let offset = 0;
         for (const line of text.split("\n")) {
             const statusMatch = line.match(/:(done|doing):/i);
-            console.log("line:", line, "statusMatch:", statusMatch);
             if (statusMatch && statusMatch.index !== undefined) {
                 const isDone = statusMatch[1].toLowerCase() === "done";
                 const tokenStart = offset + statusMatch.index;
@@ -96,7 +95,6 @@ export default function TextareaPlanner({ className }: { className?: string }) {
         let offsetDuration = 0;
         for (const line of text.split("\n")) {
             const durationMatch = line.match(DURATION_REGEX);
-            console.log("line:", line, "durationMatch:", durationMatch);
             if (durationMatch && durationMatch.index !== undefined) {
                 const durationStart = offsetDuration + durationMatch.index;
                 ranges.push(
@@ -188,9 +186,6 @@ export default function TextareaPlanner({ className }: { className?: string }) {
             parentAtDepth.length = depth + 1;
         });
 
-        console.log(items);
-
-
         if (submit) {
             useTaskStore.getState().setTasks(items);
         }
@@ -232,23 +227,6 @@ export default function TextareaPlanner({ className }: { className?: string }) {
 
     return (
         <div className={`w-full ${className} min-h-96`}>
-            <div className="flex items-center gap-4 py-2 text-muted-foreground text-sm">
-                <span className="flex items-center gap-1">
-                    <ArrowRightToLine className="w-10 h-6 border-2 py-0.5 pl-1 rounded-sm" color="white" /> <span> = child task </span>
-                </span>
-                |
-                <span>
-                    e. g. <span className="bg-primary/70 p-0.5 text-background font-bold rounded-md">next week</span> = due date
-                </span>
-                |
-                <span>
-                    e. g. <span className="bg-cyan-400/70 p-0.5 text-background font-bold rounded-md">0.5h</span> = duration
-                </span>
-                |
-                <span>
-                    task b <span className="text-green-600">:done:</span> = status
-                </span>
-            </div>
             <CodeMirror
                 placeholder="e.g. math homework due tomorrow at 18:00"
                 basicSetup={{
