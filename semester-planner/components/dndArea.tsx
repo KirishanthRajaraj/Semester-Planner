@@ -71,7 +71,7 @@ export default function dndArea() {
             }}
         >
             <div className="w-full flex items-start gap-8 p-4">
-                <div className="flex flex-col gap-8 w-80">
+                <div className="flex flex-col gap-8 w-32 md:w-52 lg:w-80">
                     <Droppable id={`inbox`} title={`Inbox`}>
                         {tasks.filter((task) => !task.date).map((task, index) => (
                             <SortableTask key={task.id} task={task} index={index} group="inbox" />
@@ -96,7 +96,7 @@ export default function dndArea() {
                                     ))}
                                 </Droppable>
 
-                                <div className="w-full grid grid-cols-7 gap-2 mb-4">
+                                <div className="w-full grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-2 mb-4">
                                     {getDays(week).map((day, dayIndex) => (
                                         <Droppable id={`week-${weekIndex + 1}-day-${dayIndex + 1}`} 
                                         title={day.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase()} 

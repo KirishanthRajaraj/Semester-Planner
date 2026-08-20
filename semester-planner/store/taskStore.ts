@@ -9,6 +9,7 @@ interface TaskStore {
   setTasks: (tasks: TaskItem[]) => void;
   getTaskById: (id: string) => TaskItem | undefined;
   setTaskStatusById: (id: string, status: TaskStatus) => void;
+  deleteTaskById: (id: string) => void;
 }
 
 export const useTaskStore = create<TaskStore>()(
@@ -21,7 +22,7 @@ export const useTaskStore = create<TaskStore>()(
       setTaskStatusById: (id: string, status: TaskStatus) => {
         const tasks = get().tasks;
         const idsToUpdate = new Set<string>([id]);
-        if (status === "done" || status === "todo") {
+        if (status === "done" || status === "todo") {
           for (const descendant of getDescendants(tasks, id)) {
             idsToUpdate.add(descendant.id);
           }
@@ -30,6 +31,9 @@ export const useTaskStore = create<TaskStore>()(
           tasks: tasks.map((t) => (idsToUpdate.has(t.id) ? { ...t, status } : t)),
         });
       },
+      deleteTaskById: (id: string) => set({
+        tasks: get().tasks.filter((t) => t.id !== id),
+      })
     }),
     {
       name: "task-storage",

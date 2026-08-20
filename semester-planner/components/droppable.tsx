@@ -27,7 +27,7 @@ export default function droppable({ id, title, isDay, className, children, week,
                         </div>
 
                         <div className={`flex flex-col w-full gap-1 min-h-10 overflow-hidden items-center justify-center`}>
-                            <div ref={ref} className={`flex flex-col w-full gap-1 min-h-16 border-2 border-dashed border-foreground/50 items-center justify-center text-foreground/50 ${style}`}>
+                            <div ref={ref} className={`flex flex-col w-full gap-3 min-h-16 border-2 border-dashed border-foreground/50 items-center justify-center text-foreground/50 ${style}`}>
                                 {!(React.Children.count(children) > 0) && <span className={isDay ? 'opacity-50 text-sm' : ''}>general</span>}
                                 {children}
                             </div>
@@ -39,7 +39,7 @@ export default function droppable({ id, title, isDay, className, children, week,
                     <Card className={`${className} py-1`}>
                         <CardContent ref={ref} className={`flex flex-col gap-1 min-h-10 ${style} ${isDay ? 'border-2 border-dashed border-foreground/50' : 'border-transparent'} ${isToday ? 'border-primary' : ''} p-2 overflow-hidden items-center justify-center`}>
                             <CardTitle className={isDay ? 'opacity-50 text-sm' : ''}>{title}</CardTitle>
-                            <div className="flex flex-col gap-2 w-full items-start">
+                            <div className="flex flex-col gap-3 w-full items-start">
                                 {children}
                             </div>
                         </CardContent>
