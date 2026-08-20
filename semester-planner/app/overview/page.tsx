@@ -60,7 +60,7 @@ export default function Overview() {
 
     return (
         <>
-            <div className="w-full font-sans flex flex-col flex-1 justify-center">
+            <div className="w-full font-sans flex flex-col flex-1">
 
                 <h1 className="text-3xl font-bold mb-12 mt-16">Übersicht</h1>
 

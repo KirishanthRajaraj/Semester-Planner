@@ -2,60 +2,62 @@ import {
   ColumnDef,
 } from "@tanstack/react-table"
 
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+
 import { Circle, CircleDot, CircleCheck } from "lucide-react";
 import { useTaskStore } from "@/store/taskStore";
 import { TaskItem, TaskStatus } from "@/interfaces/taskItem";
-import { constructParentString, isTaskOverdue } from "@/lib/taskOperations";
+import { constructParentString, getDescendants, isTaskOverdue } from "@/lib/taskOperations";
 import { DataTable } from "./ui/datatable";
+import { Toggle } from "./ui/toggle";
+import { DropdownMenu } from "./ui/dropdown-menu";
+import { TopTasksDropdown } from "./moduleDropdown";
+import { useEffect, useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
 
-const STATUS_CONFIG: Record<TaskStatus, { label: string; icon: typeof Circle; className: string }> = {
-  todo: { label: "To do", icon: Circle, className: "text-muted-foreground" },
-  inprogress: { label: "In progress", icon: CircleDot, className: "text-amber-500" },
-  done: { label: "Done", icon: CircleCheck, className: "text-green-500" },
-};
-
 function TaskStatusCell({ task }: { task: TaskItem }) {
-  const tasks = useTaskStore((state) => state.tasks);
-  const setTasks = useTaskStore((state) => state.setTasks);
   const setStatus = useTaskStore((state) => state.setTaskStatusById);
   const status = task.status ?? "todo";
-  const current = STATUS_CONFIG[status];
-  const CurrentIcon = current.icon;
 
   return (
-    // fixed size so the badge<->toggle-group crossfade doesn't reflow the row;
-    // pointer-events toggled with opacity so the hidden layer isn't clickable
-    <div className="group relative flex h-8 w-32 items-center">
-      <div className={`absolute flex items-center gap-1.5 text-xs transition-opacity group-hover:opacity-0 ${current.className}`}>
-        <CurrentIcon className="size-4" />
-        {current.label}
-      </div>
-      <ToggleGroup
-        value={[status]}
-        onValueChange={(values) => values[0] && setStatus(task.id, values[0] as TaskStatus)}
-        className="absolute pointer-events-none opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100"
+    <div className="group relative flex h-8 w-32 items-center ">
+      <Toggle
+        aria-label="Toggle status"
+        pressed={status == "done"}
+        onPressedChange={(pressed) => setStatus(task.id, pressed ? "done" : "todo")}
+        className="aria-pressed:bg-transparent hover:!bg-muted size-10 hover:cursor-pointer"
       >
-        {(Object.keys(STATUS_CONFIG) as TaskStatus[]).map((key) => {
-          const { icon: Icon, label, className } = STATUS_CONFIG[key];
-          return (
-            <ToggleGroupItem key={key} value={key} aria-label={label} className={className}>
-              <Icon className="size-4" />
-            </ToggleGroupItem>
-          );
-        })}
-      </ToggleGroup>
+        <Circle className="group-aria-pressed/toggle:hidden size-4" />
+        <CircleCheck className="group-aria-pressed/toggle:block hidden size-4" />
+      </Toggle>
     </div>
   );
 }
 
 export function TasksTable() {
+
   const tasks = useTaskStore((state) => state.tasks);
+  const [moduleFilter, setModuleFilter] = useState<string>("All");
+  const [filteredTasks, setFilteredTasks] = useState<TaskItem[]>(tasks);
+
+  useEffect(() => {
+    filterTasks(moduleFilter);
+  }, [moduleFilter, tasks]);
+
+  const filterTasks = (moduleFilter: string) => {
+    if (!moduleFilter) return tasks;
+    if (moduleFilter === "All") {
+      setFilteredTasks(tasks);
+      return;
+    }
+    const root = tasks.find((t) => t.id === moduleFilter);
+    let filteredTasks = root ? [root, ...getDescendants(tasks, root.id)] : tasks;
+    setFilteredTasks(filteredTasks);
+  }
+
   const columns: ColumnDef<TaskItem>[] = [
     {
       accessorKey: "title",
@@ -81,10 +83,24 @@ export function TasksTable() {
 
   return (
     <div className="w-full mx-auto py-10">
+      <TopTasksDropdown className="mb-4" setModuleFilter={setModuleFilter} />
+
       <DataTable
         columns={columns}
-        data={tasks}
-        getRowClassName={(task) => (isTaskOverdue(task) ? "bg-red-500" : "")}
+        data={filteredTasks}
+        getRowClassName={(task) => {
+          if (task.status == "done") {
+            return "bg-green-700/50"
+          }
+          if (isTaskOverdue(task)) {
+            return isTaskOverdue(task) ? "bg-red-500/60" : ""
+          }
+          // tasks due next 7 days
+          if (task.date && task.date?.getDate() < (new Date().getDate() + 7)) {
+            return "bg-yellow-400/60"
+          }
+          return "";
+        }}
       />
     </div>
   );
