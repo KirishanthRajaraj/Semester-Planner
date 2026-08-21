@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { TaskItem, TaskStatus } from "@/interfaces/taskItem";
 import { useTaskStore } from "@/store/taskStore";
-import { ArrowRightToLine } from "lucide-react"
+import { ArrowRightToLine, ChevronRight } from "lucide-react"
 import parse from 'parse-duration'
 
 // text editor styles
@@ -244,8 +244,9 @@ export default function TextareaPlanner({ className }: { className?: string }) {
                 value={textAreaText}
                 minHeight="25rem"
             />
-            <Button className="mt-4" onClick={() => handleSubmit()}>
+            <Button className="mt-4 gap-0.5" onClick={() => handleSubmit()}>
                 Plan
+                <ChevronRight></ChevronRight>
             </Button>
         </div>
     );

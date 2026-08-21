@@ -12,29 +12,11 @@ import { Toggle } from "./ui/toggle";
 import { DropdownMenu } from "./ui/dropdown-menu";
 import { TopTasksDropdown } from "./moduleDropdown";
 import { useEffect, useState } from "react";
+import { TaskStatusToggle } from "./TaskStatusToggle";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-}
-
-function TaskStatusCell({ task }: { task: TaskItem }) {
-  const setStatus = useTaskStore((state) => state.setTaskStatusById);
-  const status = task.status ?? "todo";
-
-  return (
-    <div className="group relative flex h-8 w-32 items-center ">
-      <Toggle
-        aria-label="Toggle status"
-        pressed={status == "done"}
-        onPressedChange={(pressed) => setStatus(task.id, pressed ? "done" : "todo")}
-        className="aria-pressed:bg-transparent hover:!bg-muted size-10 hover:cursor-pointer"
-      >
-        <Circle className="group-aria-pressed/toggle:hidden size-4" />
-        <CircleCheck className="group-aria-pressed/toggle:block hidden size-4" />
-      </Toggle>
-    </div>
-  );
 }
 
 export function TasksTable() {
@@ -77,7 +59,7 @@ export function TasksTable() {
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }) => <TaskStatusCell task={row.original} />,
+      cell: ({ row }) => <TaskStatusToggle task={row.original} className="aria-pressed:bg-transparent" />,
     },
   ]
 

@@ -2,12 +2,8 @@
 import PlanPreviewer from "@/components/planPreviewer";
 import { SemesterDates } from "@/components/SemesterDates";
 import TextareaPlanner from "@/components/textareaPlanner";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { useSemesterStore } from "@/store/semesterStore";
 import { ArrowRightToLine } from "lucide-react";
-import Image from "next/image";
-import { useEffect, useState } from "react";
 
 export default function Home() {
   /*
