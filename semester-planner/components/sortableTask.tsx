@@ -38,18 +38,19 @@ export default function SortableTask({ task, index, group }: { task: TaskItem; i
                 <span>{constructParentString(task)}</span>
             </div>}
             <div className="w-full flex flex-row items-center gap-2">
-                <TaskStatusToggle task={task} className="rounded-full !p-0 -ml-0.5 scale-0 duration-200 transition-transform min-w-6 max-h-6 w-6 absolute group-hover:scale-100 !bg-muted/30 hover:bg-muted/70 " classNameIcons="!ring-0 border-3 !w-full !h-full !p-0"></TaskStatusToggle>
+                <TaskStatusToggle task={task} className="rounded-full !p-0 -ml-0.5 scale-0 duration-200 transition-all min-w-6 max-h-6 w-6 absolute group-hover:scale-100 !bg-muted/30 hover:bg-muted/70 " classNameIcons="!ring-0 border-3 !w-full !h-full !p-0"></TaskStatusToggle>
                 <p className="text-sm font-bold truncate group-hover:ml-7 duration-200">{task.title}</p>
                 {task.duration && <p className="text-xs font-extrabold bg-cyan-400/30 dark:bg-cyan-400/50 rounded-sm p-0.5">{task.duration !== undefined ? `${task.duration / 60}h` : ""}</p>}
             </div>
 
-            <div className="w-6">
+            <div className="w-6 duration-300">
                 <X
                     className="
-            absolute -right-4 -top-4
-            w-8 h-8
+                              transition-all 
+            duration-200
+            absolute -right-3.5 -top-3.5 size-7
+            hover:size-8 hover:-right-4 hover:-top-4
             scale-0
-            transition-transform duration-200
             group-hover:scale-100
             cursor-pointer
             bg-red-700/90

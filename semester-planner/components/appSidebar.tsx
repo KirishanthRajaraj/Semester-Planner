@@ -38,6 +38,7 @@ export default function AppSidebar() {
                                     tooltip={item.title}
                                     isActive={pathname === item.url}
                                     render={<Link href={item.url} />}
+                                    className={`${pathname == item.url ? '!bg-primary !text-background' : ''}`}
                                 >
                                     <item.icon />
                                     <span>{item.title}</span>
