@@ -92,9 +92,34 @@ export default function dndArea() {
                     }
                     newDate = d;
                 }
-                const newTasks = tasks.map((task) =>
+
+                //breadcrumb handling
+                let idsToMove = undefined;
+
+                if (draggedTaskId?.toString().startsWith("subtree-")) {
+                    const breadcrumbDraggedTaskId = draggedTaskId.toString().slice("subtree-".length);
+                    const { getTaskById } = useTaskStore.getState();
+                    if (breadcrumbDraggedTaskId) {
+                        const bTask = getTaskById(breadcrumbDraggedTaskId);
+
+                        if (bTask?.parentId) {
+                            idsToMove = new Set(getDescendants(tasks, bTask.parentId).map((t) => t.id));
+                        }
+                    }
+                }
+
+                // wenn nur ein task
+                let newTasks = tasks.map((task) =>
                     task.id === draggedTaskId ? { ...task, date: newDate, noDay: isGeneralWeek } : task
                 );
+
+                // wenn breadcrumb, newtasks überschreiben
+                if (draggedTaskId?.toString().startsWith("subtree-")) {
+                    newTasks = tasks.map((task) =>
+                        idsToMove !== undefined && idsToMove.has(task.id) ? { ...task, date: newDate, noDay: isGeneralWeek } : task
+                    );
+                }
+
                 // defer so dnd-kit finishes its own drag-end teardown before React re-renders
                 // do not remove
                 queueMicrotask(() => setTasks(newTasks));
