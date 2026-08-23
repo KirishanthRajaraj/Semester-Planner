@@ -5,13 +5,14 @@ import { pointerIntersection } from "@dnd-kit/collision";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import DragDropIcon from "@/icons/dndIcon";
 import { useTaskStore } from "@/store/taskStore";
-import { constructParentString, getDescendants } from "@/lib/taskOperations";
+import { constructParentString, getDescendants, isTaskOverdue } from "@/lib/taskOperations";
 import { CircleX } from 'lucide-react';
 import { X, Lightbulb } from 'lucide-react';
 import { useEffect } from "react";
 import { TaskStatusToggle } from "./TaskStatusToggle";
 import { Toggle } from "./ui/toggle";
 import { useDraggable } from "@dnd-kit/react";
+import { KeyboardSensor } from "@dnd-kit/dom";
 
 export default function SortableTask({ task, index, group, dimmed, focused, onToggleFocus, selected, selectionSize, onToggleSelect }: {
     task: TaskItem; index: number; group: string;
@@ -34,16 +35,10 @@ export default function SortableTask({ task, index, group, dimmed, focused, onTo
     const subtreeCount = task.parentId !== undefined ? getDescendants(tasks, task.parentId).length : 1;
     const dragGroupSize = selected && selectionSize ? selectionSize : isSubtreeDragging ? subtreeCount : 1;
 
-    const { ref, isDragging } = useSortable({
+    const { ref, isDragging } = useDraggable({
         id: task.id,
         type: 'item',
-        accept: ['item', 'column'],
-        index: index,
-        group: group,
-        collisionDetector: pointerIntersection,
         disabled: dimmed,
-        // DO NOT REMOVE, OptimisticSortingPlugin (default) causes errors
-        plugins: [SortableKeyboardPlugin],
     });
 
     return (
@@ -55,7 +50,13 @@ export default function SortableTask({ task, index, group, dimmed, focused, onTo
                     onToggleSelect(task);
                 }
             }}
-            className={`group druation-300 transition-all truncate w-full ${task.status === 'done' ? 'bg-green-500' : 'bg-primary'} gap-0.5 ${task.parentId !== undefined ? '!pt-5' : ''} relative overflow-visible font-semibold p-3 rounded-lg text-background cursor-grab active:cursor-grabbing ${isDragging ? "opacity-50" : ""} ${dimmed ? "opacity-30 pointer-events-none" : ""} ${selected ? "ring-2 ring-offset-2 ring-offset-background ring-foreground" : ""}`}
+            className={`group truncate w-full ${task.status === 'done' ? 'bg-green-500' : 'bg-primary'}
+             gap-0.5 ${task.parentId !== undefined ? '!pt-5' : ''} 
+             relative overflow-visible font-semibold p-3 rounded-lg text-background cursor-grab active:cursor-grabbing $
+             {isDragging ? "opacity-50" : ""} ${dimmed ? "opacity-30 pointer-events-none" : ""} 
+             ${selected ? "ring-2 ring-offset-2 ring-offset-background ring-foreground" : ""}
+             ${isTaskOverdue(task) ? 'bg-red-500' : ''}`
+            }
         >
             {(isDragging) && dragGroupSize > 1 && (
                 <span className="absolute -top-2 -right-2 z-20 bg-background text-primary text-xs font-bold rounded-full px-1.5 py-0.5">
@@ -66,14 +67,15 @@ export default function SortableTask({ task, index, group, dimmed, focused, onTo
             {task.parentId &&
                 <div
                     ref={subtreeRef}
-                    className="absolute overflow-visible text-xs -left-1 -top-3 text-primary font-bold bg-background rounded-md px-2 py-1 hover:z-20 max-w-32 overflow-hidden whitespace-nowrap
-  text-ellipsis duration-200 transition hover:scale-125 hover:max-w-40 hover:whitespace-normal">
-                    <span>{constructParentString(task)}</span>
+                    className={`absolute text-xs -left-1 -top-3 text-primary font-bold bg-background rounded-md px-2 py-1 hover:z-20 max-w-32 overflow-hidden whitespace-nowrap
+  text-ellipsis duration-200 transition hover:scale-125 hover:max-w-40 ${isSubtreeDragging ? 'max-w-40 whitespace-normal !overflow-visible z-20' : ''} hover:whitespace-normal`}>
                     {(isSubtreeDragging) && dragGroupSize > 1 && (
-                        <span className="absolute -top-2 -right-2 z-20 bg-primary text-background border-background text-xs font-bold rounded-full px-1.5 py-0.5">
+                        <span className="absolute -top-2.5 -right-2.5 bg-primary text-background border-background border-4 text-xs font-bold rounded-full px-1.5 py-0.5">
                             +{dragGroupSize - 1}
                         </span>
                     )}
+                    <span>{constructParentString(task)}</span>
+
                 </div>}
 
             <Toggle

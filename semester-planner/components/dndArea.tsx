@@ -1,13 +1,13 @@
 import { TaskItem } from "@/interfaces/taskItem";
 import { useTaskStore } from "@/store/taskStore";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import SortableTask from "./sortableTask";
 import { DragDropProvider } from "@dnd-kit/react";
 import { isSortable } from "@dnd-kit/react/sortable";
 import Droppable from "./droppable";
 import { useSemesterStore } from "@/store/semesterStore";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
-import { getChildren, getDescendants } from "@/lib/taskOperations";
+import { getChildren, getDescendants, isTaskOverdue } from "@/lib/taskOperations";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 
 export default function dndArea() {
@@ -15,6 +15,8 @@ export default function dndArea() {
     const tasks = useTaskStore((state) => state.tasks);
     const weeks = useSemesterStore((state) => state.weeks);
     const semester = useSemesterStore((state) => state.semester);
+    const currentWeek = useRef<HTMLDivElement>(null);
+
 
     // the exact task that has focuse toggled
     const [focusedId, setFocusedId] = useState<string | undefined>(undefined);
@@ -53,6 +55,19 @@ export default function dndArea() {
             return newSet;
         });
     };
+
+    const scrollToCurrentWeek = () => {
+        currentWeek.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
+    };
+
+    useEffect(() => {
+        //do not remove, won't work without defer, weil typisch js
+        const id = setTimeout(scrollToCurrentWeek, 100);
+        return () => clearTimeout(id);
+    }, []);
 
     // clear selection of multi select
     useEffect(() => {
@@ -199,8 +214,11 @@ export default function dndArea() {
 
                     <div className="w-full flex flex-col gap-2 p-4">
                         {weeks.map((week, weekIndex) => (
-                            <div key={`weekwrapper-${weekIndex + 1}`}>
-                                <Droppable id={`week-${weekIndex + 1}`} title={`Week ${weekIndex + 1}`} key={weekIndex + 1} week={week} className={`w-full`}>
+                            <div key={`weekwrapper-${weekIndex + 1}`} ref={week.startDate <= new Date() && week.endDate >= new Date() ? currentWeek : undefined}>
+                                <Droppable id={`week-${weekIndex + 1}`} title={`Week ${weekIndex + 1}`} key={weekIndex + 1} week={week} 
+                                className={`w-full ${week.endDate < new Date() ? 'opacity-40' : ''}`}
+                                
+                                >
                                     {tasks.filter(task => task.date && getChildren(tasks, task.id).length == 0 && task.date >= week.startDate && task.date <= week.endDate && task.noDay).map((task, index) => (
                                         <SortableTask key={task.id} task={task} index={index} group={`week-${weekIndex + 1}`} dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
                                     ))}
@@ -211,7 +229,9 @@ export default function dndArea() {
                                         <Droppable id={`week-${weekIndex + 1}-day-${dayIndex + 1}`}
                                             title={day.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase()}
                                             isDay={true} key={`week-${weekIndex + 1}-day-${dayIndex + 1}`}
-                                            className={`gap-3 bg-transparent ring-0 align-bottom h-min ${day.getDay() != 1 && dayIndex == 0 ? COL_START_BY_DAY[day.getDay()] : ''}`}
+                                            className={`gap-3 bg-transparent ring-0 align-bottom h-min 
+                                                ${day.getDay() != 1 && dayIndex == 0 ? COL_START_BY_DAY[day.getDay()] : ''}
+                                                ${week.endDate < new Date() ? 'opacity-40' : ''}`}
                                             isToday={day.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)}>
                                             {tasks.filter(task => task.date && getChildren(tasks, task.id).length == 0 && task.date.toDateString() === day.toDateString() && !task.noDay).map((task, index) => (
                                                 <SortableTask key={`day-${dayIndex + 1}-${task.id}`} task={task} index={index} group={`week-${weekIndex + 1}-day-${dayIndex + 1}`} dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
