@@ -25,7 +25,7 @@ const DEFAULT_TASKS: TaskItem[] = [
   { id: "seed-w2-rek1", title: "rekursionsaufgabe 1 lösen tomorrow", depth: 2, parentId: "seed-w2", status: "todo" },
   { id: "seed-w2-rek2", title: "rekursionsaufgabe 2 lösen", depth: 2, parentId: "seed-w2", status: "todo" },
   { id: "seed-mathe", title: "mathe", depth: 0, status: "todo" },
-  { id: "seed-mathe-t1", title: "theorie teil 1", depth: 1, parentId: "seed-mathe", status: "todo", duration: 30 },
+  { id: "seed-mathe-t1", title: "theorie teil 1", depth: 1, parentId: "seed-mathe", status: "done", duration: 30 },
   { id: "seed-al1", title: "aufgaben lösen 1", depth: 1, parentId: "seed-mathe", status: "todo" },
   { id: "seed-al1-rechenregeln", title: "rechenregeln repetieren & üben oct 12", depth: 2, parentId: "seed-al1", status: "todo", duration: 120 },
   { id: "seed-al1-aufgabe", title: "aufgabe lösen", depth: 2, parentId: "seed-al1", status: "todo" },

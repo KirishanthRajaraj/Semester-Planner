@@ -1,4 +1,5 @@
 import {
+  Column,
   ColumnDef,
 } from "@tanstack/react-table"
 
@@ -10,6 +11,20 @@ import { DataTable } from "./ui/datatable";
 import { TopTasksDropdown } from "./moduleDropdown";
 import { useEffect, useState } from "react";
 import { TaskStatusToggle } from "./TaskStatusToggle";
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { Button } from "./ui/button";
+
+function SortableHeader<TData>({ column, label }: { column: Column<TData, unknown>; label: string }) {
+  const sorted = column.getIsSorted();
+  return (
+    <Button className={"hover:cursor-pointer !pl-0"} variant="ghost" onClick={() => column.toggleSorting(sorted === "asc")}>
+      {label}
+      {sorted === "asc" && <ArrowUp className="ml-2 h-4 w-4" />}
+      {sorted === "desc" && <ArrowDown className="ml-2 h-4 w-4" />}
+      {!sorted && <ArrowUpDown className="ml-2 h-4 w-4" />}
+    </Button>
+  );
+}
 
 export function TasksTable() {
 
@@ -35,25 +50,31 @@ export function TasksTable() {
   const columns: ColumnDef<TaskItem>[] = [
     {
       accessorKey: "title",
-      header: "Title",
+      header: ({ column }) => <SortableHeader column={column} label="Title" />,
       meta: {
-        className: "max-w-32",
+        className: "max-w-62",
       },
     },
     {
       accessorKey: "date",
-      header: "Date",
+      header: ({ column }) => <SortableHeader column={column} label="Date" />,
       cell: ({ row }) => row.original.date?.toLocaleDateString("de-CH") ?? "—",
     },
     {
       id: "parents",
-      header: "Parents",
+      // ohne accessorFn hat die Spalte keinen Wert zum Vergleichen - sortingFn lief
+      // bisher nur auf undefined === undefined, daher keine sichtbare Umsortierung
+      accessorFn: (row) => constructParentString(row),
+      sortingFn: 'alphanumeric',
+      header: ({ column }) => <SortableHeader column={column} label="Parents" />,
       cell: ({ row }) => constructParentString(row.original),
-
+      meta: {
+        className: "max-w-62",
+      },
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: ({ column }) => <SortableHeader column={column} label="Status" />,
       cell: ({ row }) => <TaskStatusToggle task={row.original} className="aria-pressed:bg-transparent" />,
     },
   ]

@@ -2,9 +2,10 @@
 
 import {
   ColumnDef,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table"
 
@@ -16,6 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { cn } from "@/lib/utils"
 import React from "react"
 
 interface DataTableProps<TData, TValue> {
@@ -31,18 +33,19 @@ export function DataTable<TData, TValue>({
   data,
   getRowClassName,
 }: DataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
+
+  const [sorting, setSorting] = React.useState<SortingState>([])
+
+
   const table = useReactTable({
     data,
     columns,
-    onColumnFiltersChange: setColumnFilters,
+    onSortingChange: setSorting,
     state: {
-      columnFilters,
+      sorting,
     },
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   })
 
   return (
@@ -53,7 +56,10 @@ export function DataTable<TData, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className={(header.column.columnDef.meta as { className?: string } | undefined)?.className}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -75,7 +81,13 @@ export function DataTable<TData, TValue>({
                 className={getRowClassName?.(row.original)}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    className={cn(
+                      "overflow-hidden text-ellipsis",
+                      (cell.column.columnDef.meta as { className?: string } | undefined)?.className
+                    )}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
