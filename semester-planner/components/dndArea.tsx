@@ -52,14 +52,6 @@ export default function dndArea() {
         handleFilterTask();
     }, [tasks, searchFilter]);
 
-      useEffect(() => {
-        console.log(filteredTasks);
-    }, [filteredTasks]);
-
-    useEffect(() => {
-        console.log(searchFilter);
-    }, [searchFilter]);
-
     const handleFilterTask = () => {
         setFilteredTasks(tasks.filter((task) => {
             return constructParentString(task).includes(searchFilter) || task.title.includes(searchFilter);

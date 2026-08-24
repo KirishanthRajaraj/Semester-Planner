@@ -6,27 +6,7 @@ import { TaskItem } from "@/interfaces/taskItem";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { constructParentString } from "@/lib/taskOperations";
-
-
-function getWeeks(start: Date, end: Date) {
-    const weeks: { startDate: Date; endDate: Date }[] = [];
-    let weekStart = new Date(start);
-    while (weekStart < end) {
-        // Sunday
-        const weekEnd = new Date(weekStart);
-        let startDay = weekStart.getDay(); // 0=Sun - 6=Sat
-        const weekdayIndex = (startDay + 6) % 7; // konvertieren zu, Mon=0 - Sun=6, damit es einfacher ist zum rechnen
-        weekEnd.setHours(23, 59, 59, 999);
-
-        const daysToSunday = 6 - weekdayIndex;
-        weekEnd.setDate(weekStart.getDate() + daysToSunday);
-        weeks.push({ startDate: weekStart, endDate: weekEnd < end ? weekEnd : end });
-        weekStart = new Date(weekEnd);
-        weekStart.setDate(weekStart.getDate() + 1);
-        weekStart.setHours(0, 0, 0, 0);
-    }
-    return weeks;
-}
+import { getWeeks } from "@/lib/semesterOperations";
 
 function TaskColumn({ title, tasks }: { title: string; tasks: TaskItem[] }) {
     return (
@@ -65,13 +45,9 @@ function TaskColumn({ title, tasks }: { title: string; tasks: TaskItem[] }) {
 export default function PlanPreviewer({ className }: { className?: string }) {
     const semester = useSemesterStore((state) => state.semester);
     const setWeeks = useSemesterStore((state) => state.setWeeks);
+    const weeks = useSemesterStore((state) => state.weeks);
+
     const tasks = useTaskStore((state) => state.tasks);
-
-    const weeks = getWeeks(semester.startDate, semester.endDate);
-
-    useEffect(() => {
-        setWeeks(weeks);
-    }, [weeks, setWeeks]);
 
     const inbox = tasks.filter((task) => !task.date);
     const outsideOfSemester = tasks.filter(

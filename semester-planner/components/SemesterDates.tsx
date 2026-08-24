@@ -3,6 +3,7 @@ import * as chrono from "chrono-node";
 import { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { getWeeks } from "@/lib/semesterOperations";
 
 const formatDate = (d: Date) =>
     d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
@@ -14,6 +15,7 @@ const inlineInputClass =
 export function SemesterDates({ className }: { className?: string }) {
     const semester = useSemesterStore((s) => s.semester);
     const setSemester = useSemesterStore((s) => s.setSemester);
+    const setWeeks = useSemesterStore((s) => s.setWeeks);
 
     const [startText, setStartText] = useState(formatDate(semester.startDate));
     const [endText, setEndText] = useState(formatDate(semester.endDate));
@@ -41,6 +43,7 @@ export function SemesterDates({ className }: { className?: string }) {
         }
         setError(null);
         setSemester({ startDate: start, endDate: end });
+        setWeeks(getWeeks(start, end));
     };
 
     return (

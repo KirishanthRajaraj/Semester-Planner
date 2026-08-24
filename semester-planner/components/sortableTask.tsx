@@ -17,9 +17,6 @@ export default function DraggableTask({ task, index, group, dimmed, focused, onT
 }) {
     const deleteTaskById = useTaskStore((state) => state.deleteTaskById);
     const tasks = useTaskStore((state) => state.tasks);
-    useEffect(() => {
-        console.log(tasks);
-    }, [tasks]);
 
     const { ref: subtreeRef, isDragging: isSubtreeDragging } = useDraggable({
         id: `subtree-${task.id}`,

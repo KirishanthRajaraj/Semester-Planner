@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { TaskItem, TaskStatus } from "@/interfaces/taskItem";
 import { useTaskStore } from "@/store/taskStore";
+import { useSemesterStore } from "@/store/semesterStore";
 import { ChevronRight } from "lucide-react"
 
 // text editor styles
@@ -104,6 +105,20 @@ export default function TextareaPlanner({ className }: { className?: string }) {
             offsetDuration += line.length + 1;
         }
 
+        // colour the week tokens
+        let offsetWeekToken = 0;
+        for (const line of text.split("\n")) {
+            const weekMatch = line.match(/:week(\d+):/i);
+            if (weekMatch && weekMatch.index !== undefined) {
+                const weekStart = offsetWeekToken + weekMatch.index;
+                ranges.push(
+                    Decoration.mark({ class: "bg-amber-500/50 rounded-sm p-0.5" })
+                        .range(weekStart, weekStart + weekMatch[0].length)
+                );
+            }
+            offsetWeekToken += line.length + 1;
+        }
+
         return Decoration.set(ranges, true);
     }
 
@@ -142,6 +157,18 @@ export default function TextareaPlanner({ className }: { className?: string }) {
                 rest = rest.replace(statusToken, "").trim();
             }
 
+            // :week3: -> belongs generally to week 3, no specific day
+            let noDay = false;
+            let weekDate: Date | undefined = undefined;
+            const weekMatch = rest.match(/:week(\d+):/i);
+            if (weekMatch && weekMatch.index !== undefined) {
+                noDay = true;
+                const weekNumber = parseInt(weekMatch[1]);
+                weekDate = useSemesterStore.getState().weeks[weekNumber - 1]?.endDate;
+                const weekToken = rest.slice(weekMatch.index, weekMatch.index + weekMatch[0].length);
+                rest = rest.replace(weekToken, "").trim();
+            }
+
             // remove durations from the text before saving
             let duration = undefined;
             const durationMatch = rest.match(DURATION_REGEX);
@@ -171,9 +198,10 @@ export default function TextareaPlanner({ className }: { className?: string }) {
             const item: TaskItem = ({
                 id: crypto.randomUUID(),
                 title: title,
-                date: date,
+                date: weekDate ?? date,
                 duration: duration,
                 status: status,
+                noDay: noDay,
                 parentId: parentAtDepth[depth - 1],
                 depth: depth
             });
@@ -193,15 +221,20 @@ export default function TextareaPlanner({ className }: { className?: string }) {
     // this function should always align with what textToTaskItem() does, but backwards
     const taskItemsToText = () => {
         const tasks: TaskItem[] = useTaskStore.getState().tasks;
+        const weeks = useSemesterStore.getState().weeks;
         let text: string = "";
         tasks.forEach((task) => {
+            // render weektoken
+            const weekIndex = task.noDay && task.date
+                ? weeks.findIndex((w) => task.date! >= w.startDate && task.date! <= w.endDate) : -1;
+            const weekStr = weekIndex !== -1 ? ` :week${weekIndex + 1}:` : "";
             // render date
-            const dateStr = task.date
+            const dateStr = weekIndex === -1 && task.date
                 ? " " + task.date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
                 : "";
             // render status
             const statusStr = task.status === "done" ? " :done:" : task.status === "inprogress" ? " :doing:" : "";
-            text += "\t".repeat(task.depth ?? 0) + task.title + dateStr + statusStr;
+            text += "\t".repeat(task.depth ?? 0) + task.title + dateStr + weekStr + statusStr;
             // render duration
             if (task.duration) {
                 const hours = task.duration / 60;
@@ -210,7 +243,6 @@ export default function TextareaPlanner({ className }: { className?: string }) {
             text += "\n"
 
         });
-        textToTaskItem(text, true);
         setTextAreaText(text);
     }
 
