@@ -6,8 +6,9 @@ import { DragDropProvider } from "@dnd-kit/react";
 import Droppable from "./droppable";
 import { useSemesterStore } from "@/store/semesterStore";
 import { ScrollArea } from "./ui/scroll-area";
-import { getChildren, getDescendants } from "@/lib/taskOperations";
+import { constructParentString, getChildren, getDescendants } from "@/lib/taskOperations";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
+import { Input } from "./ui/input";
 
 export default function dndArea() {
     const setTasks = useTaskStore((state) => state.setTasks);
@@ -15,7 +16,8 @@ export default function dndArea() {
     const weeks = useSemesterStore((state) => state.weeks);
     const semester = useSemesterStore((state) => state.semester);
     const currentWeek = useRef<HTMLDivElement>(null);
-
+    const [searchFilter, setSearchFilter] = useState<string>("");
+    const [filteredTasks, setFilteredTasks] = useState<TaskItem[]>([]);
 
     // the exact task that has focuse toggled
     const [focusedId, setFocusedId] = useState<string | undefined>(undefined);
@@ -44,6 +46,25 @@ export default function dndArea() {
     const toggleFocus = (task: TaskItem) => {
         setFocusedId((prev) => (prev === task.id ? undefined : task.id));
     };
+
+
+    useEffect(() => {
+        handleFilterTask();
+    }, [tasks, searchFilter]);
+
+      useEffect(() => {
+        console.log(filteredTasks);
+    }, [filteredTasks]);
+
+    useEffect(() => {
+        console.log(searchFilter);
+    }, [searchFilter]);
+
+    const handleFilterTask = () => {
+        setFilteredTasks(tasks.filter((task) => {
+            return constructParentString(task).includes(searchFilter) || task.title.includes(searchFilter);
+        }));
+    }
 
     // Mehrfachauswahl per shift + klick
     const [multiSelectedIds, setMultiSelectedIds] = useState<Set<string>>(new Set());
@@ -174,6 +195,14 @@ export default function dndArea() {
                 });
             }}
         >
+            <div className="flex w-62 justify-center gap-4 items-center p-4">
+                <Input
+                    value={searchFilter}
+                    onChange={(e) => setSearchFilter(e.target.value)}
+                    placeholder="Search..."
+                    className="ring-0 !shadow-none hover:!border-none focus:border-none duration-0 transition-none py-6 py-2"
+                />
+            </div>
             <div className="flex w-full justify-center gap-4 items-center">
                 {focusedId && (
                     <ToggleGroup
@@ -196,13 +225,13 @@ export default function dndArea() {
                 <ScrollArea className={`h-[calc(100vh-200px)]`}>
                     <div className="flex flex-col gap-8 w-32 md:w-52 lg:w-80 pr-4">
                         <Droppable id={`inbox`} title={`Inbox`}>
-                            {tasks.filter((task) => !task.date && getChildren(tasks, task.id).length == 0).map((task, index) => (
+                            {filteredTasks.filter((task) => !task.date && getChildren(tasks, task.id).length == 0).map((task, index) => (
                                 <DraggableTask key={task.id} task={task} index={index} group="inbox" dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
                             ))}
                         </Droppable>
                         {tasks.filter((task) => task.date && (task.date < semester.startDate || task.date > semester.endDate)).length > 0 &&
                             <Droppable id={`outside-semester`} title={`Outside semester`}>
-                                {tasks.filter((task) => task.date && getChildren(tasks, task.id).length == 0 && (task.date < semester.startDate || task.date > semester.endDate)).map((task, index) => (
+                                {filteredTasks.filter((task) => task.date && getChildren(tasks, task.id).length == 0 && (task.date < semester.startDate || task.date > semester.endDate)).map((task, index) => (
                                     <DraggableTask key={task.id} task={task} index={index} group="outside-semester" dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
                                 ))}
                             </Droppable>
@@ -214,11 +243,11 @@ export default function dndArea() {
                     <div className="w-full flex flex-col gap-2 p-4">
                         {weeks.map((week, weekIndex) => (
                             <div key={`weekwrapper-${weekIndex + 1}`} ref={week.startDate <= new Date() && week.endDate >= new Date() ? currentWeek : undefined}>
-                                <Droppable id={`week-${weekIndex + 1}`} title={`Week ${weekIndex + 1}`} key={weekIndex + 1} week={week} 
-                                className={`w-full ${week.endDate < new Date() ? 'opacity-40' : ''}`}
-                                
+                                <Droppable id={`week-${weekIndex + 1}`} title={`Week ${weekIndex + 1}`} key={weekIndex + 1} week={week}
+                                    className={`w-full ${week.endDate < new Date() ? 'opacity-40' : ''}`}
+
                                 >
-                                    {tasks.filter(task => task.date && getChildren(tasks, task.id).length == 0 && task.date >= week.startDate && task.date <= week.endDate && task.noDay).map((task, index) => (
+                                    {filteredTasks.filter(task => task.date && getChildren(tasks, task.id).length == 0 && task.date >= week.startDate && task.date <= week.endDate && task.noDay).map((task, index) => (
                                         <DraggableTask key={task.id} task={task} index={index} group={`week-${weekIndex + 1}`} dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
                                     ))}
                                 </Droppable>
@@ -232,7 +261,7 @@ export default function dndArea() {
                                                 ${day.getDay() != 1 && dayIndex == 0 ? COL_START_BY_DAY[day.getDay()] : ''}
                                                 ${week.endDate < new Date() ? 'opacity-40' : ''}`}
                                             isToday={day.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)}>
-                                            {tasks.filter(task => task.date && getChildren(tasks, task.id).length == 0 && task.date.toDateString() === day.toDateString() && !task.noDay).map((task, index) => (
+                                            {filteredTasks.filter(task => task.date && getChildren(tasks, task.id).length == 0 && task.date.toDateString() === day.toDateString() && !task.noDay).map((task, index) => (
                                                 <DraggableTask key={`day-${dayIndex + 1}-${task.id}`} task={task} index={index} group={`week-${weekIndex + 1}-day-${dayIndex + 1}`} dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
                                             ))}
                                         </Droppable>

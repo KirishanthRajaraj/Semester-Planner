@@ -210,6 +210,7 @@ export default function TextareaPlanner({ className }: { className?: string }) {
             text += "\n"
 
         });
+        textToTaskItem(text, true);
         setTextAreaText(text);
     }
 
