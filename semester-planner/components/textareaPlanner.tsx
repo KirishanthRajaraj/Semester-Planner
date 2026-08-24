@@ -108,8 +108,8 @@ export default function TextareaPlanner({ className }: { className?: string }) {
         // colour the week tokens
         let offsetWeekToken = 0;
         for (const line of text.split("\n")) {
-            const weekMatch = line.match(/:week(\d+):/i);
-            if (weekMatch && weekMatch.index !== undefined) {
+            const weekMatch = line.match(/\bweek\s?(\d+)\b/i);
+            if (weekMatch && weekMatch.index !== undefined && useSemesterStore.getState().weeks[parseInt(weekMatch[1]) - 1]) {
                 const weekStart = offsetWeekToken + weekMatch.index;
                 ranges.push(
                     Decoration.mark({ class: "bg-amber-500/50 rounded-sm p-0.5" })
@@ -157,10 +157,10 @@ export default function TextareaPlanner({ className }: { className?: string }) {
                 rest = rest.replace(statusToken, "").trim();
             }
 
-            // :week3: -> belongs generally to week 3, no specific day
+            // "week 3" -> belongs generally to week 3, no specific day
             let noDay = false;
             let weekDate: Date | undefined = undefined;
-            const weekMatch = rest.match(/:week(\d+):/i);
+            const weekMatch = rest.match(/\bweek\s?(\d+)\b/i);
             if (weekMatch && weekMatch.index !== undefined) {
                 noDay = true;
                 const weekNumber = parseInt(weekMatch[1]);
@@ -227,7 +227,7 @@ export default function TextareaPlanner({ className }: { className?: string }) {
             // render weektoken
             const weekIndex = task.noDay && task.date
                 ? weeks.findIndex((w) => task.date! >= w.startDate && task.date! <= w.endDate) : -1;
-            const weekStr = weekIndex !== -1 ? ` :week${weekIndex + 1}:` : "";
+            const weekStr = weekIndex !== -1 ? ` week ${weekIndex + 1}` : "";
             // render date
             const dateStr = weekIndex === -1 && task.date
                 ? " " + task.date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
