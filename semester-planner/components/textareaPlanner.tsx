@@ -1,17 +1,16 @@
 'use client'
 import CodeMirror from "@uiw/react-codemirror";
 import { indentWithTab } from "@codemirror/commands";
-import { Decoration, EditorView, MatchDecorator, ViewPlugin, keymap, type DecorationSet, type ViewUpdate } from "@codemirror/view";
+import { Decoration, EditorView, ViewPlugin, keymap, type DecorationSet, type ViewUpdate } from "@codemirror/view";
 import { type Range } from "@codemirror/state";
 import { indentUnit } from "@codemirror/language";
 import * as chrono from "chrono-node";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { TaskItem, TaskStatus } from "@/interfaces/taskItem";
 import { useTaskStore } from "@/store/taskStore";
-import { ArrowRightToLine, ChevronRight } from "lucide-react"
-import parse from 'parse-duration'
+import { ChevronRight } from "lucide-react"
 
 // text editor styles
 const editorTheme = EditorView.theme({
@@ -195,7 +194,7 @@ export default function TextareaPlanner({ className }: { className?: string }) {
     const taskItemsToText = () => {
         const tasks: TaskItem[] = useTaskStore.getState().tasks;
         let text: string = "";
-        tasks.forEach((task, index) => {
+        tasks.forEach((task) => {
             // render date
             const dateStr = task.date
                 ? " " + task.date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
@@ -226,7 +225,7 @@ export default function TextareaPlanner({ className }: { className?: string }) {
     };
 
     return (
-        <div className={`w-full ${className} min-h-96`}>
+        <div className={`w-full ${className} min-h-96 max-w-2/3`}>
             <CodeMirror
                 placeholder="e.g. math homework due tomorrow at 18:00"
                 basicSetup={{

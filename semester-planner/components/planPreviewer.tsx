@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useMemo, useState } from "react";
+import { useEffect } from "react";
 import { useSemesterStore } from "@/store/semesterStore";
 import { useTaskStore } from "@/store/taskStore";
 import { TaskItem } from "@/interfaces/taskItem";
@@ -66,7 +66,6 @@ export default function PlanPreviewer({ className }: { className?: string }) {
     const semester = useSemesterStore((state) => state.semester);
     const setWeeks = useSemesterStore((state) => state.setWeeks);
     const tasks = useTaskStore((state) => state.tasks);
-
 
     const weeks = getWeeks(semester.startDate, semester.endDate);
 

@@ -1,8 +1,5 @@
 'use client';
 
-import DndArea from "@/components/dndArea";
-import { SemesterDates } from "@/components/SemesterDates";
-
 export default function settings() {
     return (
         <div className="font-sans flex flex-col flex-1 justify-center">

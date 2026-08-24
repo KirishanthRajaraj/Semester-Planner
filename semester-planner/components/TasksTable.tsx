@@ -3,21 +3,13 @@ import {
 } from "@tanstack/react-table"
 
 
-import { Circle, CircleDot, CircleCheck } from "lucide-react";
 import { useTaskStore } from "@/store/taskStore";
-import { TaskItem, TaskStatus } from "@/interfaces/taskItem";
+import { TaskItem } from "@/interfaces/taskItem";
 import { constructParentString, getDescendants, isTaskOverdue } from "@/lib/taskOperations";
 import { DataTable } from "./ui/datatable";
-import { Toggle } from "./ui/toggle";
-import { DropdownMenu } from "./ui/dropdown-menu";
 import { TopTasksDropdown } from "./moduleDropdown";
 import { useEffect, useState } from "react";
 import { TaskStatusToggle } from "./TaskStatusToggle";
-
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-}
 
 export function TasksTable() {
 
@@ -44,6 +36,9 @@ export function TasksTable() {
     {
       accessorKey: "title",
       header: "Title",
+      meta: {
+        className: "max-w-32",
+      },
     },
     {
       accessorKey: "date",
@@ -64,7 +59,7 @@ export function TasksTable() {
   ]
 
   return (
-    <div className="w-full mx-auto py-10">
+    <div className="w-full mx-auto py-10 max-w-2/3">
       <TopTasksDropdown className="mb-4" setModuleFilter={setModuleFilter} />
 
       <DataTable

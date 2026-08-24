@@ -1,13 +1,12 @@
 import { TaskItem } from "@/interfaces/taskItem";
 import { useTaskStore } from "@/store/taskStore";
 import { useEffect, useMemo, useRef, useState } from "react";
-import SortableTask from "./sortableTask";
+import DraggableTask from "./sortableTask";
 import { DragDropProvider } from "@dnd-kit/react";
-import { isSortable } from "@dnd-kit/react/sortable";
 import Droppable from "./droppable";
 import { useSemesterStore } from "@/store/semesterStore";
-import { ScrollArea, ScrollBar } from "./ui/scroll-area";
-import { getChildren, getDescendants, isTaskOverdue } from "@/lib/taskOperations";
+import { ScrollArea } from "./ui/scroll-area";
+import { getChildren, getDescendants } from "@/lib/taskOperations";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 
 export default function dndArea() {
@@ -198,13 +197,13 @@ export default function dndArea() {
                     <div className="flex flex-col gap-8 w-32 md:w-52 lg:w-80 pr-4">
                         <Droppable id={`inbox`} title={`Inbox`}>
                             {tasks.filter((task) => !task.date && getChildren(tasks, task.id).length == 0).map((task, index) => (
-                                <SortableTask key={task.id} task={task} index={index} group="inbox" dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
+                                <DraggableTask key={task.id} task={task} index={index} group="inbox" dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
                             ))}
                         </Droppable>
                         {tasks.filter((task) => task.date && (task.date < semester.startDate || task.date > semester.endDate)).length > 0 &&
                             <Droppable id={`outside-semester`} title={`Outside semester`}>
                                 {tasks.filter((task) => task.date && getChildren(tasks, task.id).length == 0 && (task.date < semester.startDate || task.date > semester.endDate)).map((task, index) => (
-                                    <SortableTask key={task.id} task={task} index={index} group="outside-semester" dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
+                                    <DraggableTask key={task.id} task={task} index={index} group="outside-semester" dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
                                 ))}
                             </Droppable>
                         }
@@ -220,7 +219,7 @@ export default function dndArea() {
                                 
                                 >
                                     {tasks.filter(task => task.date && getChildren(tasks, task.id).length == 0 && task.date >= week.startDate && task.date <= week.endDate && task.noDay).map((task, index) => (
-                                        <SortableTask key={task.id} task={task} index={index} group={`week-${weekIndex + 1}`} dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
+                                        <DraggableTask key={task.id} task={task} index={index} group={`week-${weekIndex + 1}`} dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
                                     ))}
                                 </Droppable>
 
@@ -234,7 +233,7 @@ export default function dndArea() {
                                                 ${week.endDate < new Date() ? 'opacity-40' : ''}`}
                                             isToday={day.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)}>
                                             {tasks.filter(task => task.date && getChildren(tasks, task.id).length == 0 && task.date.toDateString() === day.toDateString() && !task.noDay).map((task, index) => (
-                                                <SortableTask key={`day-${dayIndex + 1}-${task.id}`} task={task} index={index} group={`week-${weekIndex + 1}-day-${dayIndex + 1}`} dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
+                                                <DraggableTask key={`day-${dayIndex + 1}-${task.id}`} task={task} index={index} group={`week-${weekIndex + 1}-day-${dayIndex + 1}`} dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
                                             ))}
                                         </Droppable>
                                     ))}

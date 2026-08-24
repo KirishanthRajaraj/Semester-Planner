@@ -13,7 +13,7 @@ interface SemesterStore {
 export const useSemesterStore = create<SemesterStore>()(
     persist(
         (set) => ({
-            semester: { startDate: new Date('2026-09-15'), endDate: new Date('2027-02-19') },
+            semester: { startDate: new Date('2026-08-15'), endDate: new Date('2027-02-19') },
             setSemester: (semester) => set({ semester }),
             weeks: [],
             setWeeks: (weeks) => set({ weeks }),
@@ -21,6 +21,7 @@ export const useSemesterStore = create<SemesterStore>()(
         {
             name: "semester-storage",
             storage: createJSONStorage(() => localStorage, { reviver: reviveDates }),
+
         }
     )
 );

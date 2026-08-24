@@ -1,20 +1,14 @@
 import { TaskItem } from "@/interfaces/taskItem";
-import { useSortable } from "@dnd-kit/react/sortable";
-import { SortableKeyboardPlugin } from "@dnd-kit/dom/sortable";
-import { pointerIntersection } from "@dnd-kit/collision";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import DragDropIcon from "@/icons/dndIcon";
+import { Card } from "./ui/card";
 import { useTaskStore } from "@/store/taskStore";
 import { constructParentString, getDescendants, isTaskOverdue } from "@/lib/taskOperations";
-import { CircleX } from 'lucide-react';
 import { X, Lightbulb } from 'lucide-react';
 import { useEffect } from "react";
 import { TaskStatusToggle } from "./TaskStatusToggle";
 import { Toggle } from "./ui/toggle";
 import { useDraggable } from "@dnd-kit/react";
-import { KeyboardSensor } from "@dnd-kit/dom";
 
-export default function SortableTask({ task, index, group, dimmed, focused, onToggleFocus, selected, selectionSize, onToggleSelect }: {
+export default function DraggableTask({ task, index, group, dimmed, focused, onToggleFocus, selected, selectionSize, onToggleSelect }: {
     task: TaskItem; index: number; group: string;
     dimmed?: boolean; focused?: boolean;
     onToggleFocus: (task: TaskItem) => void;

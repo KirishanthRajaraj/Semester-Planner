@@ -1,7 +1,5 @@
 import { useDroppable } from "@dnd-kit/react";
-import { CollisionPriority } from "@dnd-kit/abstract";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { DivideCircleIcon } from "lucide-react";
+import { Card, CardContent, CardTitle } from "./ui/card";
 import React from "react";
 
 export default function droppable({ id, title, isDay, className, children, week, isToday }: { id: string; title: string; isDay?: boolean; className?: string; children: React.ReactNode, week?: { startDate: Date, endDate: Date }, isToday?: boolean }) {
