@@ -53,8 +53,10 @@ export default function TextareaPlanner({ className }: { className?: string }) {
 
     const boardRevision = useTaskStore((state) => state.boardRevision);
 
+    // parse once on mount, for seeded tasks
     useEffect(() => {
-        taskItemsToText();
+        const text = taskItemsToText();
+        textToTaskItem(text, true);
     }, []);
 
     // after mutations to the previewer, build the text again with the update tasks from zustand store
@@ -147,7 +149,20 @@ export default function TextareaPlanner({ className }: { className?: string }) {
 
                 // mark overdue tasks
                 const isDone = /:done:/i.test(line);
-                const isTaskOverdue = isDateOverdue(chrono.parse(line)[0]?.start.date());
+                let isTaskOverdue = false;
+                if (chrono.parse(line)[0]?.start.date()) {
+                    isTaskOverdue = isDateOverdue(chrono.parse(line)[0]?.start.date())
+                }
+                const weekMatch = line.match(/\bweek\s?(\d+)\b/i);
+                if (weekMatch && weekMatch.index !== undefined) {
+                    const weekNumber = parseInt(weekMatch[1]);
+                    const weekDate = useSemesterStore.getState().weeks[weekNumber - 1]?.endDate;
+                    if (weekDate) {
+                        isTaskOverdue = isDateOverdue(weekDate);
+                    }
+                }
+
+
 
                 if (!isDone && isTaskOverdue) {
                     ranges.push(
@@ -286,6 +301,7 @@ export default function TextareaPlanner({ className }: { className?: string }) {
 
         });
         setTextAreaText(text);
+        return text;
     }
 
     const updatePreview = (value: string) => {
