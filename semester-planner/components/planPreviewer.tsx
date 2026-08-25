@@ -138,7 +138,7 @@ export default function PlanPreviewer({ className }: { className?: string }) {
     const renderRows = (mode: "heat" | "dots") => (
         <div className="flex flex-col gap-0.5">
             {/* Headerrow */}
-            <div className="flex items-center gap-1 mt-1">
+            <div className="flex items-center gap-1 mt-1 ml-5">
                 <div className="grid grid-cols-8 gap-0.5 flex-1">
                     {WEEKDAY_LABELS.map((d, i) => (
                         <span key={i} className="text-[9px] text-muted-foreground text-center leading-none">{d}</span>

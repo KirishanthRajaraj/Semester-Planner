@@ -38,6 +38,22 @@ export const getDescendants = (tasks: TaskItem[], parentId: string): TaskItem[] 
     ]);
 }
 
+export const getTaskProgress = (tasks: TaskItem[], task: TaskItem): number => {
+    const children = getChildren(tasks, task.id);
+
+    //base case
+    if (children.length === 0) {
+        return task.status === "done" ? 1 : 0;
+    }
+
+    let sum = 0;
+    for (const child of children) {
+        sum += getTaskProgress(tasks, child);
+    }
+
+    return sum / children.length;
+}
+
 export const constructParentString = (task: TaskItem): string => {
     const { getTaskById } = useTaskStore.getState();
 

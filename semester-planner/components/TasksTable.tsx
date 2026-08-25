@@ -80,7 +80,7 @@ export function TasksTable() {
   ]
 
   return (
-    <div className="w-full mx-auto py-10 max-w-2/3">
+    <div className="w-full mx-auto py-10 md:max-w-2/3">
       <TopTasksDropdown className="mb-4" setModuleFilter={setModuleFilter} />
 
       <DataTable
@@ -94,6 +94,7 @@ export function TasksTable() {
             return isTaskOverdue(task) ? "bg-red-500/60" : ""
           }
           // tasks due next 7 days
+          
           if (task.date && task.date?.getDate() < (new Date().getDate() + 7)) {
             return "bg-yellow-400/60"
           }
