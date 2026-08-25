@@ -1,3 +1,8 @@
-export default function InfoPage() {
+import InfoPage from "@/components/infoPage";
+
+export default function Info() {
     
+    return(
+        <InfoPage />
+    )
 }
