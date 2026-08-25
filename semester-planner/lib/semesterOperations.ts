@@ -1,3 +1,14 @@
+// returns all days of the input week
+export function getDays({ startDate, endDate }: { startDate: Date; endDate: Date }): Date[] {
+    const days: Date[] = [];
+    const d = new Date(startDate);
+    while (d <= endDate) {
+        days.push(new Date(d));
+        d.setDate(d.getDate() + 1);
+    }
+    return days;
+}
+
 export function getWeeks(start: Date, end: Date) {
     const weeks: { startDate: Date; endDate: Date }[] = [];
     let weekStart = new Date(start);

@@ -38,7 +38,7 @@ export default function RootLayout({
           >
             <AppSidebar />
 
-            <main className="w-full min-h-full flex flex-col justify-center items-center container mx-auto">
+            <main className="w-full min-h-full flex flex-col justify-center items-center mx-auto">
               {children}
             </main>
 

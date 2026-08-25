@@ -50,9 +50,17 @@ export default function TextareaPlanner({ className }: { className?: string }) {
     const router = useRouter();
     const DURATION_REGEX = /\b(\d+(?:\.\d+)?)\s?(hours?|hrs?|h)\b/i;
 
+    const boardRevision = useTaskStore((state) => state.boardRevision);
+
     useEffect(() => {
         taskItemsToText();
     }, []);
+
+    // after mutations to the previewer, build the text again with the update tasks from zustand store
+    useEffect(() => {
+        if (boardRevision === 0) return;
+        taskItemsToText();
+    }, [boardRevision]);
 
 
     // collect every markation to submit to DecorationSet all at once

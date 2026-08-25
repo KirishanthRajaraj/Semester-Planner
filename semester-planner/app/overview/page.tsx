@@ -60,7 +60,7 @@ export default function Overview() {
 
     return (
         <>
-            <div className="w-full font-sans flex flex-col flex-1">
+            <div className="w-full font-sans flex flex-col flex-1 container p-4">
 
                 <h1 className="text-3xl font-bold mb-12 mt-16">Übersicht</h1>
 
@@ -74,7 +74,7 @@ export default function Overview() {
                                 return (
                                     <div key={task.task.id}>
                                         <p className="font-bold mb-2">{task.task.title}</p>
-                                        <Progress value={(task.progress) * 100} className="w-[40%]" />
+                                        <Progress value={(task.progress) * 100} className="w-[80%]" />
                                     </div>
                                 );
                             })}

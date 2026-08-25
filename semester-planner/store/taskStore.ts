@@ -10,7 +10,7 @@ const DEFAULT_TASKS: TaskItem[] = [
   { id: "seed-modul-a", title: "modul a", depth: 0, status: "todo" },
   { id: "seed-emulator", title: "emulator installieren next week", depth: 1, parentId: "seed-modul-a", status: "todo", duration: 60 },
   { id: "seed-task-b", title: "task b week 4", depth: 1, parentId: "seed-modul-a", status: "todo" },
-  { id: "seed-task-b-sub-a", title: "subtask a", depth: 2, parentId: "seed-task-b", status: "todo" },
+  { id: "seed-task-b-sub-a", title: "subtask a", depth: 2, parentId: "seed-task-b", status: "done" },
   { id: "seed-task-b-sub-b", title: "subtask b", depth: 2, parentId: "seed-task-b", status: "todo", duration: 120 },
   { id: "seed-task-c", title: "task c", depth: 1, parentId: "seed-modul-a", status: "todo" },
   { id: "seed-task-c-sub-a", title: "subtask a week 5", depth: 2, parentId: "seed-task-c", status: "todo" },
@@ -35,6 +35,11 @@ const DEFAULT_TASKS: TaskItem[] = [
 
 interface TaskStore {
   tasks: TaskItem[];
+  // wird nur von previewer mutationen hochgezählt (nicht vom textplaner), damit der
+  // textplaner weiss, wann er seinen text aus dem store neu generieren muss
+  // zusammengefasst um syncing issues zu vermeiden
+  boardRevision: number;
+  bumpBoardRevision: () => void;
   setTasks: (tasks: TaskItem[]) => void;
   getTaskById: (id: string) => TaskItem | undefined;
   setTaskStatusById: (id: string, status: TaskStatus) => void;
@@ -45,6 +50,9 @@ export const useTaskStore = create<TaskStore>()(
   persist(
     (set, get) => ({
       tasks: DEFAULT_TASKS,
+      boardRevision: 0,
+      // simple counter, to trigger textareaPlanner.tsx for changes
+      bumpBoardRevision: () => set({ boardRevision: get().boardRevision + 1 }),
       setTasks: (tasks: TaskItem[]) => set({ tasks }),
       getTaskById: (id: string) => get().tasks.find((t) => t.id === id),
       // marking a task "done" also marks all of its descendants "done"
@@ -58,16 +66,19 @@ export const useTaskStore = create<TaskStore>()(
         }
         set({
           tasks: tasks.map((t) => (idsToUpdate.has(t.id) ? { ...t, status } : t)),
+          boardRevision: get().boardRevision + 1,
         });
       },
       deleteTaskById: (id: string) => set({
         tasks: get().tasks.filter((t) => t.id !== id),
+        boardRevision: get().boardRevision + 1,
       })
     }),
     {
       name: "task-storage",
       storage: createJSONStorage(() => localStorage, { reviver: reviveDates }),
-
+      // boardRevision nach page reload zurücksetzen
+      partialize: (state) => ({ tasks: state.tasks }),
     }
   )
 );
