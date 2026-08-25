@@ -12,6 +12,7 @@ import { TaskItem, TaskStatus } from "@/interfaces/taskItem";
 import { useTaskStore } from "@/store/taskStore";
 import { useSemesterStore } from "@/store/semesterStore";
 import { ChevronRight } from "lucide-react"
+import { isDateOverdue, isTaskOverdue } from "@/lib/taskOperations";
 
 // text editor styles
 const editorTheme = EditorView.theme({
@@ -67,7 +68,7 @@ export default function TextareaPlanner({ className }: { className?: string }) {
     function buildDecorations(text: string): DecorationSet {
         const ranges: Range<Decoration>[] = [];
 
-        // date spans over the whole doc (chrono gives absolute offsets)
+        // mark dates, chrono parse returns arrays of results with index, so no loop needed
         chrono.parse(text).forEach((result) => {
             ranges.push(
                 Decoration.mark({ class: "bg-primary/30 dark:bg-primary/50 rounded-sm p-0.5" })
@@ -75,13 +76,17 @@ export default function TextareaPlanner({ className }: { className?: string }) {
             );
         });
 
-        // every line: colour the :done:/:doing: token, and strike through done lines
-        let offset = 0;
-        for (const line of text.split("\n")) {
+        // mark parenttasks opacity, toptask underline
+        const lines = text.split("\n");
+        let offsetLine = 0;
+        lines.forEach((line, index) => {
+            const depth = line.match(/^\t*/)?.[0].length ?? 0;
+
+            // mark :done:, :doing:
             const statusMatch = line.match(/:(done|doing):/i);
             if (statusMatch && statusMatch.index !== undefined) {
                 const isDone = statusMatch[1].toLowerCase() === "done";
-                const tokenStart = offset + statusMatch.index;
+                const tokenStart = offsetLine + statusMatch.index;
                 ranges.push(
                     Decoration.mark({ class: isDone ? "text-green-500 font-bold" : "text-amber-500 font-bold" })
                         .range(tokenStart, tokenStart + statusMatch[0].length)
@@ -91,41 +96,70 @@ export default function TextareaPlanner({ className }: { className?: string }) {
                     if (indent < line.length) {
                         ranges.push(
                             Decoration.mark({ class: "line-through opacity-60" })
-                                .range(offset + indent, offset + line.length)
+                                .range(offsetLine + indent, offsetLine + line.length)
                         );
                     }
                 }
             }
-            offset += line.length + 1; // + the newline, save the offset
-        }
 
-        // colour the durations
-        let offsetDuration = 0;
-        for (const line of text.split("\n")) {
+            // mark durations
             const durationMatch = line.match(DURATION_REGEX);
             if (durationMatch && durationMatch.index !== undefined) {
-                const durationStart = offsetDuration + durationMatch.index;
+                const durationStart = offsetLine + durationMatch.index;
                 ranges.push(
                     Decoration.mark({ class: "bg-cyan-400/30 dark:bg-cyan-400/50 rounded-sm p-0.5" })
                         .range(durationStart, durationStart + durationMatch[0].length)
                 );
             }
-            offsetDuration += line.length + 1;
-        }
 
-        // colour the week tokens
-        let offsetWeekToken = 0;
-        for (const line of text.split("\n")) {
+            //mark week {index}
             const weekMatch = line.match(/\bweek\s?(\d+)\b/i);
             if (weekMatch && weekMatch.index !== undefined && useSemesterStore.getState().weeks[parseInt(weekMatch[1]) - 1]) {
-                const weekStart = offsetWeekToken + weekMatch.index;
+                const weekStart = offsetLine + weekMatch.index;
                 ranges.push(
                     Decoration.mark({ class: "bg-amber-500/50 rounded-sm p-0.5" })
                         .range(weekStart, weekStart + weekMatch[0].length)
                 );
             }
-            offsetWeekToken += line.length + 1;
-        }
+
+
+            if (line.trim() !== "") {
+                // next line that isn't empty
+                const nextLine = lines.slice(index + 1).find((l) => l.trim() !== "");
+                // get the depth of the next line
+                const nextDepth = nextLine?.match(/^\t*/)?.[0].length ?? 0;
+                const hasChildren = nextLine !== undefined && nextDepth - depth == 1;
+
+                // mark parent reduced opacity
+                if (hasChildren) {
+                    ranges.push(
+                        Decoration.mark({ class: "opacity-50" })
+                            .range(offsetLine + depth, offsetLine + line.length)
+                    );
+                }
+                // mark underline for root tasks
+                if (depth === 0) {
+                    ranges.push(
+                        Decoration.mark({ class: "underline" })
+                            .range(offsetLine + depth, offsetLine + line.length)
+                    );
+                }
+
+                // mark overdue tasks
+                const isDone = /:done:/i.test(line);
+                const isTaskOverdue = isDateOverdue(chrono.parse(line)[0]?.start.date());
+
+                if (!isDone && isTaskOverdue) {
+                    ranges.push(
+                        Decoration.mark({ class: "bg-red-500/40 rounded-sm p-0.5" })
+                            .range(offsetLine + depth, offsetLine + line.length)
+                    );
+                }
+            }
+            offsetLine += line.length + 1;
+        });
+
+
 
         return Decoration.set(ranges, true);
     }

@@ -1,8 +1,24 @@
 import { TaskItem } from "@/interfaces/taskItem";
 import { useTaskStore } from "@/store/taskStore";
 
-export const isTaskOverdue = (task: TaskItem): boolean =>
-    !!task.date && task.date < new Date() && task.status != "done";
+export const isTaskOverdue = (task: TaskItem): boolean => {
+    if (!task.date || task.status === "done") return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const taskDate = new Date(task.date);
+    taskDate.setHours(0, 0, 0, 0);
+    return taskDate < today;
+};
+
+export const isDateOverdue = (date: Date): boolean => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+
+    return checkDate < today;
+};
 
 // get direct children of a task
 export const getChildren = (tasks: TaskItem[], parentId: string): TaskItem[] =>

@@ -35,9 +35,7 @@ const DEFAULT_TASKS: TaskItem[] = [
 
 interface TaskStore {
   tasks: TaskItem[];
-  // wird nur von previewer mutationen hochgezählt (nicht vom textplaner), damit der
-  // textplaner weiss, wann er seinen text aus dem store neu generieren muss
-  // zusammengefasst um syncing issues zu vermeiden
+  // wird nur von previewer mutationen hochgezählt (nicht vom textplaner)
   boardRevision: number;
   bumpBoardRevision: () => void;
   setTasks: (tasks: TaskItem[]) => void;
