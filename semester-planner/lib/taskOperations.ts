@@ -1,4 +1,4 @@
-import { TaskItem } from "@/interfaces/taskItem";
+import { TaskItem, TaskStatus } from "@/interfaces/taskItem";
 import { useTaskStore } from "@/store/taskStore";
 
 export const isTaskOverdue = (task: TaskItem): boolean => {
@@ -36,6 +36,37 @@ export const getDescendants = (tasks: TaskItem[], parentId: string): TaskItem[] 
         child,
         ...getDescendants(tasks, child.id),
     ]);
+}
+
+// status cascade done and todo.
+// all children done -> walk up ancestors to set done
+// all parents done -> walk down descendants to set done
+export const applyStatusCascade = (tasks: TaskItem[], id: string, status: TaskStatus): TaskItem[] => {
+    const idsToUpdate = new Set<string>([id]);
+    for (const descendant of getDescendants(tasks, id)) {
+        idsToUpdate.add(descendant.id);
+    }
+
+    let updatedTasks = tasks.map((t) => (idsToUpdate.has(t.id) ? { ...t, status } : t));
+
+    let current = updatedTasks.find((t) => t.id === id);
+    while (current && current.parentId !== undefined) {
+        const parentId = current.parentId;
+        const siblings = getChildren(updatedTasks, parentId);
+
+        let allSiblingsDone = true;
+        for (const sibling of siblings) {
+            if (sibling.status !== "done") {
+                allSiblingsDone = false;
+            }
+        }
+
+        const parentStatus: TaskStatus = allSiblingsDone ? "done" : "todo";
+        updatedTasks = updatedTasks.map((t) => (t.id === parentId ? { ...t, status: parentStatus } : t));
+        current = updatedTasks.find((t) => t.id === parentId);
+    }
+
+    return updatedTasks;
 }
 
 export const getTaskProgress = (tasks: TaskItem[], task: TaskItem): number => {

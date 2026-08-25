@@ -6,7 +6,7 @@ import {
 
 import { useTaskStore } from "@/store/taskStore";
 import { TaskItem } from "@/interfaces/taskItem";
-import { constructParentString, getDescendants, isTaskOverdue } from "@/lib/taskOperations";
+import { constructParentString, getChildren, getDescendants, isTaskOverdue } from "@/lib/taskOperations";
 import { DataTable } from "./ui/datatable";
 import { TopTasksDropdown } from "./moduleDropdown";
 import { useEffect, useState } from "react";
@@ -17,7 +17,7 @@ import { Button } from "./ui/button";
 function SortableHeader<TData>({ column, label }: { column: Column<TData, unknown>; label: string }) {
   const sorted = column.getIsSorted();
   return (
-    <Button className={"hover:cursor-pointer !pl-0"} variant="ghost" onClick={() => column.toggleSorting(sorted === "asc")}>
+    <Button className={"hover:cursor-pointer !pl-0 font-bold"} variant="ghost" onClick={() => column.toggleSorting(sorted === "asc")}>
       {label}
       {sorted === "asc" && <ArrowUp className="ml-2 h-4 w-4" />}
       {sorted === "desc" && <ArrowDown className="ml-2 h-4 w-4" />}
@@ -51,6 +51,7 @@ export function TasksTable() {
     {
       accessorKey: "title",
       header: ({ column }) => <SortableHeader column={column} label="Title" />,
+      cell: ({row}) => <span className={`${getChildren(tasks, row.original.id).length > 0 ? '!opacity-40' : ''}`}>{row.original.title}</span>,
       meta: {
         className: "max-w-62",
       },
@@ -58,16 +59,23 @@ export function TasksTable() {
     {
       accessorKey: "date",
       header: ({ column }) => <SortableHeader column={column} label="Date" />,
-      cell: ({ row }) => row.original.date?.toLocaleDateString("de-CH") ?? "—",
+      cell: ({ row }) => <span className="font-semibold">{row.original.date?.toLocaleDateString("de-CH") ?? "—"}</span>,
     },
     {
       id: "parents",
-      // ohne accessorFn hat die Spalte keinen Wert zum Vergleichen - sortingFn lief
-      // bisher nur auf undefined === undefined, daher keine sichtbare Umsortierung
       accessorFn: (row) => constructParentString(row),
       sortingFn: 'alphanumeric',
       header: ({ column }) => <SortableHeader column={column} label="Parents" />,
-      cell: ({ row }) => constructParentString(row.original),
+      cell: ({ row }) => <span className="font-semibold">{constructParentString(row.original)}</span>,
+      meta: {
+        className: "max-w-62",
+      },
+    },
+    {
+      id: "Children",
+      sortingFn: 'alphanumeric',
+      header: ({ column }) => <SortableHeader column={column} label="# Children" />,
+      cell: ({ row }) => <span className={`font-semibold`}>{getChildren(tasks, row.original.id).length > 0 ? getDescendants(tasks, row.original.id).length.toString(): '—'}</span>,
       meta: {
         className: "max-w-62",
       },
@@ -92,11 +100,6 @@ export function TasksTable() {
           }
           if (isTaskOverdue(task)) {
             return isTaskOverdue(task) ? "bg-red-500/60" : ""
-          }
-          // tasks due next 7 days
-          
-          if (task.date && task.date?.getDate() < (new Date().getDate() + 7)) {
-            return "bg-yellow-400/60"
           }
           return "";
         }}
