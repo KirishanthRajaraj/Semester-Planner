@@ -1,5 +1,5 @@
 import { TaskItem } from "@/interfaces/taskItem";
-import { getChildren, getDescendants, isTaskOverdue } from "@/lib/taskOperations";
+import { getChildren, getDescendants, getTaskProgress, isTaskOverdue } from "@/lib/taskOperations";
 
 export const getLeaves = (tasks: TaskItem[]): TaskItem[] =>
     tasks.filter((task) => getChildren(tasks, task.id).length === 0);
@@ -24,70 +24,89 @@ export const getStatusCounts = (tasks: TaskItem[]) => {
     return { done, overdue, open, total: leaves.length };
 }
 
-export const getTasksPerWeek = (tasks: TaskItem[], weeks: { startDate: Date; endDate: Date }[]) => {
-    const leaves = getLeaves(tasks);
+export const getUpcomingTasks = (tasks: TaskItem[], days: number): TaskItem[] => {
+    const until = new Date();
+    until.setHours(0, 0, 0, 0);
+    until.setDate(until.getDate() + days);
 
-    return weeks.map((week, index) => {
-        let done = 0;
-        let open = 0;
+    const upcoming: TaskItem[] = [];
 
-        for (const leaf of leaves) {
-            if (!leaf.date) continue;
-            if (leaf.date < week.startDate || leaf.date > week.endDate) continue;
-            if (leaf.status === "done") {
-                done++;
-            } else {
-                open++;
-            }
-        }
+    for (const leaf of getLeaves(tasks)) {
+        if (leaf.status === "done") continue;
+        if (!leaf.date) continue;
+        if (leaf.date > until) continue;
+        upcoming.push(leaf);
+    }
 
-        return { week: `${index + 1}`, done, open };
-    });
+    upcoming.sort((a, b) => a.date!.getTime() - b.date!.getTime());
+    return upcoming;
 }
 
-export const getTasksPerModule = (tasks: TaskItem[], topTasks: TaskItem[]) => {
+export const getBacklogPerModule = (tasks: TaskItem[], topTasks: TaskItem[]) => {
     return topTasks.map((topTask) => {
         const leaves = getDescendants(tasks, topTask.id).filter(
             (task) => getChildren(tasks, task.id).length === 0
         );
 
         let done = 0;
+        let overdue = 0;
         let open = 0;
 
         for (const leaf of leaves) {
             if (leaf.status === "done") {
                 done++;
+            } else if (isTaskOverdue(leaf)) {
+                overdue++;
             } else {
                 open++;
             }
         }
 
-        return { module: topTask.title, done, open };
+        return { module: topTask.title, done, overdue, open };
     });
 }
 
-export const getDurationPerModule = (tasks: TaskItem[], topTasks: TaskItem[]) => {
-    return topTasks.map((topTask) => {
-        const descendants = getDescendants(tasks, topTask.id);
+export const getOverallProgress = (tasks: TaskItem[], topTasks: TaskItem[]): number => {
+    if (topTasks.length === 0) return 0;
 
-        let minutes = 0;
-        for (const task of descendants) {
-            minutes += task.duration ?? 0;
-        }
+    let sum = 0;
+    for (const topTask of topTasks) {
+        sum += getTaskProgress(tasks, topTask);
+    }
 
-        return { module: topTask.title, hours: minutes / 60 };
-    });
+    return sum / topTasks.length;
 }
 
-export const getDurationCoverage = (tasks: TaskItem[]) => {
-    const leaves = getLeaves(tasks);
+export const getCompletedBlocks = (tasks: TaskItem[]) => {
+    const parents = tasks.filter((task) => getChildren(tasks, task.id).length > 0);
 
-    let withDuration = 0;
-    for (const leaf of leaves) {
-        if (leaf.duration) {
-            withDuration++;
+    let done = 0;
+    for (const parent of parents) {
+        const leaves = getDescendants(tasks, parent.id).filter(
+            (task) => getChildren(tasks, task.id).length === 0
+        );
+
+        if (leaves.length > 0 && leaves.every((leaf) => leaf.status === "done")) {
+            done++;
         }
     }
 
-    return { withDuration, total: leaves.length };
+    return { done, total: parents.length };
 }
+
+export const getModuleTaskCounts = (tasks: TaskItem[], topTask: TaskItem) => {
+    const leaves = getDescendants(tasks, topTask.id).filter(
+        (task) => getChildren(tasks, task.id).length === 0
+    );
+
+    let done = 0;
+    for (const leaf of leaves) {
+        if (leaf.status === "done") {
+            done++;
+        }
+    }
+
+    return { done, total: leaves.length };
+}
+
+

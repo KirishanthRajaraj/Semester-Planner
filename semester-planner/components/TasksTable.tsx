@@ -31,6 +31,7 @@ export function TasksTable() {
   const tasks = useTaskStore((state) => state.tasks);
   const [moduleFilter, setModuleFilter] = useState<string>("All");
   const [filteredTasks, setFilteredTasks] = useState<TaskItem[]>(tasks);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     filterTasks(moduleFilter);
@@ -53,7 +54,7 @@ export function TasksTable() {
       header: ({ column }) => <SortableHeader column={column} label="Title" />,
       cell: ({row}) => <span className={`${getChildren(tasks, row.original.id).length > 0 ? '!opacity-40' : ''}`}>{row.original.title}</span>,
       meta: {
-        className: "max-w-62",
+        className: "max-w-82",
       },
     },
     {
@@ -77,7 +78,7 @@ export function TasksTable() {
       header: ({ column }) => <SortableHeader column={column} label="# Children" />,
       cell: ({ row }) => <span className={`font-semibold`}>{getChildren(tasks, row.original.id).length > 0 ? getDescendants(tasks, row.original.id).length.toString(): '—'}</span>,
       meta: {
-        className: "max-w-62",
+        className: "max-w-82",
       },
     },
     {
@@ -87,13 +88,15 @@ export function TasksTable() {
     },
   ]
 
+  const visibleTasks = showAll ? filteredTasks : filteredTasks.slice(0, 10);
+
   return (
-    <div className="w-full mx-auto py-10 md:max-w-2/3">
+    <div className="w-full mx-auto">
       <TopTasksDropdown className="mb-4" setModuleFilter={setModuleFilter} />
 
       <DataTable
         columns={columns}
-        data={filteredTasks}
+        data={visibleTasks}
         getRowClassName={(task) => {
           if (task.status == "done") {
             return "bg-green-700/50"
@@ -104,6 +107,12 @@ export function TasksTable() {
           return "";
         }}
       />
+
+      {filteredTasks.length > 10 && (
+        <Button variant="outline" className="mt-2 !bg-primary text-background" onClick={() => setShowAll(!showAll)}>
+          {showAll ? "show less" : `show all ${filteredTasks.length}`}
+        </Button>
+      )}
     </div>
   );
 }

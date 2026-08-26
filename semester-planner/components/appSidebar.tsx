@@ -1,7 +1,7 @@
 'use client'
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { KanbanSquare, LayoutDashboard, NotepadText, Settings } from "lucide-react";
+import { Info, KanbanSquare, LayoutDashboard, NotepadText, Settings } from "lucide-react";
 import {
     Sidebar,
     SidebarContent,
@@ -18,6 +18,7 @@ const navItems = [
     { title: "Plan", url: "/plan", icon: KanbanSquare },
     { title: "Overview", url: "/overview", icon: LayoutDashboard },
     { title: "Settings", url: "/settings", icon: Settings },
+    { title: "Info", url: "/info", icon: Info },
 ];
 
 export default function AppSidebar() {
