@@ -187,7 +187,7 @@ export default function dndArea() {
                 });
             }}
         >
-            <div className="flex w-full max-w-62 mx-auto justify-center gap-4 items-center p-4">
+            <div className="flex w-full max-w-62 mx-auto md:mx-0 justify-center gap-4 items-center p-4">
                 <Input
                     value={searchFilter}
                     onChange={(e) => setSearchFilter(e.target.value)}
