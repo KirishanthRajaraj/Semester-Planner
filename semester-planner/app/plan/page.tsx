@@ -12,7 +12,7 @@ export default function dnd() {
             <div>
                 <Link href={"/"}>
 
-                    <Button className="mt-16 gap-0.5">
+                    <Button className="ml-2 mt-16 gap-0.5">
                         <ChevronLeft></ChevronLeft>
                         Text Plan
                     </Button>

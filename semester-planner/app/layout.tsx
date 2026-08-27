@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AppSidebar from "@/components/appSidebar";
 import AppFooter from "@/components/appFooter";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 const geistSans = Geist({
@@ -38,6 +38,9 @@ export default function RootLayout({
             className=""
           >
             <AppSidebar />
+
+            {/* auf mobile rendert Sidebar als geschlossenes Sheet, der trigger darin ist dann mit eingesperrt */}
+            <SidebarTrigger className="md:hidden fixed top-3 left-3 z-50 bg-muted/60 backdrop-blur-sm" />
 
             <main className="w-full">
               <div className="w-full min-h-full flex flex-col justify-center items-center mx-auto pb-9">

@@ -187,7 +187,7 @@ export default function dndArea() {
                 });
             }}
         >
-            <div className="flex w-62 justify-center gap-4 items-center p-4">
+            <div className="flex w-full max-w-62 mx-auto justify-center gap-4 items-center p-4">
                 <Input
                     value={searchFilter}
                     onChange={(e) => setSearchFilter(e.target.value)}
@@ -195,12 +195,12 @@ export default function dndArea() {
                     className="ring-0 !shadow-none hover:!border-none focus:border-none duration-0 transition-none py-6 py-2"
                 />
             </div>
-            <div className="flex w-full justify-center gap-4 items-center">
+            <div className="flex flex-wrap w-full justify-center gap-4 items-center px-4">
                 {focusedId && (
                     <ToggleGroup
                         value={[focusMode]}
                         onValueChange={(values) => values[0] && setFocusMode(values[0] as "siblings" | "descendants")}
-                        className={`font-bold`}
+                        className={`font-bold flex-wrap justify-center`}
                     >
                         <ToggleGroupItem
                             value="siblings"
@@ -213,9 +213,9 @@ export default function dndArea() {
                     </ToggleGroup>
                 )}
             </div>
-            <div className="w-full flex items-start gap-8 p-4 select-none">
-                <ScrollArea className={`h-[calc(100vh-200px)]`}>
-                    <div className="flex flex-col gap-8 w-32 md:w-52 lg:w-80 pr-4">
+            <div className="w-full flex flex-col lg:flex-row items-start gap-4 lg:gap-8 p-4 select-none">
+                <ScrollArea className={`h-64 lg:h-[calc(100vh-200px)] w-full lg:w-auto pb-4 border-b-6 border-muted/20 lg:pb-0 lg:border-b-0 `}>
+                    <div className="flex flex-col gap-8 w-full lg:w-80 pr-4">
                         <Droppable id={`inbox`} title={`Inbox`}>
                             {filteredTasks.filter((task) => !task.date && getChildren(tasks, task.id).length == 0).map((task, index) => (
                                 <DraggableTask key={task.id} task={task} index={index} group="inbox" dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
@@ -230,7 +230,7 @@ export default function dndArea() {
                         }
                     </div>
                 </ScrollArea>
-                <ScrollArea className={`h-[calc(100vh-200px)] w-full`}>
+                <ScrollArea className={`h-[70vh] lg:h-[calc(100vh-200px)] w-full`}>
 
                     <div className="w-full flex flex-col gap-2 p-4">
                         {weeks.map((week, weekIndex) => (

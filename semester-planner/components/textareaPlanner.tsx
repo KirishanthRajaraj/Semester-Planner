@@ -316,7 +316,7 @@ export default function TextareaPlanner({ className }: { className?: string }) {
     };
 
     return (
-        <div className={`w-full ${className} min-h-96 max-w-2/3`}>
+        <div className={`w-full ${className} min-h-96 lg:max-w-2/3`}>
             <CodeMirror
                 placeholder="e.g. math homework due tomorrow at 18:00"
                 basicSetup={{
