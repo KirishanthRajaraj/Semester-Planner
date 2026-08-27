@@ -21,7 +21,7 @@ export default function Home() {
 
       <div className="flex flex-col gap-4 mb-8">
       <TextAreaTooltip></TextAreaTooltip>        
-        <div className="font-sans flex flex-col lg:flex-row gap-4 w-full">
+        <div className="font-sans flex flex-col lg:flex-row items-start gap-4 w-full">
           <TextareaPlanner />
           <PlanPreviewer />
         </div>

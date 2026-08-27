@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AppSidebar from "@/components/appSidebar";
+import AppFooter from "@/components/appFooter";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -38,8 +39,12 @@ export default function RootLayout({
           >
             <AppSidebar />
 
-            <main className="w-full min-h-full flex flex-col justify-center items-center mx-auto">
-              {children}
+            <main className="w-full">
+              <div className="w-full min-h-full flex flex-col justify-center items-center mx-auto pb-9">
+                {children}
+              </div>
+              <AppFooter />
+
             </main>
 
           </SidebarProvider>

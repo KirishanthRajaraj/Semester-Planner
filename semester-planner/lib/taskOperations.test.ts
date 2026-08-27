@@ -4,6 +4,36 @@ import { applyStatusCascade, getTaskProgress } from "@/lib/taskOperations";
 
 const getStatus = (tasks: TaskItem[], id: string) => tasks.find((t) => t.id === id)?.status;
 
+
+describe("getTaskProgress", () => {
+    const modul: TaskItem = { id: "modul", title: "modul", status: "todo" };
+    /*tasks:
+        emulator; todo
+            task-b; todo
+                b1; todo
+                b2; todo
+    */
+    const tasks: TaskItem[] = [
+        modul,
+        { id: "emulator", title: "emulator", parentId: "modul", status: "todo" },
+        { id: "task-b", title: "task b", parentId: "modul", status: "todo" },
+        { id: "b1", title: "b1", parentId: "task-b", status: "todo" },
+        { id: "b2", title: "b2", parentId: "task-b", status: "todo" },
+    ];
+
+    it("weights a leaf on the first level higher than one further down", () => {
+        const firstLevelDone = tasks.map((task) =>
+            task.id === "emulator" ? { ...task, status: "done" as TaskStatus } : task
+        );
+        const secondLevelDone = tasks.map((task) =>
+            task.id === "b1" ? { ...task, status: "done" as TaskStatus } : task
+        );
+
+        expect(getTaskProgress(firstLevelDone, modul)).toBe(0.5);
+        expect(getTaskProgress(secondLevelDone, modul)).toBe(0.25);
+    });
+});
+
 describe("applyStatusCascade", () => {
     /*
     tasks:
@@ -34,34 +64,5 @@ describe("applyStatusCascade", () => {
         expect(getStatus(result, "b1")).toBe("todo");
         expect(getStatus(result, "task-b")).toBe("todo");
         expect(getStatus(result, "modul")).toBe("todo");
-    });
-});
-
-describe("getTaskProgress", () => {
-    const modul: TaskItem = { id: "modul", title: "modul", status: "todo" };
-    /*tasks:
-        emulator; todo
-            task-b; todo
-                b1; todo
-                b2; todo
-    */
-    const tasks: TaskItem[] = [
-        modul,
-        { id: "emulator", title: "emulator", parentId: "modul", status: "todo" },
-        { id: "task-b", title: "task b", parentId: "modul", status: "todo" },
-        { id: "b1", title: "b1", parentId: "task-b", status: "todo" },
-        { id: "b2", title: "b2", parentId: "task-b", status: "todo" },
-    ];
-
-    it("weights a leaf on the first level higher than one further down", () => {
-        const firstLevelDone = tasks.map((task) =>
-            task.id === "emulator" ? { ...task, status: "done" as TaskStatus } : task
-        );
-        const secondLevelDone = tasks.map((task) =>
-            task.id === "b1" ? { ...task, status: "done" as TaskStatus } : task
-        );
-
-        expect(getTaskProgress(firstLevelDone, modul)).toBe(0.5);
-        expect(getTaskProgress(secondLevelDone, modul)).toBe(0.25);
     });
 });
