@@ -8,11 +8,12 @@ import * as chrono from "chrono-node";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
-import { TaskItem, TaskStatus } from "@/interfaces/taskItem";
+import { TaskItem } from "@/interfaces/taskItem";
 import { useTaskStore } from "@/store/taskStore";
 import { useSemesterStore } from "@/store/semesterStore";
 import { ChevronRight } from "lucide-react"
 import { isDateOverdue, isTaskOverdue } from "@/lib/taskOperations";
+import { parseLines } from "@/lib/textParsing";
 
 // text editor styles
 const editorTheme = EditorView.theme({
@@ -52,6 +53,7 @@ export default function TextareaPlanner({ className }: { className?: string }) {
     const DURATION_REGEX = /\b(\d+(?:\.\d+)?)\s?(hours?|hrs?|h)\b/i;
 
     const boardRevision = useTaskStore((state) => state.boardRevision);
+    const tasks = useTaskStore((state) => state.tasks)
 
     // parse once on mount, for seeded tasks
     useEffect(() => {
@@ -65,10 +67,16 @@ export default function TextareaPlanner({ className }: { className?: string }) {
         taskItemsToText();
     }, [boardRevision]);
 
+    useEffect(() => {
+        console.log(tasks);
+    }, [tasks]);
+
 
     // collect every markation to submit to DecorationSet all at once
     function buildDecorations(text: string): DecorationSet {
         const ranges: Range<Decoration>[] = [];
+        // gleiche methodenableitung wie textToTaskItem, damit cascading auch in den decorations realtime angezeigt wird
+        const parsedLines = parseLines(text, useSemesterStore.getState().weeks);
 
         // mark dates, chrono parse returns arrays of results with index, so no loop needed
         chrono.parse(text).forEach((result) => {
@@ -84,24 +92,18 @@ export default function TextareaPlanner({ className }: { className?: string }) {
         lines.forEach((line, index) => {
             const depth = line.match(/^\t*/)?.[0].length ?? 0;
 
+            // status nach dem cascading, nicht nur der token in dieser zeile
+            const isDone = parsedLines[index]?.status === "done";
+
             // mark :done:, :doing:
             const statusMatch = line.match(/:(done|doing):/i);
             if (statusMatch && statusMatch.index !== undefined) {
-                const isDone = statusMatch[1].toLowerCase() === "done";
+                const isDoneToken = statusMatch[1].toLowerCase() === "done";
                 const tokenStart = offsetLine + statusMatch.index;
                 ranges.push(
-                    Decoration.mark({ class: isDone ? "text-green-500 font-bold" : "text-amber-500 font-bold" })
+                    Decoration.mark({ class: isDoneToken ? "text-green-500 font-bold" : "text-amber-500 font-bold" })
                         .range(tokenStart, tokenStart + statusMatch[0].length)
                 );
-                if (isDone) {
-                    const indent = line.match(/^\t*/)?.[0].length ?? 0;
-                    if (indent < line.length) {
-                        ranges.push(
-                            Decoration.mark({ class: "line-through opacity-60" })
-                                .range(offsetLine + indent, offsetLine + line.length)
-                        );
-                    }
-                }
             }
 
             // mark durations
@@ -147,8 +149,15 @@ export default function TextareaPlanner({ className }: { className?: string }) {
                     );
                 }
 
+                // durchstreichen, auch wenn der status nur geerbt/abgeleitet ist
+                if (isDone && depth < line.length) {
+                    ranges.push(
+                        Decoration.mark({ class: "line-through opacity-60" })
+                            .range(offsetLine + depth, offsetLine + line.length)
+                    );
+                }
+
                 // mark overdue tasks
-                const isDone = /:done:/i.test(line);
                 let isTaskOverdue = false;
                 if (chrono.parse(line)[0]?.start.date()) {
                     isTaskOverdue = isDateOverdue(chrono.parse(line)[0]?.start.date())
@@ -195,79 +204,29 @@ export default function TextareaPlanner({ className }: { className?: string }) {
     );
 
     const textToTaskItem = (text: string, submit: boolean) => {
-        const lines = text.split("\n");
+        const parsedLines = parseLines(text, useSemesterStore.getState().weeks);
         const items: TaskItem[] = [];
 
-        // string benutzen für die id
-        const parentAtDepth: (string | undefined)[] = [];
-        lines.forEach((line) => {
-            if (line.trim() === "") return; // ignore empty lines
+        const idByLine: (string | undefined)[] = [];
 
-            const depth = line.match(/^\t*/)?.[0].length ?? 0;
-            // remove :done:/:doing: from the text before saving
-            let status: TaskStatus = "todo";
-            let rest = line;
-            const statusMatch = rest.match(/:(done|doing):/i);
-            if (statusMatch && statusMatch.index !== undefined) {
-                status = statusMatch[1].toLowerCase() === "done" ? "done" : "inprogress";
-                const statusToken = rest.slice(statusMatch.index, statusMatch.index + statusMatch[0].length);
-                rest = rest.replace(statusToken, "").trim();
-            }
+        parsedLines.forEach((parsedLine, lineIndex) => {
+            if (parsedLine === undefined) return; // leere zeile
 
-            // "week 3" -> belongs generally to week 3, no specific day
-            let noDay = false;
-            let weekDate: Date | undefined = undefined;
-            const weekMatch = rest.match(/\bweek\s?(\d+)\b/i);
-            if (weekMatch && weekMatch.index !== undefined) {
-                noDay = true;
-                const weekNumber = parseInt(weekMatch[1]);
-                weekDate = useSemesterStore.getState().weeks[weekNumber - 1]?.endDate;
-                const weekToken = rest.slice(weekMatch.index, weekMatch.index + weekMatch[0].length);
-                rest = rest.replace(weekToken, "").trim();
-            }
-
-            // remove durations from the text before saving
-            let duration = undefined;
-            const durationMatch = rest.match(DURATION_REGEX);
-            if (durationMatch && durationMatch.index !== undefined) {
-                const durationToken = rest.slice(durationMatch.index, durationMatch.index + durationMatch[0].length);
-                rest = rest.replace(durationToken, "").trim();
-                const num = Number(durationMatch[0].match(/\d+(?:\.\d+)?/)?.[0]); // "1.5 hours" -> 1.5
-                duration = num * 60;
-            }
-
-            const parsedDates = chrono.parse(rest);
-
-            // only the first detected date becomes the task's date
-            const date = parsedDates[0]?.start.date();
-
-            // remove all dates from text
-            let title = rest;
-            for (let i = 0; i < parsedDates.length; i++) {
-                const lineText = parsedDates[i];
-                title = title.slice(0, lineText.index) + title.slice(lineText.index + lineText.text.length);
-            }
-            title = title.replace(/\s+/g, " ").trim();
-
-            if (title.trim() === "") return; // ignore empty lines, that have dates
-
+            const id = crypto.randomUUID();
+            idByLine[lineIndex] = id;
 
             const item: TaskItem = ({
-                id: crypto.randomUUID(),
-                title: title,
-                date: weekDate ?? date,
-                duration: duration,
-                status: status,
-                noDay: noDay,
-                parentId: parentAtDepth[depth - 1],
-                depth: depth
+                id: id,
+                title: parsedLine.title,
+                date: parsedLine.date,
+                duration: parsedLine.duration,
+                status: parsedLine.status,
+                noDay: parsedLine.noDay,
+                parentId: parsedLine.parentIndex !== undefined ? idByLine[parsedLine.parentIndex] : undefined,
+                depth: parsedLine.depth
             });
 
             items.push(item);
-            // aktuellen Parent zwischenspeichern, sodass man die ParentId für das nächste Item setzen kann
-            parentAtDepth[depth] = item.id;
-            // hinzufügen / löschen von plätzen im Array, sodass die Länge des Arrays immer der Tiefe entspricht + 1, sodass man immer den Parent des nächsten setzen kann
-            parentAtDepth.length = depth + 1;
         });
 
         if (submit) {
