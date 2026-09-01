@@ -9,4 +9,5 @@ export interface TaskItem {
   depth?: number;
   status?: TaskStatus;
   noDay?: boolean;
+  dateInherited?: boolean;
 }

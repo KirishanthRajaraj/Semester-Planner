@@ -12,6 +12,8 @@ export interface ParsedLine {
     status: TaskStatus;
     // zeilenindex des parents, undefined bei root zeilen
     parentIndex?: number;
+    // wenn true kommen date/noDay vom parent, in dieser zeile steht kein datums token
+    dateInherited?: boolean;
 }
 
 const DURATION_REGEX = /\b(\d+(?:\.\d+)?)\s?(hours?|hrs?|h)\b/i;
@@ -125,6 +127,33 @@ const cascadeStatusUp = (parsedLines: (ParsedLine | undefined)[]) => {
     }
 };
 
+// datum vom parent an alle kinder, die noch kein date haben
+const cascadeDateDown = (parsedLines: (ParsedLine | undefined)[]) => {
+    for (const parsedLine of parsedLines) {
+        if (parsedLine === undefined || parsedLine.parentIndex === undefined) continue;
+        if (parsedLine.date !== undefined) continue; // eigenes datum schlaegt vererbung
+
+        const parent = parsedLines[parsedLine.parentIndex];
+        if (parent === undefined || parent.date === undefined) continue;
+
+        parsedLine.date = parent.date;
+        parsedLine.noDay = parent.noDay;
+        parsedLine.dateInherited = true;
+    }
+};
+
+// so wie taskItemsToText ein datum schreibt: "week 3" wenn es fuer die ganze woche
+// gilt, sonst "03 Sept 2026"
+export const formatDateToken = (date: Date, noDay: boolean, weeks: Week[]): string => {
+    if (noDay) {
+        const weekIndex = weeks.findIndex((w) => date >= w.startDate && date <= w.endDate);
+        if (weekIndex !== -1) {
+            return `week ${weekIndex + 1}`;
+        }
+    }
+    return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+};
+
 export const parseLines = (text: string, weeks: Week[]): (ParsedLine | undefined)[] => {
     const parsedLines: (ParsedLine | undefined)[] = [];
     // parentAtDepth = was ist der aktuelle parent, auf der aktuellen depth
@@ -162,6 +191,7 @@ export const parseLines = (text: string, weeks: Week[]): (ParsedLine | undefined
 
     cascadeStatusDown(parsedLines);
     cascadeStatusUp(parsedLines);
+    cascadeDateDown(parsedLines);
 
     return parsedLines;
 };

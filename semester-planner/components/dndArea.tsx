@@ -162,20 +162,20 @@ export default function dndArea() {
 
                 // wenn nur ein task
                 let newTasks = tasks.map((task) =>
-                    task.id === draggedTaskId ? { ...task, date: newDate, noDay: isGeneralWeek } : task
+                    task.id === draggedTaskId ? { ...task, date: newDate, noDay: isGeneralWeek, dateInherited: false } : task
                 );
 
                 // wenn breadcrumb, newtasks überschreiben
                 if (draggedTaskId?.toString().startsWith("subtree-")) {
                     newTasks = tasks.map((task) =>
-                        idsToMove !== undefined && idsToMove.has(task.id) ? { ...task, date: newDate, noDay: isGeneralWeek } : task
+                        idsToMove !== undefined && idsToMove.has(task.id) ? { ...task, date: newDate, noDay: isGeneralWeek, dateInherited: false } : task
                     );
                 }
 
                 // wenn multi select
                 if (draggedTaskId && multiSelectedIds.has(draggedTaskId.toString()) && multiSelectedIds.size > 1) {
                     newTasks = tasks.map((task) =>
-                        multiSelectedIds.has(task.id) ? { ...task, date: newDate, noDay: isGeneralWeek } : task
+                        multiSelectedIds.has(task.id) ? { ...task, date: newDate, noDay: isGeneralWeek, dateInherited: false } : task
                     )
                 }
 

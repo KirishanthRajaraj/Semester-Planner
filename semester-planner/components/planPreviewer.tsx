@@ -223,7 +223,7 @@ export default function PlanPreviewer({ className }: { className?: string }) {
         }
 
         const newTasks = tasks.map((task) =>
-            task.id === draggedTaskId ? { ...task, date: newDate, noDay } : task
+            task.id === draggedTaskId ? { ...task, date: newDate, noDay, dateInherited: false } : task
         );
 
         // defer, damit dnd-kit sein drag-end fertig abwickelt bevor React neu rendert
@@ -235,40 +235,42 @@ export default function PlanPreviewer({ className }: { className?: string }) {
     };
 
     return (
-        <DragDropProvider onDragEnd={handleDragEnd}>
+        <div className={`w-full ${!isFullscreen ? 'sticky top-0 pt-4 -mt-4' : ''}`}>
+            <DragDropProvider onDragEnd={handleDragEnd}>
 
-            <div
-                className={`${isFullscreen
-                    ? "fixed inset-4 z-50 overflow-auto shadow-2xl animate fade-in-0 zoom-in-95 duration-200"
-                    : `${className} w-full`
-                    } border-2 border-muted-foreground/20 rounded-xl bg-background p-3`}
-            >
-                <Tabs defaultValue="dots">
-                    <div className="flex items-center justify-between gap-2">
-                        <TabsList className="p-1.5 rounded-lg">
-                            <TabsTrigger className="data-[active]:!bg-primary data-[active]:text-background p-1 cursor-pointer" value="dots">Tasks</TabsTrigger>
-                            <TabsTrigger className="data-[active]:!bg-primary data-[active]:text-background p-1 cursor-pointer" value="heat">Heatmap</TabsTrigger>
-                        </TabsList>
-                        <div className="flex items-center gap-2">
-                            {outside.length > 0 && (
-                                <span className="text-[10px] text-muted-foreground">{outside.length} outside semester</span>
-                            )}
-                            <Button className="cursor-pointer" variant="ghost" size="icon-xs" onClick={() => setIsFullscreen((v) => !v)}>
-                                {isFullscreen ? <Minimize2 className="size-3" /> : <Maximize2 className="size-3" />}
-                            </Button>
+                <div
+                    className={`${isFullscreen
+                        ? "fixed inset-4 z-50 overflow-auto shadow-2xl animate fade-in-0 zoom-in-95 duration-200"
+                        : `${className} w-full`
+                        } border-2 border-muted-foreground/20 rounded-xl bg-background p-3`}
+                >
+                    <Tabs defaultValue="dots">
+                        <div className="flex items-center justify-between gap-2">
+                            <TabsList className="p-1.5 rounded-lg">
+                                <TabsTrigger className="data-[active]:!bg-primary data-[active]:text-background p-1 cursor-pointer" value="dots">Tasks</TabsTrigger>
+                                <TabsTrigger className="data-[active]:!bg-primary data-[active]:text-background p-1 cursor-pointer" value="heat">Heatmap</TabsTrigger>
+                            </TabsList>
+                            <div className="flex items-center gap-2">
+                                {outside.length > 0 && (
+                                    <span className="text-[10px] text-muted-foreground">{outside.length} outside semester</span>
+                                )}
+                                <Button className="cursor-pointer" variant="ghost" size="icon-xs" onClick={() => setIsFullscreen((v) => !v)}>
+                                    {isFullscreen ? <Minimize2 className="size-3" /> : <Maximize2 className="size-3" />}
+                                </Button>
+                            </div>
                         </div>
-                    </div>
 
-                    <TabsContent value="dots">{renderRows("dots")}</TabsContent>
-                    <TabsContent value="heat">{renderRows("heat")}</TabsContent>
+                        <TabsContent value="dots">{renderRows("dots")}</TabsContent>
+                        <TabsContent value="heat">{renderRows("heat")}</TabsContent>
 
-                    {/* inbox, tasks ohne datum */}
-                    <div className="mt-2 pt-2 border-t border-muted-foreground/20">
-                        <p className="text-[9px] text-muted-foreground mb-1">Inbox ({inbox.length})</p>
-                        <DotCell id="inbox" tasks={inbox} className="min-h-6" large={isFullscreen} />
-                    </div>
-                </Tabs>
-            </div>
-        </DragDropProvider>
+                        {/* inbox, tasks ohne datum */}
+                        <div className="mt-2 pt-2 border-t border-muted-foreground/20">
+                            <p className="text-[9px] text-muted-foreground mb-1">Inbox ({inbox.length})</p>
+                            <DotCell id="inbox" tasks={inbox} className="min-h-6" large={isFullscreen} />
+                        </div>
+                    </Tabs>
+                </div>
+            </DragDropProvider>
+        </div>
     );
 }

@@ -1,7 +1,7 @@
 'use client'
 import CodeMirror from "@uiw/react-codemirror";
 import { indentWithTab } from "@codemirror/commands";
-import { Decoration, EditorView, ViewPlugin, keymap, type DecorationSet, type ViewUpdate } from "@codemirror/view";
+import { Decoration, EditorView, ViewPlugin, WidgetType, keymap, type DecorationSet, type ViewUpdate } from "@codemirror/view";
 import { type Range } from "@codemirror/state";
 import { indentUnit } from "@codemirror/language";
 import * as chrono from "chrono-node";
@@ -12,8 +12,8 @@ import { TaskItem } from "@/interfaces/taskItem";
 import { useTaskStore } from "@/store/taskStore";
 import { useSemesterStore } from "@/store/semesterStore";
 import { ChevronRight } from "lucide-react"
-import { isDateOverdue, isTaskOverdue } from "@/lib/taskOperations";
-import { parseLines } from "@/lib/textParsing";
+import { isDateOverdue } from "@/lib/taskOperations";
+import { formatDateToken, parseLines } from "@/lib/textParsing";
 
 // text editor styles
 const editorTheme = EditorView.theme({
@@ -46,6 +46,29 @@ const editorTheme = EditorView.theme({
         color: "var(--muted-foreground)",
     },
 });
+
+// zeigt am zeilenende an, welches datum das child vom parent erben würde, reine anzeige
+class InheritedDateWidget extends WidgetType {
+    constructor(readonly label: string) {
+        super();
+    }
+
+    // ohne eq wrde codemirror das widget bei jedem tastendruck neu bauen
+    eq(other: InheritedDateWidget) {
+        return other.label === this.label;
+    }
+
+    toDOM() {
+        const chip = document.createElement("span");
+        chip.className = "ml-2 px-1 rounded-sm text-xs align-middle bg-primary/15 text-muted-foreground select-none";
+        chip.textContent = `\u21b3 ${this.label}`;
+        return chip;
+    }
+
+    ignoreEvent() {
+        return true;
+    }
+}
 
 export default function TextareaPlanner({ className }: { className?: string }) {
     const [textAreaText, setTextAreaText] = useState<string>("");
@@ -106,6 +129,28 @@ export default function TextareaPlanner({ className }: { className?: string }) {
                 );
             }
 
+            // durchstreichen, auch wenn der status nur geerbt/abgeleitet ist
+            if (isDone) {
+                ranges.push(
+                    Decoration.mark({ class: "line-through opacity-60" })
+                        .range(offsetLine + depth, offsetLine + line.length)
+                );
+            }
+
+            // chip mit dem datum das diese zeile vom parent erben wuerde
+            const parsedLine = parsedLines[index];
+            if (parsedLine?.dateInherited && parsedLine.date !== undefined) {
+                const label = formatDateToken(
+                    parsedLine.date,
+                    parsedLine.noDay,
+                    useSemesterStore.getState().weeks
+                );
+                ranges.push(
+                    Decoration.widget({ widget: new InheritedDateWidget(label) })
+                        .range(offsetLine + line.length)
+                );
+            }
+
             // mark durations
             const durationMatch = line.match(DURATION_REGEX);
             if (durationMatch && durationMatch.index !== undefined) {
@@ -145,14 +190,6 @@ export default function TextareaPlanner({ className }: { className?: string }) {
                 if (depth === 0) {
                     ranges.push(
                         Decoration.mark({ class: "underline" })
-                            .range(offsetLine + depth, offsetLine + line.length)
-                    );
-                }
-
-                // durchstreichen, auch wenn der status nur geerbt/abgeleitet ist
-                if (isDone && depth < line.length) {
-                    ranges.push(
-                        Decoration.mark({ class: "line-through opacity-60" })
                             .range(offsetLine + depth, offsetLine + line.length)
                     );
                 }
@@ -222,6 +259,7 @@ export default function TextareaPlanner({ className }: { className?: string }) {
                 duration: parsedLine.duration,
                 status: parsedLine.status,
                 noDay: parsedLine.noDay,
+                dateInherited: parsedLine.dateInherited,
                 parentId: parsedLine.parentIndex !== undefined ? idByLine[parsedLine.parentIndex] : undefined,
                 depth: parsedLine.depth
             });
@@ -234,30 +272,26 @@ export default function TextareaPlanner({ className }: { className?: string }) {
         }
     }
 
-    // this function should always align with what textToTaskItem() does, but backwards
+    // this function should always align with what textToTaskItem() does, but backwards!
     const taskItemsToText = () => {
         const tasks: TaskItem[] = useTaskStore.getState().tasks;
         const weeks = useSemesterStore.getState().weeks;
         let text: string = "";
         tasks.forEach((task) => {
-            // render weektoken
-            const weekIndex = task.noDay && task.date
-                ? weeks.findIndex((w) => task.date! >= w.startDate && task.date! <= w.endDate) : -1;
-            const weekStr = weekIndex !== -1 ? ` week ${weekIndex + 1}` : "";
-            // render date
-            const dateStr = weekIndex === -1 && task.date
-                ? " " + task.date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
-                : "";
-            // render status
-            const statusStr = task.status === "done" ? " :done:" : task.status === "inprogress" ? " :doing:" : "";
-            text += "\t".repeat(task.depth ?? 0) + task.title + dateStr + weekStr + statusStr;
-            // render duration
-            if (task.duration) {
-                const hours = task.duration / 60;
-                text += " " + hours + "h";
-            }
-            text += "\n"
+            const parent = task.parentId !== undefined ? useTaskStore.getState().getTaskById(task.parentId) : undefined;
+            const sameAsParent =
+                parent?.date?.toDateString() === task.date?.toDateString() &&
+                (parent?.noDay ?? false) === (task.noDay ?? false);
 
+            // wenn date gleich wie parent || inherited, date entfernen, nicht anzeigen, sonst sieht man den decoration widget nicht
+            const ownDate = task.dateInherited || sameAsParent ? undefined : task.date;
+
+            const indent = "\t".repeat(task.depth ?? 0);
+            const dateStr = ownDate ? " " + formatDateToken(ownDate, task.noDay ?? false, weeks) : "";
+            const statusStr = task.status === "done" ? " :done:" : task.status === "inprogress" ? " :doing:" : "";
+            const durationStr = task.duration ? " " + task.duration / 60 + "h" : "";
+
+            text += indent + task.title + dateStr + statusStr + durationStr + "\n";
         });
         setTextAreaText(text);
         return text;
