@@ -92,7 +92,7 @@ export function OverviewCharts() {
                         return (
                             <div
                                 key={task.id}
-                                className={`flex items-center justify-between gap-3 rounded-md border-l-1 py-1.5 pl-2.5 pr-2 text-sm
+                                className={`flex items-center justify-between gap-3 rounded-md border-b-1 py-1.5 pl-2.5 pr-2 text-sm
                                     ${overdue ? "border-red-500 bg-red-500/10" : "border-primary bg-muted/40"}`}
                             >
                                 <div className="min-w-0">

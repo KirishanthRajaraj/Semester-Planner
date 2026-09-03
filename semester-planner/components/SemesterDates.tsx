@@ -10,7 +10,7 @@ const formatDate = (d: Date) =>
 
 // input disguised as label text: no border/bg/padding, muted, subtle underline on hover/focus
 const inlineInputClass =
-    "inline-block field-sizing-content h-auto w-auto border-0 bg-transparent text-sm text-muted-foreground shadow-none underline-offset-4 hover:underline focus-visible:text-foreground focus-visible:underline focus-visible:ring-0 border-1 !border-primary/80";
+    "inline-block field-sizing-content h-auto w-auto border-0 bg-transparent text-sm text-muted-foreground shadow-none underline-offset-4 hover:underline focus-visible:text-foreground focus-visible:underline focus-visible:ring-0 border-b-1 !border-primary/80";
 
 export function SemesterDates({ className }: { className?: string }) {
     const semester = useSemesterStore((s) => s.semester);

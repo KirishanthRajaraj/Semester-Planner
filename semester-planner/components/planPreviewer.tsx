@@ -246,7 +246,7 @@ export default function PlanPreviewer({ className }: { className?: string }) {
                 >
                     <Tabs defaultValue="dots">
                         <div className="flex items-center justify-between gap-2">
-                            <TabsList className="p-1.5 rounded-lg">
+                            <TabsList className="p-1.5 rounded-lg bg-card">
                                 <TabsTrigger className="data-[active]:!bg-primary data-[active]:text-background p-1 cursor-pointer" value="dots">Tasks</TabsTrigger>
                                 <TabsTrigger className="data-[active]:!bg-primary data-[active]:text-background p-1 cursor-pointer" value="heat">Heatmap</TabsTrigger>
                             </TabsList>

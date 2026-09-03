@@ -131,7 +131,7 @@ const cascadeStatusUp = (parsedLines: (ParsedLine | undefined)[]) => {
 const cascadeDateDown = (parsedLines: (ParsedLine | undefined)[]) => {
     for (const parsedLine of parsedLines) {
         if (parsedLine === undefined || parsedLine.parentIndex === undefined) continue;
-        if (parsedLine.date !== undefined) continue; // eigenes datum schlaegt vererbung
+        if (parsedLine.date !== undefined) continue; // eigenes datum überschreibt vererbung
 
         const parent = parsedLines[parsedLine.parentIndex];
         if (parent === undefined || parent.date === undefined) continue;

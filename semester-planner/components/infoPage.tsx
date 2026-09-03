@@ -18,7 +18,7 @@ export default function InfoPage() {
         show: true,
         animationDuration: 500,
         animationDelay: 500,
-        color: "var(--primary)"
+        color: "var(--primary)",
     };
 
     return (
@@ -46,6 +46,7 @@ export default function InfoPage() {
                             <RoughNotation
                                 type="crossed-off"
                                 {...notationProps}
+                                 strokeWidth={2}
                                 color="red"
                             >
                                 <span className="font-black">5+ clicks</span>
@@ -56,7 +57,7 @@ export default function InfoPage() {
                     </span>{" "}
                     <span className="font-black">-&gt;</span>{" "}
                     <span className="opacity-80">create</span>{" "}
-                    <RoughNotation type="underline" {...notationProps}>
+                    <RoughNotation type="underline" strokeWidth={2} {...notationProps}>
                         <span className="font-black">a dozen</span>
                     </RoughNotation>{" "}
                     <span className="opacity-80">tasks in</span>{" "}
@@ -64,7 +65,7 @@ export default function InfoPage() {
                         <span className="font-black">seconds</span>
                     </RoughNotation>
                     <span className="opacity-80">,</span>{" "}
-                    <RoughNotation type="underline" {...notationProps}>
+                    <RoughNotation type="underline" strokeWidth={2} {...notationProps}>
                         <span className="font-black">0 clicks</span>
                     </RoughNotation>
                 </p>
@@ -77,14 +78,14 @@ export default function InfoPage() {
                     <span className="opacity-80">
                         But use and visualize{" "}
                     </span>
-                    <RoughNotation type="underline" {...notationProps}>
+                    <RoughNotation type="underline" strokeWidth={2} {...notationProps}>
                         <span className="font-black">like a real app</span>
                     </RoughNotation>
                 </p>
 
                 <p className="mb-5">
                     <span className="opacity-80">Keep</span>{" "}
-                    <RoughNotation type="underline" {...notationProps}>
+                    <RoughNotation type="underline" strokeWidth={2} {...notationProps}>
                         <span className="font-black">
                             your whole semester in view
                         </span>

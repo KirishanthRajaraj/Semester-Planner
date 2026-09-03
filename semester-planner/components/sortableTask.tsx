@@ -43,8 +43,8 @@ export default function DraggableTask({ task, index, group, dimmed, focused, onT
             }}
             className={`group duration-200 transition-colors truncate w-full ${task.status === 'done' ? 'bg-green-500' : 'bg-primary'}
              gap-0.5 ${task.parentId !== undefined ? '!pt-5' : ''} 
-             relative overflow-visible font-semibold p-3 rounded-lg text-background cursor-grab active:cursor-grabbing $
-             {isDragging ? "opacity-50" : ""} ${dimmed ? "opacity-30 pointer-events-none" : ""} 
+             relative overflow-visible font-semibold p-3 rounded-lg text-background cursor-grab active:cursor-grabbing
+             ${isDragging ? "opacity-50" : ""} ${dimmed ? "opacity-30 pointer-events-none" : ""} 
              ${selected ? "ring-2 ring-offset-2 ring-offset-background ring-foreground" : ""}
              ${isTaskOverdue(task) ? 'bg-red-500' : ''}`
             }

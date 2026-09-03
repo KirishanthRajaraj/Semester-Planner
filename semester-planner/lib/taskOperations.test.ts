@@ -8,10 +8,11 @@ const getStatus = (tasks: TaskItem[], id: string) => tasks.find((t) => t.id === 
 describe("getTaskProgress", () => {
     const modul: TaskItem = { id: "modul", title: "modul", status: "todo" };
     /*tasks:
+    modul
         emulator; todo
-            task-b; todo
-                b1; todo
-                b2; todo
+        task-b; todo
+            b1; todo
+            b2; todo
     */
     const tasks: TaskItem[] = [
         modul,

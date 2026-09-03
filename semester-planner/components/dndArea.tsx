@@ -17,7 +17,6 @@ export default function dndArea() {
     const semester = useSemesterStore((state) => state.semester);
     const currentWeek = useRef<HTMLDivElement>(null);
     const [searchFilter, setSearchFilter] = useState<string>("");
-    const [filteredTasks, setFilteredTasks] = useState<TaskItem[]>([]);
 
     // the exact task that has focuse toggled
     const [focusedId, setFocusedId] = useState<string | undefined>(undefined);
@@ -47,16 +46,11 @@ export default function dndArea() {
         setFocusedId((prev) => (prev === task.id ? undefined : task.id));
     };
 
-
-    useEffect(() => {
-        handleFilterTask();
+    const filteredTasks = useMemo(() => {
+        return tasks.filter((task) => {
+            return constructParentString(task).includes(searchFilter) || task.title.includes(searchFilter);
+        });
     }, [tasks, searchFilter]);
-
-    const handleFilterTask = () => {
-        setFilteredTasks(tasks.filter((task) => {
-            return constructParentString(task).includes(searchFilter) || task.title.includes(searchFilter);
-        }));
-    }
 
     // Mehrfachauswahl per shift + klick
     const [multiSelectedIds, setMultiSelectedIds] = useState<Set<string>>(new Set());

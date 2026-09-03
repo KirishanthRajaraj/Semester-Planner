@@ -186,6 +186,7 @@ export default function TextareaPlanner({ className }: { className?: string }) {
                             .range(offsetLine + depth, offsetLine + line.length)
                     );
                 }
+
                 // mark underline for root tasks
                 if (depth === 0) {
                     ranges.push(
@@ -208,8 +209,6 @@ export default function TextareaPlanner({ className }: { className?: string }) {
                     }
                 }
 
-
-
                 if (!isDone && isTaskOverdue) {
                     ranges.push(
                         Decoration.mark({ class: "bg-red-500/40 rounded-sm p-0.5" })
@@ -219,8 +218,6 @@ export default function TextareaPlanner({ className }: { className?: string }) {
             }
             offsetLine += line.length + 1;
         });
-
-
 
         return Decoration.set(ranges, true);
     }

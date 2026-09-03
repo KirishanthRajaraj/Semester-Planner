@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Semester Planner",
-  description: "Plane dein Semester mit wenig pflegeaufwand",
+  description: "Tree based bulk planner",
 };
 
 export default function RootLayout({
@@ -29,9 +29,19 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      // dark ist der default, das skript unten nimmt sie wieder weg wenn light gespeichert ist.
+      // suppressHydrationWarning, weil genau dieses skript die klasse vor dem hydrieren aendert.
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      suppressHydrationWarning
     >
-      <body className="dark">
+      <body>
+        {/* laeuft synchron als erstes im body, also bevor irgendwas gezeichnet wird.
+            ohne das gaebe es beim reload kurz das falsche theme zu sehen. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem("theme")==="light"){document.documentElement.classList.remove("dark")}}catch(e){}`,
+          }}
+        />
         <TooltipProvider>
           <SidebarProvider
             defaultOpen={false}

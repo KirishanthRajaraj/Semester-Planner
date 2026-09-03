@@ -3,9 +3,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Info, KanbanSquare, LayoutDashboard, NotepadText, Settings } from "lucide-react";
 import { RoughNotation } from "react-rough-notation";
+import { ThemeToggle } from "./themeToggle";
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarHeader,
     SidebarMenu,
@@ -75,9 +77,18 @@ export default function AppSidebar() {
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         ))}
+                        <SidebarMenuItem className="">
+
+                        </SidebarMenuItem>
                     </SidebarMenu>
+
                 </SidebarGroup>
             </SidebarContent>
+            <SidebarFooter>
+                <div className="w-auto flex justify-end">
+                    <ThemeToggle />
+                </div>
+            </SidebarFooter>
         </Sidebar>
     );
 }

@@ -20,7 +20,7 @@ export default function dnd() {
 
             </div>
             <div className="flex items-center gap-8 mb-8 mt-4 justify-between p-4">
-                <h1 className="text-3xl font-bold">Planung Drag & Drop</h1>
+                <h1 className="text-3xl font-bold">Plan</h1>
                 <SemesterDates />
             </div>
             <DndArea />

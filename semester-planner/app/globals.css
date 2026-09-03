@@ -49,13 +49,13 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
+  --background: #faf6ec;
   --foreground: oklch(0.147 0.004 49.25);
-  --card: oklch(1 0 0);
+  --card: #fafcf6;
   --card-foreground: oklch(0.147 0.004 49.25);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.147 0.004 49.25);
-  --primary: oklch(0.852 0.199 91.936);
+  --primary: rgb(148, 170, 69);
   --primary-foreground: oklch(0.421 0.095 57.708);
   --secondary: oklch(0.967 0.001 286.375);
   --secondary-foreground: oklch(0.21 0.006 285.885);
@@ -73,7 +73,7 @@
   --chart-4: oklch(0.554 0.135 66.442);
   --chart-5: oklch(0.476 0.114 61.907);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0.001 106.423);
+  --sidebar: #FAE8B4(0.985 0.001 106.423);
   --sidebar-foreground: oklch(0.147 0.004 49.25);
   --sidebar-primary: oklch(0.681 0.162 75.834);
   --sidebar-primary-foreground: oklch(0.987 0.026 102.212);
@@ -121,10 +121,38 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     @apply font-sans;
+  }
+}
+
+@keyframes sunGlow {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 1px color-mix(in oklch, oklch(0.795 0.184 86.047) 50%, transparent));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 5px oklch(0.795 0.184 86.047));
+  }
+}
+
+.sun-glow {
+  animation: sunGlow 2.5s ease-in-out;
+}
+
+.dark .sun-glow {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sun-glow {
+    animation: none;
   }
 }
