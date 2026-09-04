@@ -2,7 +2,7 @@
 
 # Planung
 
-## meilensteinplan
+## Meilensteinplan
 
 ### Übersicht
  
@@ -10,14 +10,14 @@
 |---|---|---|---|
 | M0 Vision & Vorbereitung | bis 13. Juni | 5h | ✅ abgeschlossen |
 | M1 Interviews, Anforderungen & Scope | bis 30. Juni | ~15h | ✅ abgeschlossen |
-| M2 Technologieentscheid & Learning neuer Technolgien | laufend | ~10h | ✅ in progress |
-| M3 Prototyp Skateboard (MVP-Kern) & Designprozess, entscheid | bis 14. Juli | ~35h | ✅  |
-| M4 User Evaulierungen, User Tests vom MVP | bis 21. Juli | ~10h | ✅ |
-| M5 Prototyp Roller (2. Iteration ) | bis 9. August | ~30h | ✅ |
-| M6 Feedback-Märkte, ~~weiteres externes User Feedback~~ | 10.–24. August | ~20h | ✅ auf weiteres externes Feedback wurde verzichtet |
-| M7 Prototyp Auto (Finalisierung, 3. Iteration) | bis 5. September | ~30h | ✅ in progress |
-| M8 ~~Erstellung Demo video / gifs~~, Info Seite | bis 5. September | ~5h | ✅ |
-| M9 ~~Vorbereitung~~ Reflexion, Abgabe & Präsentation | bis 5. September | ~10h | ⬜  in progress |
+| M2 Technologieentscheid & Learning neuer Technolgien | laufend | ~10h | ✅ abgeschlossen |
+| M3 Prototyp Skateboard (MVP-Kern) & Designprozess, entscheid | bis 14. Juli | ~35h | ✅ abgeschlossen |
+| M4 User Evaulierungen, User Tests vom MVP | bis 21. Juli | ~10h | ✅ abgeschlossen |
+| M5 Prototyp Roller (2. Iteration ) | bis 9. August | ~30h | ✅ abgeschlossen |
+| M6 Feedback-Märkte, ~~weiteres externes User Feedback~~ | 10.–24. August | ~20h | ✅ abgeschlossen, auf weiteres externes Feedback wurde verzichtet |
+| M7 Prototyp Auto (Finalisierung, 3. Iteration) | bis 5. September | ~30h | ✅ abgeschlossen |
+| M8 ~~Erstellung Demo video / gifs~~, Info Seite | bis 5. September | ~5h | ✅ abgeschlossen |
+| M9 ~~Vorbereitung~~ Reflexion, Abgabe & Präsentation | bis 5. September | ~10h | ✅ abgeschlossen, ausser Präsentation Studis |
 | **Reserve** | laufend | ~10h | – |
 | **Total** | | **~180h** | |
 
@@ -66,7 +66,8 @@ Ein minimales Web-Tool, das Studierenden hilft, den Überblick über ihre Semest
 
 ### Problem
 Die Aufgaben und den persönlichen Stand von mehreren Module gleichzeitig im überblick zu halten ist unübersichtlich. Bestehende Tools wie Todoist oder Notion verlangen dutzende Klicks pro Aufgabe (Datumsangabe, Zeit, Prio, Titel, Beschreibung, Aufwand, Status, etc.) und konstante manuelle Pflege. Ausserdem um Termine von mehreren Aufgaben zu verschieben besteht dasselbe Problem, hoher Aufwand, weniger Operationen auf mehrere Aufgaben gleichzeitig möglich. Das Resultat ist, dass man gar nichts einträgt/verwaltet, weil es zu aufwändig ist, alles im Kopf behält und so über die Wochen den Überblick verliert.
-herkömmliches mühsames eintragen:
+herkömmliches mühsames eintragen:  
+
 ![herkoemmliche Erfassung](/Ablage/img/herkoemmliche-erfassung.gif)
 
 ### Zielgruppe
@@ -75,10 +76,11 @@ Studierende, die mehrere Module parallel führen und sich die Semesterarbeit sch
 ### Lösung
 Semester Planer setzt auf eine vereinfachte Natural-Language-Eingabe, bei der Module und Unteraufgaben per Text in Bulk erfasst werden. Z.B. einmal pro Semesteranfang. Aufwandsangaben wie «2h» oder «half day» werden automatisch mit einer Vorgefertigten Bibliothek an Wörtern erkannt. Einmal Start- und Enddatum gesetzt, teilt die App die Aufgaben in planbare Abschnitte auf, die man per Drag-and-drop den verfügbaren Semesterwochen zuweist. Die Verwaltung in Wochen ist hier wichtig, da im Studium bei den Modulen auch in Wochen geplant wird. Eine Übersichtsseite zeigt jederzeit den aktuellen Stand aller Module auf einen Blick.
 Ungefährer Leitfaden:
+
 ![neuer Lösungsansatz für Aufgaben Eintrageproblem](/Ablage/img/meine-loesung.gif)
 
 ### Abgrenzung
-Semester Planer ist kein vollständiges Projektmanagement-System. Komplexe Zeitplanung, freie Datumserkennung oder dutzende Integrationen sind bewusst nicht Teil der Kernidee. Der Fokus liegt auf das schnelle initiale Eintragen aller offenen Aufgaben. Und somit lange nicht mehr manuell Aufgaben eintragen zu müssen.
+Semester Planer ist kein vollständiges Projektmanagement-System. Komplexe Zeitplanung, freie Datumserkennung oder dutzende Integrationen sind bewusst nicht Teil der Kernidee. Der Fokus liegt auf das schnelle initiale Eintragen aller offenen Aufgaben.
 
 ## interview
 
@@ -145,7 +147,7 @@ Siehe separates Dokument "interview_resultate.md".
 ### KI gestützter Coding Workflow
 Heutzutage ist ein KI gestützter coding Workflow gang und gäbe, um effizient Applikationen zu entwickeln. Und wird in der heutigen Zeit von Arbeitgeber meist auch vorausgesetzt.
 Deshalb möchte ich diese Chance mit dem ipro Projekt verwenden, um diesen Workflow auszuprobieren. 
-Ich habe ebenfalls eine relativ grosses App Konzept, wobei ich hoffe, dass ich mit diesem Workflow möglichst viel umsetzen kann.
+Ich habe ebenfalls ein relativ grosses App Konzept, wobei ich hoffe, dass ich mit diesem Workflow möglichst viel umsetzen kann.
 Wichtig ist natürlich, dass man die Grenzen kennt:
 - Man kann grössere Konzept-, Design- oder Architekturentscheidungen nicht blind KI überlassen.
 - Man sollte den Code der AI Agents überprüfen & verstehen, aus offensichtlichen Gründen.
@@ -299,17 +301,21 @@ Ich habe zwei optionen kurz skizziert, und werde mit der v2 sidebar version gehe
 In meinem v1 Wireframe habe ich auf der ersten Seite nur ein Textfeld, da werden die wenigsten direkt verstehen dass es sich um eine Planungsapp handelt,
 bei der man bulk Aufgaben hinzufügen kann, jede Zeile eine Aufgabe ist und man per Tab Unteraufgaben erstellen kann.
 
-Option 1: Placeholder ghost Text in der text area
-Option 2: Tooltip neben dem text area Label
-Option 3: Ein Previewvideo, bei dem alles grafisch erklärt wird
-Option 4: Tutorial, bei dem der User Schritt für Schritt mit hervorgehebenen Elementen erklärt bekommt wie alles funktioniert.
-Option 5: Ein Fragezeichen in der Navigation, bei der die App erklärt wird
+Option 1: Placeholder ghost Text in der text area.  
+
+Option 2: Tooltip neben dem text area Label. 
+
+Option 3: Ein Previewvideo, bei dem alles grafisch erklärt wird. 
+
+Option 4: Tutorial, bei dem der User Schritt für Schritt mit hervorgehebenen Elementen erklärt bekommt wie alles funktioniert.  
+
+Option 5: Ein Fragezeichen in der Navigation, bei der die App erklärt wird. 
 
 ## Rationale / Fragenklärung / sonstige Entscheidungshilfe
-Ich habe bemerkt, dass mir einige Fragen/Unklarheiten aufgetaucht sind während dem Vorbereiten dieses Projektes, die mit der Zfeit viel Aufwand aufweisen und sich auch als wichtig erscheinen für die Laufbahn des Projektes. Deshalb dokumentiere ich sie hier. Dieser Abschnitt unterstützt auch als generelle Entscheidungshilfe.
+Ich habe bemerkt, dass mir einige Fragen/Unklarheiten aufgetaucht sind während dem Vorbereiten dieses Projektes, die mit der Zeit viel Aufwand aufweisen und sich auch als wichtig erscheinen für die Laufbahn des Projektes. Deshalb dokumentiere ich sie hier. Dieser Abschnitt unterstützt auch als generelle Entscheidungshilfe.
 
 ### Fragen
-**Da dieses Projekt hauptsächlich ein natural language bulk Aufgabenplaner ist, warum nicht einfach ein llm mit anbindung zum persönlichen Kalender benutzen?**
+**Da dieses Projekt hauptsächlich ein natural language bulk Aufgabenplaner ist, warum nicht einfach ein llm mit anbindung zum persönlichen Kalender benutzen?**. 
 Ich habe nach dem einreichen der Projektidee gemerkt, dass es den grössten Teil meiner geplanten App bereits gibt, in Form von z. B. Gemini und Google Kalender. Es funktioniert auch relativ gut und sehr flexibel mit dem natural language.
 - Der genannte Workflow ist zwar eine sehr gute Wahl, aber das editieren von einem bereits festgelegtem plan ist immernoch schwierig, sobald man mit der llm die bulk Kalendereinträge gemacht hat, bleiben bulk edits dennoch schwierig.
 - Ich möchte User centered Design & Requirements Engineering üben & anwenden. Ist am einfachsten mit einer Produktivitätsapp
@@ -319,20 +325,16 @@ Ich habe nach dem einreichen der Projektidee gemerkt, dass es den grössten Teil
 - Es ist gute Übung für allgemein schnelle, iterative Softwareentwicklung
 Aus diesen Gründen finde ich es trotzdem eine gute Idee
 
-**Wann mache ich user Tests. nach Erstellung des MVP/Prototypen oder nach vollständigem 1.0?**
+**Wann mache ich user Tests. nach Erstellung des MVP/Prototypen oder nach vollständigem 1.0?**. 
 Nach dem Prototypen kann ich nur die Features testen lassen, usability z.b. nicht da dann das Design etc. nicht in der finalen Version sein wird.
-Allerdings möchte ich auch Usability möglichst früh testen und Fehler erkennen, ohne das ich 180h in die falsche Richtung gehe
+Allerdings möchte ich auch Usability möglichst früh testen und Fehler erkennen, ohne das ich 180h in die falsche Richtung gehe. Entscheid, so viel testen wie möglich.
 
-**teste ich die erste iteration mit der finalen iteration der app mit denselben personen oder mit neuen?**
-Ich will Erstkontakte von Usern mit meiner App testen. Wenn Personen die App bereits kennen, teste ich nicht das was ich herausfinden möchte.
-
-**Sollte ich eine genauere Planung erlauben, also z.b. eine Tagesplanung hinzufügen?** 
+**Sollte ich eine genauere Planung erlauben, also z.b. eine Tagesplanung hinzufügen?**   
+Ich habe mich für eine Tagesplanung entschieden neben der vorhandenen Wochenplanung. So hat es keine Nachteile. 
+Aktuell ist das dnd customized, für mehr flexibilität. Allerdings wäre eine spätere Kalenderintegration offen.
 
 **Sollte der Text Editor nur rein als task capture funktionieren oder sollte der Bulk Edit auch damit gesteuert sein?**
-Nachteile:
-- Viel Synchronisierungsaufwand & mögliche Bugs
-    - wiederkehrende Tasks z.B. "notizen durchlesen every friday". was wenn der user im dnd editor oder in der tabelle einen friday vom every friday task herausnimmt und der user zurück zum texteditor view geht? im text editor kann dann nicht mehr "notizen durchlesen every friday"
-    -  
+Vorteil viel Synchronisierungsaufwand & mögliche Bugs. Nachteil kein Bulk Edit. In meinem Tool geht es vorallem darum, dass man schnell tasks verwalten kann, deshalb wäre mir der Bulk Edit noch wichtig.
 
 **Parent / Child / Sibling Handling**
 Aktuell habe ich Schwierigkeiten zu entscheiden:
@@ -352,7 +354,7 @@ Aktuell habe ich Schwierigkeiten zu entscheiden:
 Ich habe das gefühl, items mit children gar nicht anzuzeigen spart mir das handling von ein paar edge cases und generell mehr tasks als nötig zu sehen senkt produktivität, habe ich das Gefühl.
 Was definitiv gemacht werden soll ist das children das due date vom parent erben, ausser sie haben explizit ein eigenes datum als property/werden irgendwo anders hingezogen.
 
-Entscheid:
+**Entscheid:**
 - dnd separate version
 - items mit children nicht anzeigen
 - glühbirne toggle für sibling und/oder escendants anzeige
@@ -384,24 +386,27 @@ Entscheid:
 
 Um mit den eingegebenen Daten zu arbeiten, brauche ich ein Objekt / Datenstruktur. 
 Als erstes habe ich an folgendes gedacht um mit den verschachtelten Aufgaben zu arbeiten.
-
+```
 export interface TaskItem {
   id: string;
   title: string;
   children?: TaskItem;
   ...
 }
-
+```
 Allerdings würde es hier mühsam werden rekursiv die children durchzugehen könnte mühsam werden.
 Es kommen noch folgende in Frage.
 
+```
 export interface TaskItem {
   id: string;
   title: string;
   childIds?: string;
   ...
 }
+```
 
+```
 export interface TaskItem {
   id: string;
   title: string;
@@ -409,13 +414,16 @@ export interface TaskItem {
   parentId?: string;
   ...
 }
+```
 
+```
 export interface TaskItem {
   id: string;
   title: string;
   parentId?: string;
   ...
 }
+```
 
 Nach ein wenig recherche, scheint die Version mit nur der parentId am besten für mich zu sein. Da ich später aus diesen Objekten eine Drag and Drop Komponente bauen möchte.
 So müsste ich bei änderung des Parents von einem Objekt, bei Drag and Drop nur beim geschobenen Objekt die ParentId ändern und nicht ein Property bei zwei Objekten aktualisieren.
@@ -445,11 +453,12 @@ Benötigte Komponenten der dnd-kit/react library:
 **useDroppable**, macht aus einem Element ein droppable Element, bei dem man draggable elemente einfügen kann. In meinem Fall sind es alle Wochen des Semesters, die dynamisch generiert werden, je nach Semesterlänge.
 
 ### allgemein edge cases / bugs
-- wie werden Tasks mit mehreren datumsangaben gehandled?
-- wie werden child Tasks die über dem datum des parents liegen gehandled?
-- tasks die children haben, sollten nicht als tasks aufgezeigt werden
-- child tasks, erben standardmässig das due date vom parent
-- over indentation, zwei oder drei indentations, zum vorherigen
+- wie werden Tasks mit mehreren datumsangaben gehandled? -> nur das erste datum wird erkannt
+- wie werden child Tasks die über dem datum des parents liegen gehandled? -> aktuell noch nicht gehandelt
+- tasks die children haben, sollten nicht als tasks aufgezeigt werden -> korrekt
+- child tasks, erben standardmässig das due date vom parent -> korrekt
+- over indentation, zwei oder drei indentations, zum vorherigen -> wird nicht zu einem task bei overindentation
+- alle children kombiniert sollte nicht höheren aufwand ausweisen, als es auf dem parent steht -> aktuell noch nicht gehandelt
 ... 
 
 - wiederkehrende Tasks (sofern es diese geben wird), wie "every friday notizen durchlesen"
@@ -457,7 +466,6 @@ Benötigte Komponenten der dnd-kit/react library:
     - sollten innerhalb des Text Editors nicht überschrieben werden können mit anderen daten
 
 ## F03 Bulk Edit
-Ursprünglich geplant: Bulk Edit über Text Editor. Nach MVP-Grossteil: mögliche Schwierigkeiten aufgefallen → genauer angeschaut.
 
 ### Bulk Edit per Text Editor: Nachteile
 * dnd braucht eine stabile ID pro Task. Aktuell vergibt der Text Editor bei jedem onChange neue UUID -> dnd sieht es als "neuen" Task, Reihenfolge geht verloren, falls sortierung innerhalb droppable containern implementiert wurde. So ist concurrent Editing von Tasks, zwischen Tabelle, dnd und Text Editor nicht möglich.
@@ -478,20 +486,21 @@ Ursprünglich geplant: Bulk Edit über Text Editor. Nach MVP-Grossteil: möglich
 
 **Text Editor Bulk Edit ohne Date/Status, nur Hierarchie/Reorder/Titel**:
 * Schade um chrono-node, ungenutzt
-* User müsste zwischen Fenstern wechseln (Datum, Subtasks) → Kontext-Switching, genau das, was vermieden werden soll
+* User müsste zwischen Fenstern wechseln (Datum, Subtasks) -> Kontext-Switching, genau das, was vermieden werden soll
 
 ### Nebenentscheid: Tagesplanung
 Zusätzlich zu Wochenplanung (dnd) auch Tagesplanung.
-Aufwand: 2-6h. Task-Objekt arbeitet schon mit Datum-Property → nur neue droppable areas pro Wochentag nötig. Komplexer falls Sortierung innerhalb droppable areas persistiert werden muss (Store/Getter/Objekthandling an vielen Stellen betroffen). Vor Implementierung genauer planen.
+Aufwand: 2-6h. Task-Objekt arbeitet schon mit Datum-Property -> nur neue droppable areas pro Wochentag nötig. Komplexer falls Sortierung innerhalb droppable areas persistiert werden muss (Store/Getter/Objekthandling an vielen Stellen betroffen). Vor Implementierung genauer planen.
 
 ### Entscheid Bulk Edit: komplett über Text Editor
 Nach den genannten Vorteilen ist die Entscheidung klar für mich. Text Editor übernimmt neben Quick Capture auch komplette Task-Verwaltung. 
 * eine View: Text Editor fetcht & stellt Tasks korrekt dar
 * Status sichtbar & aktualisierbar
-* Date & Status müssen aus Titel gecleaned werden — sonst z.B. "kapitel 2 lesen 28/09/26 :doing:" als Titel gespeichert → sichtbar in anderen App-Teilen als Tasktitel
+* Date & Status müssen aus Titel gecleaned werden sonst wird z.B. "kapitel 2 lesen 28/09/26 doing" als Titel gespeichert -> sichtbar in anderen App-Teilen als Tasktitel
 
-## F05 ... Fortschrittsanzeige aller Module | Verbindung zu prog1 Modul
-Dieses Feature ist spannend, da es direkt eine Verknüpfung zu prog1 darsellt. Ein kleines eingehäustes Feature, bei dem es darum geht einen rekursiven Algorithmus zu entwicklen, der den Fortschritt aller Module bzw. aller level 1 Task Items aufzeigt:
+## F05 ... Fortschrittsanzeige aller Module & Verbindung zu prog1 Modul
+Dieses Feature ist spannend, da es direkt eine Verknüpfung zu prog1 darsellt. Ein kleines eingehäustes Feature, bei dem es darum geht einen rekursiven Algorithmus zu entwicklen, der den Fortschritt aller Module bzw. aller level 1 Task Items aufzeigt:  
+
 ![alt text](/Ablage/img/TaskProgress.png)
 Ein Task gilt als 100% erledigt, wenn alle sub Tasks auch erledigt sind. Allerdings, wenn z. B. Task C1 erledigt ist zählt es nicht gleich viel zum Fortschritt wie wenn Task B3 oder Task B1 erledigt ist. Task A1 ist der Root Level 1 Task für den der Fortschritt gemessen wird (z. B. ein Modul). 
 **Fall Task B1 ist erledigt:**
@@ -502,14 +511,16 @@ Ein Task gilt als 100% erledigt, wenn alle sub Tasks auch erledigt sind. Allerdi
 Das Ganze wird hier wegen der unendlichen Child Struktur am besten rekursiv gemacht. ~~Aktuell stimmt der Algorithmus den ich geschrieben habe noch nicht ganz, deswegen muss hier noch dahinter.~~
 
 Der Algorithmus wurde neu geschrieben und deutlich vereinfacht und sieht nun folgendermassen aus, ich habe versucht ihn visuell zu erklären:
-![alt text](/Ablage/img/recursiveProgress.png)
+![alt text](/Ablage/img/recursiveProgress.png)  
 
+## Barrierefreiheit
+Die dnd-kit unterstützt nativ keyboard input, also musste ich hier nur ein Prop setzen, damit die Barrierefreiheit gewährleistet ist.
 
-##  M3 Prototyp Skateboard verstpätete Erledigung
+## M3 Prototyp Skateboard verstpätete Erledigung
 Diesen Meilenstein konnte ich erfolgreich nach Plan erledigen. Allerdings hatte ich ungefähr 15 Tage Verspätung. Ich habe die Zeit deutlich unterschätzt. Einbindung von Libraries & Komponenten die ich nicht kenne (dnd-kit, Code mirror, tanstack datatable) habe ich unterschätzt, regelmässig Gedanken für Umentscheidungen haben vorallem zur Verspätung geführt. Diese Erkenntnisse nehme ich für die nächsten Projekte mit, mehr Zeit für unbekanntes einplanen & den Scope kleiner einplanen, und vor allem dabei bleiben.
 
 ## M4 User Evaulierungen, User Tests vom MVP
-Dies habe ich gestrichen, da ich eine Pause eingelegt habe von Anfang Juli bis mitte August. Ich habe in meinem Meilensteinplan, keine Pausen / Ferien eingeplant. Ich habe für den ganzen Sommer Arbeit eingeplant, das war nicht sehr geschickt. Das nehme ich auch für das nächste mal mit. Da der Feedbackmarkt auch bald ist, hat es für meine eigenen ersten User Validierungen keine grossen nutzen.
+Dies habe ich gestrichen, da ich eine Pause eingelegt habe von Anfang Juli bis mitte August. Ich habe in meinem Meilensteinplan, keine Pausen / Ferien eingeplant und habe für den ganzen Sommer Arbeit eingeplant, was nicht sehr geschickt war. Das nehme ich auch für das nächste Mal mit. Da der Feedbackmarkt auch bald ist, hat es für meine eigenen ersten User Validierungen keine grossen nutzen.
 
 ## M6 Testszenarien
 ich möchte testen:
@@ -542,24 +553,27 @@ ich möchte testen:
 **Akzeptanzkriterium:** bestanden, wenn User selbständig zur Overview-Page navigiert und Fortschritt/Status mind. eines Moduls korrekt benennt.
  
 ✅ Bestanden
+
 ---
  
 ### Szenario 3: Task wiederfinden
 "Du hast vorhin eine Aufgabe mit zwei Unteraufgaben angelegt. Findest du die wieder, auch in einer anderen Ansicht als der, in der du sie erstellt hast?"
-*(mit Beispiel/-Initialtext arbeiten)*
- 
+*(mit Beispiel/-Initialtext arbeiten)*. 
 **Akzeptanzkriterium:** bestanden, wenn User Task samt beiden Subtasks in mind. einer anderen View wiederfindet und Parent-Child-Beziehung erkennt.
 
 ✅ Bestanden
+
 ---
  
 ### Szenario 4: Einplanen & Persistenz
-"Zieh eine deiner offenen Aufgaben aus der Inbox auf eine passende Woche. Lad danach die Seite neu."
+"Zieh eine deiner offenen Aufgaben aus der Inbox auf eine passende Woche. Lad danach die Seite neu."  
 **Akzeptanzkriterium:** bestanden, wenn User Task selbständig per Drag & Drop von Inbox auf eine Woche zieht, Task nach Reload weiterhin korrekt zugeordnet ist.
 
 ✅ Bestanden
 
 ## M6 Beobachtungen / Erkenntnisse Feedbackmarkt & M7 Prototyp Auto (Finalisierung, 3. Iteration)
+Die Hauptpunkte sind die Erkenntnisse und die Unterpunkte jeweils was ich dafür eingeplant habe
+
 - Die Legende wurde meistens nicht immer beachtet, oder nicht komplett. child tasks, oder duration, oder datum, wurden manchmal erst nach erklärung verwendet.
     - vorlagen erstellen
     - die legende als tooltip, und besser gestaltet, sofern zeit. oder ein preview video
@@ -623,11 +637,13 @@ Für die Umsetzung bin ich auf Rough Notations Library gestossen, die jede marki
 
 ## Was war das Ziel? Ziel erreicht?
 Wenn ich in die Produktvision schaue, steht vorallem das schnelle eintragen/einplanen mehrerer Aufgaben und Unteraufgaben ohne viele Klicks mit Natural Language im Vordergrund. Das habe ich im MVP genauer definiert.
-Vom definierten MVP wurden alle Punkte erreicht. ✅
+Vom definierten MVP wurden alle Punkte erreicht. ✅  
 Aktuell werden nur dates über Natural Language erkannt, Aufwände nicht. Was für mich in Ordnung so ist. So konnte ich mich auf Anderes konzentrierten.
 **Der Text Planer** sieht genau so aus wie ich ihn mir vorgestellt habe. Am Anfang hatte ich mit der Entscheidung gekämpft, ob ich einfach eine normale Textarea Komponente selbst umbaue in diesen Syntax markierenden Editor. Aber ich bin sehr froh, dass ich mich für Codemirror 6 entschieden habe. Es hat vieles sehr vereinfacht und unterstützt genau die Standard Features die ich brauche, wie styling von einzelnen Wörtern/Zeilen, hinweissetzung über widgets und gutters auf spezifische Zeilen, einklappen von mehreren Zielen und vieles mehr out of the box, ohne Umwege. Es ist ursprünglich da um Code Editoren zu bauen, ich habe es jetzt für meine Text Planung verwendet, für die es wunderbar funktioniert. Ich bin sehr glücklich damit.  
+
 **Das Dnd** und die Übersichtsseite sind auch gut herausgekommen. Beim dnd habe ich zwar nur eine Wochenview, aktuell, aber ich denke für den Moment reicht das für Semester Planungen. Eine spätere Kalender UI Integration wäre geplant. Die Implementierung mittels dnd-kit war auch einfacher als ich dachte.  
-Die Implementierung der **Übersichtstabelle** ist jetzt zwar erreicht, aber es war mühsamer als ich dachte. Ich habe mich für den Tanstack Datatable, anstelle einer einfachen Table Komponente entschieden. Der Unterschied ist, dass der Tanstack Datatable, sehr viele Features bereits eingebaut hat (pagination, filtering, sorting, etc.) und dass er generally typed ist. Also man mapped nicht manuell über seine Daten, sondern man übergibt sein Objekt (mein Tasks Array) und der Datatable stellt es automatisch dar. Was mit eigenständiger Syntax kam wie getCoreRowModelClass, getColumDef etc. was für mich eher neuland war. Ich habe es ausgewählt für future proofing, damit ich meine Tabelle später einfach erweitern könnte.
+Die Implementierung der **Übersichtstabelle** ist jetzt zwar erreicht, aber es war mühsamer als ich dachte. Ich habe mich für den Tanstack Datatable, anstelle einer einfachen Table Komponente entschieden. Der Unterschied ist, dass der Tanstack Datatable, sehr viele Features bereits eingebaut hat (pagination, filtering, sorting, etc.) und dass er generally typed ist. Also man mapped nicht manuell über seine Daten, sondern man übergibt sein Objekt (mein Tasks Array) und der Datatable stellt es automatisch dar. Was mit eigenständiger Syntax kam wie getCoreRowModelClass, getColumDef etc. was für mich eher neuland war. Ich habe es ausgewählt für future proofing, damit ich meine Tabelle später einfach erweitern könnte.  
+
 **Erste Statistiken** auf der Überisichtsseite habe ich schon mal, mit denen ich zufrieden bin. Das hervorheben von Overdue Tasks war mir wichtig. Da ist mein Ziel für das ipro Projekt erreicht. Allerdings mit den Taskdaten die ich aktuell habe kann man um einiges kreativer werden. Z. B. Eine Statistik die hilft Aufwand oder Aufwand über Zeit zu visualisieren wäre bestimmt hilfreich. Oder sogar selber konfigurierbare "build your own" Statistiken, die man per dnd herumschieben kann, und damit sein eigenes Dashboard zusammenbauen kann. Oder zumindest in den Settings von einer Auswahl an Statistiken wählen kann. Dafür hat die Zeit nicht gereicht.
 
 Im grossen Ganzen konnte ich die Kernfeatures umsetzen, und sehe viel Potenzial für Weiteres. Vorallem wäre es nun ready zur Benutzung für mich. Ich kann es nun für meine eigene Semesterplanung und sonstige Planungen verwenden 😁. Also Ziel erreicht für mich.
@@ -647,7 +663,7 @@ Ich konnte die ~180h die ich verwendet habe, für dieses Projekt auch aufzeichne
 Ich habe sehr früh im Projekt gemerkt, dass ich schnell den Überblick und Verständnis über meine Codebase verliere, desto mehr code ich generieren lasse. Bei mir passiert es schon wenn ich zwei Prompts aufeinanderfolge, ohne dazwischen den Code zu lesen und verstehen.
 Deswegen habe ich deutlich mehr code selber geschrieben als ich es am anfang wollte. Und  
 Ich habe nun einen **Leitfaden** für mich bezüglich agentic coding erstellt:
-- Code / Features die ich selber nicht schreiben könnte nicht generieren lassen. (exklusive Boilerplate code z.B. Library/Framework Syntax)
+- Code / Features die ich selber nicht schreiben könnte, nicht generieren lassen. (exklusive Boilerplate code z.B. Library/Framework Syntax)
 - Code Änderungen sehr spezifisch beschreiben. nie nur "baue Feature x" prompten
 - Jede Zeile muss gelesen und überprüft werden, sonst endet man mit unnötig komplexen code, oder code der gar nicht gebraucht wird
 - Grössere Architektur / Design Entscheidungen nicht dem Agent übergeben! Infos sammeln, verschiedene Dinge evaluieren mit dem Agent kann gut, aber nicht wichtige Entscheidungen verlagern
@@ -712,4 +728,4 @@ Ich habe diese App jetzt sehr auf Semesterplanungen fokussiert. Allerdings einen
 Möglicherweise wenn Plänlify ein wenig mehr ausgereift ist, und als vollständige Applikation verwendbar ist, könnte ich es versuchen zu kommerzialisieren. Einen wahren tree based, natural language / token erkennbarer Bulk Text Planer gibt es soweit ich weiss keinen. Tree based gibt es, aber ohne bulk Text Edit. Natural Language capturing gibt es, aber ohne bulk Text Edit. Oder wenn ich Plänlify nicht kommerzialisieren kann / möchte, könnte ich Plänlify als Blueprint für kommerzialisierung weiterer Projektideen verwenden. Denselben Stack, um schnell produktiv zu werden, dieselben Prozesse zur Entwicklung eines Produktes aber nun effizienter etc.
 Dies könnte ich auch mit anderen Modulen wie z. B. Lean Startup kombinieren.
 
-Kurzgesagt: Ich freue mich sehr auf das weitere Studium. Auf Projekte wie ipro habe ich mich gefreut, mein angeeignetes Wissen, auf meine Weise, selbstständig, kreativ ohne grosse Restriktionen oder Zeitdruck anwenden zu können. Vielen Dank.
+**Kurzgesagt:** Ich freue mich sehr auf das weitere Studium. Auf Projekte wie ipro habe ich mich gefreut, mein angeeignetes Wissen, auf meine Weise, selbstständig, kreativ ohne grosse Restriktionen oder Zeitdruck anwenden zu können. Vielen Dank.
