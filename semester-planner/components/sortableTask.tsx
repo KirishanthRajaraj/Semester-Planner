@@ -41,7 +41,7 @@ export default function DraggableTask({ task, index, group, dimmed, focused, onT
                     onToggleSelect(task);
                 }
             }}
-            className={`group duration-200 transition-colors truncate w-full ${task.status === 'done' ? 'bg-green-500' : 'bg-primary'}
+            className={`group/task duration-200 transition-colors truncate w-full ${task.status === 'done' ? 'bg-green-500' : 'bg-primary'}
              gap-0.5 ${task.parentId !== undefined ? '!pt-5' : ''} 
              relative overflow-visible font-semibold p-3 rounded-lg text-background cursor-grab active:cursor-grabbing z-20
              ${isDragging ? "opacity-50" : ""} ${dimmed ? "opacity-30 pointer-events-none" : ""} 
@@ -75,9 +75,9 @@ export default function DraggableTask({ task, index, group, dimmed, focused, onT
                 onPressedChange={() => onToggleFocus(task)}
                 className={`
                     transition-all duration-200
-                    absolute -left-4 -bottom-4 size-8 z-20
+                    absolute -left-4 -bottom-4 size-8
                     hover:!scale-120
-                    scale-0 group-hover:scale-100 ${focused ? "!scale-100" : ""}
+                    scale-0 group-hover/task:scale-100 ${focused ? "!scale-100" : ""}
                     cursor-pointer
                     bg-primary/50 aria-pressed:bg-primary
                     rounded-full border-6 border-background p-0.5
@@ -87,8 +87,8 @@ export default function DraggableTask({ task, index, group, dimmed, focused, onT
             </Toggle>
 
             <div className="w-full flex flex-row items-center gap-2">
-                <TaskStatusToggle task={task} className="rounded-full !p-0 -ml-0.5 scale-0 duration-200 transition-all min-w-6 max-h-6 w-6 absolute group-hover:scale-80 hover:scale-100 !bg-muted/30 hover:bg-muted/70 " classNameIcons="!ring-0 border-3 !w-full !h-full !p-0"></TaskStatusToggle>
-                <p className="text-sm font-bold truncate group-hover:ml-7 duration-200">{task.title}</p>
+                <TaskStatusToggle task={task} className="rounded-full !p-0 -ml-0.5 scale-0 duration-200 transition-all min-w-6 max-h-6 w-6 absolute group-hover/task:scale-80 hover:scale-100 !bg-muted/30 hover:bg-muted/70 " classNameIcons="!ring-0 border-3 !w-full !h-full !p-0"></TaskStatusToggle>
+                <p className="text-sm font-bold truncate group-hover/task:ml-7 duration-200">{task.title}</p>
                 {task.duration && <p className="text-xs font-extrabold bg-cyan-400/30 dark:bg-cyan-400/50 rounded-sm p-0.5">{task.duration !== undefined ? `${task.duration / 60}h` : ""}</p>}
             </div>
 
@@ -100,7 +100,7 @@ export default function DraggableTask({ task, index, group, dimmed, focused, onT
                         absolute -right-3.5 -top-3.5 size-7
                         hover:size-8 hover:-right-4 hover:-top-4
                         scale-0
-                        group-hover:scale-100
+                        group-hover/task:scale-100
                         cursor-pointer
                         bg-red-700/90
                         rounded-full

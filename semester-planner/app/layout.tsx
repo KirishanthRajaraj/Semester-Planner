@@ -30,14 +30,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      // dark ist der default, das skript unten nimmt sie wieder weg wenn light gespeichert ist.
-      // suppressHydrationWarning, weil genau dieses skript die klasse vor dem hydrieren aendert.
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
       suppressHydrationWarning
     >
       <body>
-        {/* laeuft synchron als erstes im body, also bevor irgendwas gezeichnet wird.
-            ohne das gaebe es beim reload kurz das falsche theme zu sehen. */}
         <script
           dangerouslySetInnerHTML={{
             __html: `try{if(localStorage.getItem("theme")==="light"){document.documentElement.classList.remove("dark")}}catch(e){}`,
@@ -50,8 +46,7 @@ export default function RootLayout({
           >
             <AppSidebar />
 
-            {/* auf mobile rendert Sidebar als geschlossenes Sheet, der trigger darin ist dann mit eingesperrt */}
-            <SidebarTrigger className="md:hidden fixed top-3 left-3 z-50 bg-muted/60 backdrop-blur-sm" />
+            <SidebarTrigger className="md:hidden fixed top-3 left-3 z-50 size-11 rounded-xl bg-muted/60 backdrop-blur-sm [&_svg:not([class*='size-'])]:size-5" />
 
             <main className="w-full">
               <div className="w-full min-h-full flex flex-col justify-center items-center mx-auto pb-9">

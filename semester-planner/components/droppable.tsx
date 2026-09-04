@@ -20,7 +20,6 @@ export default function Droppable({ id, title, isDay, className, children, week,
         accept: 'item',
     });
 
-    // waehrend eines drags waere die fuellung nur stoerend
     const { source } = useDragOperation();
     const isDragActive = source != null;
 
@@ -28,8 +27,6 @@ export default function Droppable({ id, title, isDay, className, children, week,
 
     const style = isDropTarget ? ' border-2 !border-solid !border-foreground rounded-lg p-2' : 'border-2 rounded-lg p-2';
 
-    // liegt hinter den task karten (die sind relative, also weiter oben im stapel).
-    // klicks auf eine karte treffen die karte, klicks daneben das plus.
     const addOverlay = addTarget && !isDragActive && (
         <button
             type="button"
@@ -39,7 +36,7 @@ export default function Droppable({ id, title, isDay, className, children, week,
                        bg-muted/60 opacity-0 scale-95 transition-all duration-200 ease-out
                        hover:opacity-100 hover:scale-100"
         >
-            <Plus onClick={() => setAddOpen(true)} className="size-6 text-primary transition-transform duration-200 group-hover:rotate-90" />
+            <Plus onClick={() => setAddOpen(true)} className="size-6 text-primary transition-transform duration-200 group-hover/droppable:rotate-90" />
         </button>
     );
 
@@ -68,7 +65,7 @@ export default function Droppable({ id, title, isDay, className, children, week,
                         </div>
 
                         <div className={`flex flex-col w-full gap-1 overflow-visible items-center justify-center`}>
-                            <div ref={ref} className={`group relative overflow-visible w-full gap-3 min-h-10 mb-4`}>
+                            <div ref={ref} className={`group/droppable relative overflow-visible w-full gap-3 min-h-10 mb-4`}>
                                 {addOverlay}
                                 <div className={`z-20 w-full min-h-full flex flex-col gap-3 border-2 border-dashed border-foreground/50 items-center justify-center text-foreground/50  ${style}`}>
                                     {!(React.Children.count(children) > 0) && <span className={`${isDay ? 'opacity-50 text-sm' : ''}`}>general</span>}
@@ -83,7 +80,7 @@ export default function Droppable({ id, title, isDay, className, children, week,
                 (
                     <Card className={`${className} py-1 overflow-visible`}>
                         <CardContent ref={ref}
-                            className={`group relative flex flex-col gap-1 min-h-10 ${style} ${isDay ? 'border-2 border-dashed border-foreground/50' : 'border-transparent'} ${isToday ? 'border-primary' : ''}
+                            className={`group/droppable relative flex flex-col gap-1 min-h-10 ${style} ${isDay ? 'border-2 border-dashed border-foreground/50' : 'border-transparent'} ${isToday ? 'border-primary' : ''}
                         p-2 overflow-visible items-center justify-center`}>
                             {addOverlay}
                             <CardTitle className={`relative ${isDay ? 'opacity-50 text-sm' : ''}`}>{title}</CardTitle>
