@@ -134,10 +134,10 @@ Siehe separates Dokument "interview_resultate.md".
 ## Wireframes | Verbindung zu ucdre Modul
 
 ###
-Wireframe v1, MVP:
+#### Wireframe v1, MVP:  
 ![alt text](Ablage/img/Wireframe_v1.png)
 
-Wireframe dnd Erstversionen:
+#### Wireframe dnd Erstversionen:
 ![alt text](Ablage/img/dnd_versionen.png)
 
 ## Technologieentscheid
@@ -196,16 +196,16 @@ Für Aussagen wie "2h", oder "1h 10min", gibt es mehrere libraries jurations.js,
 
 Hier sieht man klar, dass sich State management mit Zustand mehr lohnt. Ich wollte zwar etwas grösseres neues lernen, was mir später auch weiterhelfen würde, aber da ich den Fokus auf user cenetered design & requirements engineering setzen möchte, denke ich wäre das Learning einer grossen library wie Redux unpassend in den Aufwand den ich übrig habe in diesem Projekt. Ausserdem wäre Redux für den Scope dieses Projektes sehr wahrscheinlich overkill. Falls ich Zeit habe könnte ich eine Migration von Zustand auf Redux durchführen, aber vorerst fahre ich mit Zustand weiter.
 
-#### posthog - noch nicht entschieden
+#### posthog - vorerst nicht
 Posthog habe ich bisher noch nie verwendet. Ein grobes User tracking. Datenschutz müsste hier beachtet werden. Möglicherweise overkill für dieses Projekt, vorallem, da ich bereits viel Feedback erhalte von direkten Userinteraktionen.
 
-#### LLM Anbindung - noch nicht entschieden
+#### LLM Anbindung - vorerst nicht
 - Für besseres Natural Language Processing
 - Für Ratschlag Gebung mit der aktuellen Einplanungen als Quelle
 - Sonstiges Features
 Ich lehne eher dagegen, da dies teuer werden kann und laut den User Interviews, User eher skeptisch gegenüber AI Features sind
 
-### Eigenes Backend - noch nicht entschieden
+### Eigenes Backend - vorerst nicht
 Ich tendiere eher dagegen.
 - Auth & Usermanagement kann ich mit next.js api routes und externen Anbietern einbinden
 - Eigenes Auth mit eigenem Backend ist sehr unsicher
@@ -617,7 +617,7 @@ Die übrige Zeit würde ich lieber in M7 Auto investieren.
 In meiner Freizeit bin ich auf eine Website eines Fotografen gestossen, der solche rough underline und circle Elemente auf seiner Website hatte. https://www.rossandhisjpegs.com/
 Dieser Stil gefällt mir sehr, damit ich keinen Wall of Text habe, um dem User eine erste Einschätzung zu geben für was die App entwickelt wurde.
 Für die Umsetzung bin ich auf Rough Notations Library gestossen, die jede markierung randomized neu berechnet, was noch toll ist, dann habe ich keine statische Markierungen habe.
-![alt text](/Ablage/img/infoModal.png.png)
+![alt text](/Ablage/img/infoModal.png)
 
 # Reflexion
 

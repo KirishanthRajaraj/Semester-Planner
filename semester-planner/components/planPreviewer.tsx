@@ -42,7 +42,7 @@ function statusClass(task: TaskItem): string {
 
 function taskLabel(task: TaskItem): string {
     const parents = constructParentString(task);
-    return parents ? `${parents} < ${task.title}` : task.title;
+    return parents ? `${task.title} < ${parents}` : task.title;
 }
 
 // one small square per task, draggable

@@ -101,3 +101,17 @@ export const constructParentString = (task: TaskItem): string => {
 
 export const parentTasksSet = (tasks: TaskItem[]): Set<string> =>
     new Set(tasks.map((t) => t.parentId).filter((pId): pId is string => pId !== undefined && pId !== null && pId.length > 0))
+
+export const insertTask = (tasks: TaskItem[], newTask: TaskItem): TaskItem[] => {
+    const parentId = newTask.parentId;
+    if (parentId === undefined) return [...tasks, newTask];
+
+    const subtreeIds = new Set([parentId, ...getDescendants(tasks, parentId).map((t) => t.id)]);
+    const lastIndex = tasks.findLastIndex((t) => subtreeIds.has(t.id));
+
+    // parent gibt es nicht
+    if (lastIndex === -1) return [...tasks, newTask];
+
+    // task hinten anhängen
+    return [...tasks.slice(0, lastIndex + 1), newTask, ...tasks.slice(lastIndex + 1)];
+};

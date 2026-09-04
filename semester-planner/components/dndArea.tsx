@@ -210,7 +210,7 @@ export default function dndArea() {
             <div className="w-full flex flex-col lg:flex-row items-start gap-4 lg:gap-8 p-4 select-none">
                 <ScrollArea className={`h-64 lg:h-[calc(100vh-200px)] w-full lg:w-auto pb-4 border-b-6 border-muted/20 lg:pb-0 lg:border-b-0 `}>
                     <div className="flex flex-col gap-8 w-full lg:w-80 pr-4">
-                        <Droppable id={`inbox`} title={`Inbox`}>
+                        <Droppable id={`inbox`} title={`Inbox`} addTarget={{ noDay: false }}>
                             {filteredTasks.filter((task) => !task.date && getChildren(tasks, task.id).length == 0).map((task, index) => (
                                 <DraggableTask key={task.id} task={task} index={index} group="inbox" dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
                             ))}
@@ -230,6 +230,7 @@ export default function dndArea() {
                         {weeks.map((week, weekIndex) => (
                             <div key={`weekwrapper-${weekIndex + 1}`} ref={week.startDate <= new Date() && week.endDate >= new Date() ? currentWeek : undefined}>
                                 <Droppable id={`week-${weekIndex + 1}`} title={`Week ${weekIndex + 1}`} key={weekIndex + 1} week={week}
+                                    addTarget={{ date: week.endDate, noDay: true }}
                                     className={`w-full ${week.endDate < new Date() ? 'opacity-40' : ''}`}
 
                                 >
@@ -246,7 +247,9 @@ export default function dndArea() {
                                             className={`gap-3 bg-transparent ring-0 align-bottom h-min 
                                                 ${day.getDay() != 1 && dayIndex == 0 ? COL_START_BY_DAY[day.getDay()] : ''}
                                                 ${week.endDate < new Date() ? 'opacity-40' : ''}`}
-                                            isToday={day.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)}>
+                                            addTarget={{ date: new Date(day), noDay: false }}
+                                            isToday={day.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)}
+                                            dayDate={day}>
                                             {filteredTasks.filter(task => task.date && getChildren(tasks, task.id).length == 0 && task.date.toDateString() === day.toDateString() && !task.noDay).map((task, index) => (
                                                 <DraggableTask key={`day-${dayIndex + 1}-${task.id}`} task={task} index={index} group={`week-${weekIndex + 1}-day-${dayIndex + 1}`} dimmed={highlightedIds !== undefined && !highlightedIds.has(task.id)} focused={focusedId === task.id} onToggleFocus={toggleFocus} selected={multiSelectedIds.has(task.id)} selectionSize={multiSelectedIds.size} onToggleSelect={toggleMultiSelect} />
                                             ))}

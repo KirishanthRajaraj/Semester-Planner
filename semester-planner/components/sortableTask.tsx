@@ -43,7 +43,7 @@ export default function DraggableTask({ task, index, group, dimmed, focused, onT
             }}
             className={`group duration-200 transition-colors truncate w-full ${task.status === 'done' ? 'bg-green-500' : 'bg-primary'}
              gap-0.5 ${task.parentId !== undefined ? '!pt-5' : ''} 
-             relative overflow-visible font-semibold p-3 rounded-lg text-background cursor-grab active:cursor-grabbing
+             relative overflow-visible font-semibold p-3 rounded-lg text-background cursor-grab active:cursor-grabbing z-20
              ${isDragging ? "opacity-50" : ""} ${dimmed ? "opacity-30 pointer-events-none" : ""} 
              ${selected ? "ring-2 ring-offset-2 ring-offset-background ring-foreground" : ""}
              ${isTaskOverdue(task) ? 'bg-red-500' : ''}`
@@ -58,7 +58,7 @@ export default function DraggableTask({ task, index, group, dimmed, focused, onT
             {task.parentId &&
                 <div
                     ref={subtreeRef}
-                    className={`absolute text-xs -left-1 -top-3 text-primary font-bold bg-background rounded-md px-2 py-1 hover:z-20 max-w-32 overflow-hidden whitespace-nowrap
+                    className={`absolute z-20 text-xs -left-1 -top-3 text-primary font-bold bg-background rounded-md px-2 py-1 hover:z-20 max-w-32 overflow-hidden whitespace-nowrap
   text-ellipsis duration-200 transition hover:scale-125 hover:max-w-40 ${isSubtreeDragging ? 'max-w-40 whitespace-normal !overflow-visible z-20' : ''} hover:whitespace-normal`}>
                     {(isSubtreeDragging) && dragGroupSize > 1 && (
                         <span className="absolute -top-2.5 -right-2.5 bg-primary text-background border-background border-4 text-xs font-bold rounded-full px-1.5 py-0.5">
@@ -75,7 +75,7 @@ export default function DraggableTask({ task, index, group, dimmed, focused, onT
                 onPressedChange={() => onToggleFocus(task)}
                 className={`
                     transition-all duration-200
-                    absolute -left-4 -bottom-4 size-8 z-10
+                    absolute -left-4 -bottom-4 size-8 z-20
                     hover:!scale-120
                     scale-0 group-hover:scale-100 ${focused ? "!scale-100" : ""}
                     cursor-pointer
