@@ -11,7 +11,7 @@ interface SemesterStore {
     setWeeks: (weeks: { startDate: Date; endDate: Date }[]) => void;
 }
 
-const initStart = new Date('2026-08-15');
+const initStart = new Date('2026-09-15');
 const initEnd = new Date('2027-02-19')
 
 export const useSemesterStore = create<SemesterStore>()(

@@ -70,6 +70,24 @@ class InheritedDateWidget extends WidgetType {
     }
 }
 
+
+class BulletWidget extends WidgetType {
+    eq() {
+        return true;
+    }
+
+    toDOM() {
+        const dot = document.createElement("span");
+        dot.className = "mr-1 text-muted-foreground/60 select-none";
+        dot.textContent = "\u2022";
+        return dot;
+    }
+
+    ignoreEvent() {
+        return true;
+    }
+}
+
 export default function TextareaPlanner({ className }: { className?: string }) {
     const [textAreaText, setTextAreaText] = useState<string>("");
     const router = useRouter();
@@ -178,6 +196,13 @@ export default function TextareaPlanner({ className }: { className?: string }) {
                 // get the depth of the next line
                 const nextDepth = nextLine?.match(/^\t*/)?.[0].length ?? 0;
                 const hasChildren = nextLine !== undefined && nextDepth - depth == 1;
+
+                if (depth > 0 && !hasChildren) {
+                    ranges.push(
+                        Decoration.widget({ widget: new BulletWidget(), side: -1 })
+                            .range(offsetLine + depth)
+                    );
+                }
 
                 // mark parent reduced opacity
                 if (hasChildren) {

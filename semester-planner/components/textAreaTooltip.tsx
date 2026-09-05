@@ -12,7 +12,7 @@ export function TextAreaTooltip() {
         <div className="!bg-background font-foreground ">
             <Tooltip>
                 <TooltipTrigger className={"!bg-background font-foreground  "} render={<Button variant="outline" size="icon-sm"><CircleQuestionMark className="border-primary ring-primary  " /></Button>} />
-                <TooltipContent className={"bg-background font-foreground p-2 flex gap-2 py-4 max-w-none"}>
+                <TooltipContent className={"bg-background font-foreground p-2 gap-2 py-4 max-w-none flex flex-col items-baseline"}>
                     {/* Legende */}
                     <div className="flex items-center gap-4 py-2 text-muted-foreground text-sm">
                         <span className="flex items-center gap-3">
@@ -36,6 +36,17 @@ export function TextAreaTooltip() {
                         </span>
                     </div>
                     {/* Legende */}
+                    <ul className="flex flex-col ml-6 list-disc gap-2">
+                        <li>
+                            every line = one task
+                        </li>
+                        <li>
+                            child tasks inherit <span className="bg-primary/70 p-0.5 text-background font-bold rounded-md">dates</span> and <span className="text-green-600">status</span> from parents, unless explicitly set
+                        </li>
+                        <li>
+                            there is no error handling yet for dates and duration...
+                        </li>
+                    </ul>
                 </TooltipContent>
             </Tooltip>
         </div>

@@ -8,8 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { DragDropProvider, useDraggable, useDroppable } from "@dnd-kit/react";
 import { Button } from "@/components/ui/button";
-import { Maximize2, Minimize2 } from "lucide-react";
+import { CircleQuestionMark, Maximize2, Minimize2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { TextAreaTooltip } from "./textAreaTooltip";
 
 // identical to dndArea handling
 const COL_START_BY_DAY: Record<number, string> = {
@@ -250,9 +251,29 @@ export default function PlanPreviewer({ className }: { className?: string }) {
                                 <TabsTrigger className="data-[active]:!bg-primary data-[active]:text-background p-1 cursor-pointer" value="dots">Tasks</TabsTrigger>
                                 <TabsTrigger className="data-[active]:!bg-primary data-[active]:text-background p-1 cursor-pointer" value="heat">Heatmap</TabsTrigger>
                             </TabsList>
+                            <div className="flex gap-2 items-center">
+                                <span className="font-bold text-foreground/60 text-xs">week based preview</span>
+                                <Tooltip>
+                                    <TooltipTrigger className={"!bg-background font-foreground  "} render={<Button variant="outline" className="w-auto h-auto p-1"><CircleQuestionMark className="border-primary ring-primary size-3" /></Button>} />
+                                    <TooltipContent className={"bg-background font-foreground p-2 flex gap-2 py-4 max-w-none"}>
+                                        <ul>
+                                            <li>
+                                                week 1 = semester start date
+                                            </li>
+                                            <li>
+                                                every row = one week
+                                            </li>
+                                            <li>
+                                                "?" = generally in this week, no specific day
+                                            </li>
+                                        </ul>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </div>
+
                             <div className="flex items-center gap-2">
                                 {outside.length > 0 && (
-                                    <span className="text-[10px] text-muted-foreground">{outside.length} outside semester</span>
+                                    <span className="text-[10px] text-muted-foreground">{outside.length} tasks outside semester</span>
                                 )}
                                 <Button className="cursor-pointer" variant="ghost" size="icon-xs" onClick={() => setIsFullscreen((v) => !v)}>
                                     {isFullscreen ? <Minimize2 className="size-3" /> : <Maximize2 className="size-3" />}
@@ -262,6 +283,7 @@ export default function PlanPreviewer({ className }: { className?: string }) {
 
                         <TabsContent value="dots">{renderRows("dots")}</TabsContent>
                         <TabsContent value="heat">{renderRows("heat")}</TabsContent>
+
 
                         {/* inbox, tasks ohne datum */}
                         <div className="mt-2 pt-2 border-t border-muted-foreground/20">
