@@ -36,7 +36,7 @@ export function TextAreaTooltip() {
                         </span>
                     </div>
                     {/* Legende */}
-                    <ul className="flex flex-col ml-6 list-disc gap-2">
+                    <ul className="flex flex-col ml-4 gap-1 text-foreground/50">
                         <li>
                             every line = one task
                         </li>
@@ -44,7 +44,7 @@ export function TextAreaTooltip() {
                             child tasks inherit <span className="bg-primary/70 p-0.5 text-background font-bold rounded-md">dates</span> and <span className="text-green-600">status</span> from parents, unless explicitly set
                         </li>
                         <li>
-                            there is no error handling yet for dates and duration...
+                            there is also no parent child handling of duration yet...
                         </li>
                     </ul>
                 </TooltipContent>

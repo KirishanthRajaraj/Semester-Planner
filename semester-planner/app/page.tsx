@@ -35,8 +35,9 @@ export default function Home() {
             <ul className="flex flex-col gap-2">
               <li>
                   <div>
-                    <span className="text-xs">Disclaimer</span><p className="text-muted-foreground text-xs">This textarea is a realtime bulk edit tool. If you delete all text from the text area, all your tasks will be permanently deleted everywhere.</p>
+                    <span className="text-xs">Disclaimer</span><p className="text-muted-foreground text-xs">This textarea is a realtime bulk edit tool. If you delete all text from the text area, all your tasks will be permanently deleted everywhere aswell.</p>
                     <p className="text-muted-foreground text-xs">Backing up your plan text somewhere is recommended.</p>
+                    <p className="text-muted-foreground text-xs">There is also no cross browser tab syncing of your tasks yet...</p>
                   </div>
               </li>
             </ul>
