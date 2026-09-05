@@ -44,7 +44,7 @@ export function TextAreaTooltip() {
                             child tasks inherit <span className="bg-primary/70 p-0.5 text-background font-bold rounded-md">dates</span> and <span className="text-green-600">status</span> from parents, unless explicitly set
                         </li>
                         <li>
-                            there is also no parent child handling of duration yet...
+                            there is no parent child handling of duration yet...
                         </li>
                     </ul>
                 </TooltipContent>
